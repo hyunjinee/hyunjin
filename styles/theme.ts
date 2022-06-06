@@ -1,13 +1,21 @@
 import styled, { DefaultTheme, css } from 'styled-components';
 
-export const flexCenter = css`
-  display: flex;
-  align-items: center;
-  justify-content: center;
+export const Container = styled.div`
+  width: 100%;
+  padding: 0 4.2rem;
+  max-width: 144rem;
 `;
 
-export const Container = styled.div``;
+export const darkTheme: DefaultTheme = {
+  color: {
+    black: '#000000',
+    white: '#ffffff',
+  },
+};
 
-export const darkTheme: DefaultTheme = {};
-
-export const lightTheme: DefaultTheme = {};
+export const lightTheme: DefaultTheme = {
+  color: {
+    black: '#ffffff',
+    white: '#000000',
+  },
+};
