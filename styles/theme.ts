@@ -10,6 +10,8 @@ export const darkTheme: DefaultTheme = {
   color: {
     black: '#000000',
     white: '#ffffff',
+    blue: '#3EFFFF',
+    red: '#FF5E5E',
   },
 };
 
@@ -17,5 +19,7 @@ export const lightTheme: DefaultTheme = {
   color: {
     black: '#ffffff',
     white: '#000000',
+    blue: '#6400ff',
+    red: '#00ff50',
   },
 };

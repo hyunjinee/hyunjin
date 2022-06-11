@@ -1,16 +1,10 @@
-import Image from 'next/image';
 import styled, { useTheme } from 'styled-components';
-
 import { fadeIn } from 'styles/keyframes';
 import { media } from 'styles/media';
 import { flexCenter } from 'styles/utils';
 
 const Slider: React.FC = () => {
   const theme = useTheme();
-  const isDarkTheme = theme.color.black === '#000000';
-
-  console.log(theme);
-
   return (
     <SliderContainer>
       <TextContainer>
@@ -18,23 +12,6 @@ const Slider: React.FC = () => {
         <div className="second">ENGINEER</div>
         <div className="third">HYUNJIN LEE</div>
       </TextContainer>
-      <ImageContainer>
-        {isDarkTheme ? (
-          <Image
-            src="/assets/arrow3.svg"
-            width={188}
-            height={105}
-            alt="scroll down"
-          />
-        ) : (
-          <Image
-            src="/assets/arrow.svg"
-            width={188}
-            height={105}
-            alt="scroll down"
-          />
-        )}
-      </ImageContainer>
     </SliderContainer>
   );
 };
@@ -87,16 +64,6 @@ const TextContainer = styled.div`
     text-align: center;
 
     animation: ${fadeIn} 3s;
-  }
-`;
-
-const ImageContainer = styled.div`
-  position: absolute;
-  bottom: 0;
-  color: ${({ theme }) => theme.color.white};
-  svg {
-    fill: red;
-    stroke: red;
   }
 `;
 

@@ -1,6 +1,6 @@
-import type { AppProps } from 'next/app';
-import Head from 'next/head';
 import { useState } from 'react';
+import Head from 'next/head';
+import type { AppProps } from 'next/app';
 import styled, { ThemeProvider } from 'styled-components';
 
 import ScrollObserver from 'contexts/scrollObserver';
@@ -27,7 +27,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <GlobalStyle />
       <ThemeProvider theme={theme === 'dark' ? darkTheme : lightTheme}>
         <ThemeToggle onClick={handleTheme}>
-          {theme === 'dark' ? '🌙' : '🌞'}
+          {theme === 'dark' ? 'DARK' : 'LIGHT'}
         </ThemeToggle>
         <ScrollObserver>
           <Component {...pageProps} />
@@ -42,7 +42,17 @@ const ThemeToggle = styled.div`
   top: 2rem;
   right: 2rem;
   z-index: 999;
-  transition: 1s;
+
+  font-size: 1.5rem;
+  font-weight: bold;
+
+  color: ${({ theme }) => theme.color.white};
+
+  /* transition: 0.3s; */
+  &:hover {
+    transition: 0.3s;
+    color: ${({ theme }) => theme.color.blue};
+  }
 
   cursor: pointer;
 `;

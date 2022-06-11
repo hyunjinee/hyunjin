@@ -1,7 +1,7 @@
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 import { ThemeProvider } from 'styled-components';
 import { darkTheme } from 'styles/theme';
-import Slider from './Slider';
+import Slider from './Slider3';
 
 export default {
   title: 'Components/Slider',
@@ -11,7 +11,9 @@ export default {
 const Template: ComponentStory<typeof Slider> = (args) => {
   return (
     <ThemeProvider theme={darkTheme}>
-      <Slider {...args} />
+      <div style={{ width: '100%', height: '100vh' }}>
+        <Slider {...args} />
+      </div>
     </ThemeProvider>
   );
 };
