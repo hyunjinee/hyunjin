@@ -1,6 +1,7 @@
 import AboutMe from 'components/aboutme';
 import Slider from 'components/intro/Slider';
 import Slider2 from 'components/intro/Slider2';
+import Projects from 'components/projects';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
@@ -11,7 +12,12 @@ const Home: NextPage = () => {
     <Container>
       <Slider />
       <AboutMe />
+      <Slider />
       {/* <Slider2 /> */}
+
+      <Projects />
+
+      <div style={{ height: '100%' }}>hi</div>
     </Container>
   );
 };
