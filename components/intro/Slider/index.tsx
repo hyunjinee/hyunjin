@@ -9,7 +9,7 @@ const Slider: React.FC = () => {
   const theme = useTheme();
   const isDarkTheme = theme.color.black === '#000000';
 
-  console.log(theme);
+  console.log(theme.color.black);
 
   return (
     <SliderContainer>
@@ -40,11 +40,12 @@ const Slider: React.FC = () => {
 };
 
 const SliderContainer = styled.div`
-  position: fixed;
+  position: relative;
   top: 0;
   left: 0;
-  width: 100%;
+  /* width: 100%; */
   height: 100vh;
+  /* z-index: -1; */
 
   ${flexCenter}
 
@@ -56,7 +57,12 @@ const TextContainer = styled.div`
   font-size: 12rem;
   line-height: 1.15;
   font-weight: 900;
+  /* position: absolute;
+  top: 0; */
 
+  /* width: 100%;
+  height: 100%; */ /* z-index: 10; */
+  /* width: 100%; */
   ${media.tablet} {
     font-size: 10rem;
   }
@@ -69,7 +75,6 @@ const TextContainer = styled.div`
     padding-bottom: 5rem;
     animation: ${fadeIn} 1s;
     text-align: center;
-
     ${media.small} {
       padding-bottom: 2rem;
     }

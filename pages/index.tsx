@@ -1,3 +1,4 @@
+import AboutMe from 'components/aboutme';
 import Slider from 'components/intro/Slider';
 import Slider2 from 'components/intro/Slider2';
 import type { NextPage } from 'next';
@@ -9,12 +10,15 @@ const Home: NextPage = () => {
   return (
     <Container>
       <Slider />
+      <AboutMe />
       {/* <Slider2 /> */}
     </Container>
   );
 };
 
 const Container = styled.div`
+  /* width: 100%;
+  height: 100%; */
   color: ${({ theme }) => theme.color.white};
   background-color: ${({ theme }) => theme.color.black};
 `;
