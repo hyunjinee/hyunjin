@@ -43,8 +43,8 @@ const SliderContainer = styled.div`
   position: sticky;
   top: 0;
   left: 0;
-  width: 100%;
   height: 100vh;
+  width: 100%;
   /* z-index: 100; */
 
   ${flexCenter}

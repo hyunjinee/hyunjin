@@ -32,4 +32,10 @@ const ScrollObserver: React.FC<ScrollObserverProps> = ({ children }) => {
   );
 };
 
+export const useScroll = () => {
+  const { scrollY } = React.useContext(ScrollContext);
+
+  return scrollY;
+};
+
 export default ScrollObserver;

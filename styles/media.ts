@@ -7,7 +7,7 @@ const mediaQuery = (maxWidth: number) => `@media (max-width: ${maxWidth}px)`;
 export const media = {
   xSmall: mediaQuery(xSmall),
   small: mediaQuery(small),
-  mobile: mediaQuery(medium),
-  tablet: mediaQuery(1234),
-  desktop: mediaQuery(1440),
+  medium: mediaQuery(medium),
+  large: mediaQuery(large),
+  xlarge: mediaQuery(xlarge),
 };

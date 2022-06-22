@@ -26,9 +26,9 @@ function MyApp({ Component, pageProps }: AppProps) {
       </Head>
       <GlobalStyle />
       <ThemeProvider theme={theme === 'dark' ? darkTheme : lightTheme}>
-        <ThemeToggle onClick={handleTheme}>
+        {/* <ThemeToggle onClick={handleTheme}>
           {theme === 'dark' ? 'DARK' : 'LIGHT'}
-        </ThemeToggle>
+        </ThemeToggle> */}
         <ScrollObserver>
           <Component {...pageProps} />
         </ScrollObserver>

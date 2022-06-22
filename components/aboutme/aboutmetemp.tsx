@@ -12,7 +12,7 @@ const opacityForBlock = (sectionProgress: number, blockNo: number) => {
   return 0.2;
 };
 
-const AboutMe: React.FC = () => {
+const AboutMeTemp: React.FC = () => {
   const scrollY = useScroll();
   const refContainer = useRef<HTMLDivElement>(null);
 
@@ -80,4 +80,4 @@ const AboutMeContainer = styled(Container)`
   }
 `;
 
-export default AboutMe;
+export default AboutMeTemp;

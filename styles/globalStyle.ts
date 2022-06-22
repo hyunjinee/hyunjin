@@ -11,20 +11,19 @@ export const GlobalStyle = createGlobalStyle`
   html, body {
     width: 100%;
     height: 100vh;
-    /* min-width: 1440px; */
-
-    font-size: 62.5%; // 1rem === 10px
+    background-color: #13111A; // temp
+    font-size: 10px;
     font-weight: 900;
-    font-family: "SF Pro Display", Poppins, Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+    font-family: Inter,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;
 
     box-sizing: border-box;
 
     -ms-overflow-style: none;
-        scrollbar-width: none;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
+    scrollbar-width: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
   }
 
 
