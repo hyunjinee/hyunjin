@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import {
   Category,
@@ -8,23 +9,36 @@ import {
 } from './styles';
 
 interface CardProps {
-  contentName: string;
-  date: string;
+  category?: string;
+  contentName?: string;
+  contentUrl?: string;
+  place?: string;
+  date?: string;
+  color: string;
 }
 
-const Card: React.FC<CardProps> = ({ contentName, date }) => {
+const Card: React.FC<CardProps> = ({
+  contentName,
+  date,
+  category,
+  place,
+  contentUrl,
+  color,
+}) => {
   return (
     <Container>
-      <Category>Category</Category>
+      <Category color={color}>{category}</Category>
       <ContentContainer>
         <ContentName>{contentName}</ContentName>
       </ContentContainer>
-      {/* <Link href="/">
-        <a rel="noreferrer"></a>
-      </Link> */}
+      <Link href="/">
+        <a rel="noreferrer" className="link">
+          <Image src="/assets/link.svg" width={20} height={20} />
+        </a>
+      </Link>
       <Footer>
-        <h4>app.js ocnf</h4>
-        <h6>june 4ed 2022</h6>
+        <h4>{place}</h4>
+        <h6>{date}</h6>
       </Footer>
     </Container>
   );

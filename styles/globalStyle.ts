@@ -26,5 +26,8 @@ export const GlobalStyle = createGlobalStyle`
     user-select: none;
   }
 
-
+  @font-face {
+    font-family: Thicccboi;
+    src: url('/fonts/Thicccboi.ttf');
+  }
 `;

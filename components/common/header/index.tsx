@@ -18,7 +18,7 @@ const Header: React.FC = () => {
             />
           </a>
         </Link>
-        <Link href="/">
+        <Link href="https://www.instagram.com/hyunjnlee/">
           <a>
             <Image
               src="/assets/instagram.svg"

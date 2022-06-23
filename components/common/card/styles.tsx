@@ -18,17 +18,33 @@ export const Container = styled.div`
   background-color: #1d1a27;
 
   overflow: hidden;
+
+  a {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+  }
 `;
-export const Category = styled.h5`
-  color: #6648b6;
+export const Category = styled.h5<{ color: string }>`
+  color: ${({ color }) => color};
   font-size: 1.8rem;
+  line-height: 23.994px;
+  font-family: 'Thicccboi';
+  font-weight: 700;
   width: 100%;
+  /* color: #f2003c !important; */
 `;
 export const ContentContainer = styled.div``;
 export const ContentName = styled.h2``;
 export const Footer = styled.div`
   display: flex;
   justify-content: space-between;
+
+  h4 {
+    font-size: 1.3rem;
+    line-height: 1.6549rem;
+    font-weight: 300;
+  }
 
   h6 {
     color: #8b8989;

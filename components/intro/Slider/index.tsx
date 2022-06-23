@@ -63,7 +63,7 @@ const TextContainer = styled.div`
   /* width: 100%;
   height: 100%; */ /* z-index: 10; */
   /* width: 100%; */
-  ${media.tablet} {
+  ${media.large} {
     font-size: 10rem;
   }
 

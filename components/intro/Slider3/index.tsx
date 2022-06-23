@@ -34,7 +34,7 @@ const TextContainer = styled.div`
   line-height: 1.15;
   font-weight: 900;
 
-  ${media.tablet} {
+  ${media.large} {
     font-size: 10rem;
   }
 
