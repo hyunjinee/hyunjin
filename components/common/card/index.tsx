@@ -11,7 +11,7 @@ import {
 interface CardProps {
   category?: string;
   contentName?: string;
-  contentUrl?: string;
+  contentUrl: string;
   place?: string;
   date?: string;
   color: string;
@@ -31,7 +31,7 @@ const Card: React.FC<CardProps> = ({
       <ContentContainer>
         <ContentName>{contentName}</ContentName>
       </ContentContainer>
-      <Link href="/">
+      <Link href={contentUrl}>
         <a rel="noreferrer" className="link">
           <Image src="/assets/link.svg" width={20} height={20} alt="link" />
         </a>
