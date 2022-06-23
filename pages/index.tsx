@@ -156,8 +156,8 @@ const AboutMeSection = styled.section`
     font-weight: 700;
     margin-bottom: 2.4rem;
     width: 100%;
-    font-family: Thicccboi, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-      Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
+    font-family: 'Thicccboi', -apple-system, BlinkMacSystemFont, Segoe UI,
+      Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
       sans-serif;
   }
 
