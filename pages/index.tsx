@@ -127,6 +127,7 @@ const Container = styled.div`
   margin: auto;
   padding-right: 2.4rem;
   padding-left: 2.4rem;
+  /* padding-bottom: 14rem; */
   /* padding: 0 2.4rem; */
   color: ${({ theme }) => theme.color.white};
   /* background-color: ${({ theme }) => theme.color.black}; */
@@ -174,11 +175,13 @@ const AboutMeSection = styled.section`
 
     strong {
       font-weight: 900;
+      font-size: 3rem;
     }
   }
 `;
 
 const ContentSection = styled.section`
+  padding-bottom: 14.8rem;
   h2 {
     margin-top: 0;
     font-size: 3.2rem;
