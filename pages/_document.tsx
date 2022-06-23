@@ -38,7 +38,17 @@ class MyDocument extends Document {
   render(): ReactElement {
     return (
       <Html>
-        <Head />
+        <Head>
+          <meta charSet="UTF-8" />
+          <meta
+            name="keywords"
+            content="이현진, 개발자 이현진, 프론트엔드 이현진, hyunjin, frontend engineer, lee hyunjin"
+          />
+          <meta
+            name="description"
+            content="personal website of hyunjin lee, frontend engineer"
+          />
+        </Head>
         <body>
           <Main />
           <NextScript />

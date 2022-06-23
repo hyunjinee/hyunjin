@@ -29,7 +29,7 @@ export const Category = styled.h5<{ color: string }>`
   color: ${({ color }) => color};
   font-size: 1.8rem;
   line-height: 23.994px;
-  font-family: 'Thicccboi';
+  font-family: 'Thicccboi', -apple-system;
   font-weight: 700;
   width: 100%;
   /* color: #f2003c !important; */

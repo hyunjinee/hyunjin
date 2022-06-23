@@ -33,7 +33,7 @@ const Card: React.FC<CardProps> = ({
       </ContentContainer>
       <Link href="/">
         <a rel="noreferrer" className="link">
-          <Image src="/assets/link.svg" width={20} height={20} />
+          <Image src="/assets/link.svg" width={20} height={20} alt="link" />
         </a>
       </Link>
       <Footer>

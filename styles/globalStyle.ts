@@ -27,7 +27,8 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   @font-face {
-    font-family: Thicccboi;
-    src: url('/fonts/Thicccboi.ttf');
+    font-family: 'Thicccboi';
+    src: url('assets/fonts/THICCCBOI-Regular.ttf');
+    src: url('assets/fonts/THICCCBOI-Bold.ttf');
   }
 `;
