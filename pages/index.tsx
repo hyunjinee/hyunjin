@@ -19,7 +19,7 @@ const contents = [
     contentName: '방슐랭 가이드',
     date: 'Oct 1, 2021',
     category: 'Project',
-    place: 'Hello Center',
+    place: 'hello center',
     contentUrl: 'temp',
     color: '#DD63A7',
   },
@@ -55,29 +55,76 @@ const contents = [
     contentUrl: 'https://github.com/hyunjinee/storyofweb',
     color: '#94C2F3',
   },
+
   {
-    contentName: 'qwzd',
-    date: 'May 12, 2022',
-    category: 'Project',
-    place: 'qwzd team',
-    contentUrl: 'https://qwzd.kr/',
-    color: '#DD63A7',
-  },
-  {
-    contentName: 'react-docs',
+    contentName: 'React-Docs',
     date: 'May 13, 2022',
     category: 'Blog',
     place: 'hyunjin',
     contentUrl: 'https://github.com/hyunjinee/react-docs',
     color: '#73BE68',
   },
+
   {
     contentName: 'Rendering Patterns',
     date: 'July 7, 2022',
     category: 'Conference Talk',
-    place: 'swmaestro center',
-    contentUrl: 'temp',
+    place: 'hyunjin',
+    contentUrl: 'https://velog.io/@hyunjine/Rendering-Patterns',
     color: '#94C2F3',
+  },
+
+  {
+    contentName: 'useState vs useRef',
+    date: 'July 7, 2022',
+    category: 'Blog',
+    place: 'swmaestro center',
+    contentUrl: 'https://velog.io/@hyunjine/useState-vs-useRef',
+    color: '#73BE68',
+  },
+  {
+    contentName: 'GraphQL',
+    date: 'Aug 29, 2022',
+    category: 'Conference Talk',
+    place: 'swmaestro center',
+    contentUrl: 'https://velog.io/@hyunjine/GraphQL',
+    color: '#94C2F3',
+  },
+  {
+    contentName: 'Thinking in React',
+    date: 'Sep 29, 2022',
+    category: 'Conference Talk',
+    place: 'swmaestro center',
+    contentUrl: 'https://velog.io/@hyunjine/Thinking-in-React',
+    color: '#94C2F3',
+  },
+
+  {
+    contentName: 'PWA에 대한 생각',
+    date: 'Oct 23, 2022',
+    category: 'Blog',
+    place: 'swmaestro center',
+    contentUrl:
+      'https://velog.io/@hyunjine/PWA%EC%97%90-%EB%8C%80%ED%95%9C-%EC%83%9D%EA%B0%81',
+    color: '#73BE68',
+  },
+
+  {
+    contentName: 'React Rendering Optimization',
+    date: 'Oct 31, 2022',
+    category: 'Blog',
+    place: 'swmaestro center',
+    contentUrl: 'https://velog.io/@hyunjine/React-Rendering-Optimization',
+    color: '#73BE68',
+  },
+
+  {
+    contentName: 'MOZI',
+    date: 'Nov 26, 2022',
+    category: 'Project',
+    place: 'hyunjin',
+    contentUrl: 'https://github.com/team-yaza/mozi-client',
+    color: '#DD63A7',
   },
 ];
 
