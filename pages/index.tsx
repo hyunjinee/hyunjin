@@ -137,8 +137,8 @@ const Home: NextPage = () => {
       <AboutMeSection>
         <h2>About Me</h2>
         <p>
-          {"Hello! I'm hyunjin. 24y/o developer."} <br />
-          {
+          {'안녕하세요. FE 개발자 이현진입니다.'} <br />
+          {/* {
             "I'm interested in TypeScript, React, GraphQL, Web Performance, and Cloud technologies."
           }
           <br />
@@ -146,11 +146,10 @@ const Home: NextPage = () => {
           <br />
           {
             'I would like to give myself some challenges and overcome them.'
-          }{' '}
+          }{' '} */}
           <br />
           <br />
-          <strong>{'"Endless failure, Endless Improvement"'}</strong>
-          {/* I like to make computer science concepts easier for anyone who's interested in tech, by writing approachable articles on technical content through visualizations!" */}
+          <strong>{'"Practice Makes Improvement"'}</strong>
         </p>
       </AboutMeSection>
 
