@@ -135,7 +135,7 @@ const Home: NextPage = () => {
         <Header />
       </section>
       <AboutMeSection>
-        <h2>About Me</h2>
+        {/* <h2>About Me</h2> */}
         <p>
           {'안녕하세요. FE 개발자 이현진입니다.'} <br />
           {/* {
@@ -147,8 +147,8 @@ const Home: NextPage = () => {
           {
             'I would like to give myself some challenges and overcome them.'
           }{' '} */}
-          <br />
-          <br />
+          {/* <br />
+          <br /> */}
           <strong>{'"Practice Makes Improvement"'}</strong>
         </p>
       </AboutMeSection>
