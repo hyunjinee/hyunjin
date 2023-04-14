@@ -16,7 +16,6 @@ export const Container = styled.div`
   border-radius: 2.2rem;
   box-shadow: 0 10px 34px 0 rgb(0 0 0 / 35%);
   background-color: #1d1a27;
-
   overflow: hidden;
 
   a {
