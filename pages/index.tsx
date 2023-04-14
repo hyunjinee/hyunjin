@@ -39,14 +39,14 @@ const contents = [
     contentUrl: 'https://www.swmaestro.org/sw/main/main.do#secondPage',
     color: '#6748B6',
   },
-  {
-    contentName: 'Redux에 대한 생각',
-    date: 'Apr 28, 2022',
-    category: 'Blog',
-    place: 'hyunjin',
-    contentUrl: 'https://hyunjinee.tistory.com/63?category=970038',
-    color: '#73BE68',
-  },
+  // {
+  //   contentName: 'Redux에 대한 생각',
+  //   date: 'Apr 28, 2022',
+  //   category: 'Blog',
+  //   place: 'hyunjin',
+  //   contentUrl: 'https://hyunjinee.tistory.com/63?category=970038',
+  //   color: '#73BE68',
+  // },
   {
     contentName: '웹은 어떻게 발전했는가',
     date: 'May 10, 2022',
@@ -126,6 +126,15 @@ const contents = [
     contentUrl: 'https://github.com/team-yaza/mozi-client',
     color: '#DD63A7',
   },
+  {
+    contentName: '리액트 렌더링에 대한 이해',
+    date: 'Mar 4, 2022',
+    category: 'Blog',
+    place: 'hyunjin',
+    contentUrl:
+      'https://velog.io/@hyunjine/%EB%A6%AC%EC%95%A1%ED%8A%B8-%EB%A0%8C%EB%8D%94%EB%A7%81%EC%97%90-%EB%8C%80%ED%95%9C-%EC%9D%B4%ED%95%B4',
+    color: '#73BE68',
+  },
 ];
 
 const Home: NextPage = () => {
@@ -137,7 +146,7 @@ const Home: NextPage = () => {
       <AboutMeSection>
         {/* <h2>About Me</h2> */}
         <p>
-          {'안녕하세요. FE 개발자 이현진입니다.'} <br />
+          {/* {'안녕하세요. FE 개발자 이현진입니다.'} <br /> */}
           {/* {
             "I'm interested in TypeScript, React, GraphQL, Web Performance, and Cloud technologies."
           }
