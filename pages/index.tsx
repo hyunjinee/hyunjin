@@ -127,8 +127,17 @@ const contents = [
     color: '#DD63A7',
   },
   {
+    contentName: '웹 프론트엔드에서 상태란?',
+    date: 'Feb 8, 2023',
+    category: 'Blog',
+    place: 'hyunjin',
+    contentUrl:
+      'https://velog.io/@hyunjine/%EC%9B%B9-%ED%94%84%EB%A1%A0%ED%8A%B8%EC%97%94%EB%93%9C%EC%97%90%EC%84%9C-%EC%83%81%ED%83%9C%EB%9E%80',
+    color: '#73BE68',
+  },
+  {
     contentName: '리액트 렌더링에 대한 이해',
-    date: 'Mar 4, 2022',
+    date: 'Mar 4, 2023',
     category: 'Blog',
     place: 'hyunjin',
     contentUrl:
