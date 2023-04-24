@@ -38,10 +38,7 @@ const AboutMeTemp: React.FC = () => {
   return (
     <AboutMeContainer ref={refContainer}>
       <div className="first" style={{ opacity: opacityForBlock(progress, 0) }}>
-        {`Hello, my name is HYUNJIN LEE.
-  I'm a FrontEnd Engineer, Speaker, Traveler. 
-
-  `}
+        {`Hello, my name is HYUNJIN LEE.`}
       </div>
       <div className="second" style={{ opacity: opacityForBlock(progress, 1) }}>
         {`I'm interested at React, TypeScript.

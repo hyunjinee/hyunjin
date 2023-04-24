@@ -6,7 +6,7 @@ const Header: React.FC = () => {
   return (
     <>
       <Name>HYUNJIN LEE</Name>
-      <Job>FrontEnd Engineer | Speaker | Traveler</Job>
+      <Job>FrontEnd Engineer</Job>
       <SocialMedia>
         <Link href="https://github.com/hyunjinee">
           <a>
