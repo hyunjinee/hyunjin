@@ -1,0 +1,42 @@
+{
+  "name": "hyunjin",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
+  },
+  "dependencies": {
+    "next": "12.1.5",
+    "react": "18.0.0",
+    "react-dom": "18.0.0",
+    "styled-components": "^5.3.5",
+    "styled-reset": "^4.3.4"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.18.2",
+    "@storybook/addon-actions": "^6.5.7",
+    "@storybook/addon-essentials": "^6.5.7",
+    "@storybook/addon-interactions": "^6.5.7",
+    "@storybook/addon-links": "^6.5.7",
+    "@storybook/builder-webpack5": "^6.5.7",
+    "@storybook/manager-webpack5": "^6.5.7",
+    "@storybook/react": "^6.5.7",
+    "@storybook/testing-library": "^0.0.11",
+    "@types/node": "17.0.27",
+    "@types/react": "18.0.7",
+    "@types/react-dom": "18.0.0",
+    "@types/styled-components": "^5.1.25",
+    "babel-loader": "^8.2.5",
+    "babel-plugin-styled-components": "^2.0.7",
+    "eslint": "8.14.0",
+    "eslint-config-next": "12.1.5",
+    "eslint-plugin-storybook": "^0.5.12",
+    "tsconfig-paths-webpack-plugin": "^3.5.2",
+    "typescript": "4.6.3"
+  }
+}

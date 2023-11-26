@@ -1,18 +1,11 @@
-<h1 align="center">
-  Zoomkoding Gatsby Blog
-</h1>
-
-<p align="center">
-  <a href="https://github.com/zoomkoding/zoomkoding-gatsby-blog/blob/master/LICENSE">
-    <img src="https://img.shields.io/badge/license-0BSD-blue.svg" alt="Zoomkoding Gatsby Blog is released under the 0BSD license." />
-  </a>
-  <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs welcome!" />
-  <img src="https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat" alt="contributions welcome" />
-</p>
-
-**Demo Websites**: [**English**](https://zoomkoding.netlify.app) | [**Korean**](https://www.zoomkoding.com)
-
-[**English README.md**](https://github.com/zoomkoding/zoomkoding-gatsby-blog/blob/master/README.en.md)
+---
+emoji: 🧢
+title: 쉽고 빠르게 나만의 개츠비(Gatsby) 블로그 만들기
+date: '2021-03-22 23:00:00'
+author: 줌코딩
+tags: blog gatsby theme 개츠비 테마
+categories: 블로그 featured
+---
 
 ## 👋 소개
 
@@ -22,22 +15,7 @@
 블로그 테마가 맘에 드셨다면 아래 과정을 통해 자신의 블로그를 만들어보시길 바랍니다!
 
 > 혹시 만드시는 과정에서 궁금하신 점이나 어려움이 있으시다면 [이슈](https://github.com/zoomKoding/zoomkoding-gatsby-blog/issues/new)를 통해 문의 남겨주세요!  
-> ⭐️는 블로그 운영에 큰 힘이 됩니다!😊
-
-## ✨ 기능
-
-- 😛 미모지와 문자 애니메이션를 통한 자기 소개
-- 🔍 포스팅 검색 지원
-- 🌘 다크모드 지원
-- 💅 코드 하이라이팅 지원
-- 👉 글 목차 자동 생성(ToC)
-- 💬 Utterances 댓글 기능 지원
-- ⚙️ meta-config를 통한 세부 설정 가능
-- 👨‍💻 About Page 내용 변경 가능
-- 📚 Posts Page 자동 생성
-- 🛠 sitemap.xml, robots.txt 자동 생성
-- 📈 Google Analytics 지원
-- 🧢 Emoji 지원
+> [스타](https://github.com/zoomKoding/zoomkoding.com)는 블로그 테마를 지속적으로 발전시키는데 큰 힘이 됩니다!⭐️
 
 ## 🚀 시작하기
 
@@ -114,7 +92,7 @@ author: {
     bio: {
       role: '개발자',
       description: ['사람에 가치를 두는', '능동적으로 일하는', '이로운 것을 만드는'],
-      thumbnail: `zoomkoding.gif`,
+      thumbnail: 'zoomkoding.gif',
     },
     social: {
       github: 'https://github.com/zoomKoding',
@@ -136,13 +114,13 @@ about 페이지 또한 gatsby-meta-config.js를 통해 생성됩니다. about �
 
 ```js
 {
-  date: '2021.02 ~',
-  activity: '개인 블로그 개발 및 운영',
-  links: {
-    post: '/gatsby-starter-zoomkoding-introduction',
-    github: 'https://github.com/zoomkoding/zoomkoding-gatsby-blog',
-    demo: 'https://www.zoomkoding.com',
-  },
+    date: '2021.02 ~',
+    activity: '개인 블로그 개발 및 운영',
+    links: {
+        post: '/gatsby-starter-zoomkoding-introduction',
+        github: 'https://github.com/zoomkoding/zoomkoding-gatsby-blog',
+        demo: 'https://www.zoomkoding.com',
+    },
 },
 ```
 
@@ -215,3 +193,7 @@ categories: tutorial
 
 > 🤔 혹시 특정 기능이 없어서 테마 사용을 망설이시거나 제안하고 싶으신 기능이 있으시다면,  
 > 👉 [여기](https://github.com/zoomKoding/zoomkoding-gatsby-blog/issues/40)에 댓글 남겨주세요! 적극적으로 반영하겠습니다 :)
+
+```toc
+
+```
