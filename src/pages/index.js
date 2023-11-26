@@ -13,7 +13,12 @@ function HomePage({ data }) {
   const { author, language } = data.site.siteMetadata;
   const categories = ['All', ...getUniqueCategories(posts)];
   const featuredTabIndex = categories.findIndex((category) => category === 'featured');
-  const [tabIndex, setTabIndex] = useState(featuredTabIndex === -1 ? 0 : featuredTabIndex);
+  // featured 탭을 무조건 먼저보여줌
+  // const [tabIndex, setTabIndex] = useState(featuredTabIndex === -1 ? 0 : featuredTabIndex);
+
+  // 무조건 0번째 탭으로 시작
+  const [tabIndex, setTabIndex] = useState(0);
+
   const onTabIndexChange = useCallback((e, value) => setTabIndex(value), []);
 
   return (

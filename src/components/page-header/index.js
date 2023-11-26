@@ -33,7 +33,7 @@ function PageHeader({ siteTitle }) {
               </Link>
             </div>
             <div className="trailing-section">
-              {/* TODO 나중에 ㅇ */}
+              {/* TODO 나중에 On */}
               {/* <Link className="link" to="/about">
                 about
               </Link> */}
