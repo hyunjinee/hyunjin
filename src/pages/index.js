@@ -19,7 +19,8 @@ function HomePage({ data }) {
   return (
     <Layout>
       <Seo title="Home" />
-      <Bio author={author} language={language} />
+      {/* TODO 이건 변경 */}
+      {/* <Bio author={author} language={language} /> */}
       <PostTabs
         posts={posts}
         onChange={onTabIndexChange}
