@@ -1,6 +1,6 @@
 module.exports = {
   title: `hyunjin`,
-  description: ``,
+  description: `공부 기록`,
   language: `ko`,
   siteUrl: `https://www.hyunjinlee.com`,
   ogImage: `/og-image.png`, // Path to your in the 'static' folder
