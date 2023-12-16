@@ -6,7 +6,11 @@ settings:
 
 importers:
 
-  .: {}
+  .:
+    devDependencies:
+      eslint:
+        specifier: 8.14.0
+        version: 8.14.0
 
   services/blog:
     dependencies:
