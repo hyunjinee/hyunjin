@@ -118,7 +118,7 @@ importers:
         specifier: ^5.3.3
         version: 5.3.3
 
-  services/자기소개페이지-deprecated:
+  services/introduce:
     dependencies:
       next:
         specifier: 12.1.5
