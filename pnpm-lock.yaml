@@ -88,6 +88,9 @@ importers:
       react-dom:
         specifier: ^17.0.1
         version: 17.0.2(react@17.0.2)
+      react-helmet:
+        specifier: ^6.1.0
+        version: 6.1.0(react@17.0.2)
       react-rotating-text:
         specifier: ^1.4.1
         version: 1.4.1(react-dom@17.0.2)(react@17.0.2)
