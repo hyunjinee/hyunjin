@@ -12,7 +12,7 @@ dependencies:
     specifier: ^5.1.0
     version: 5.15.0(@emotion/react@11.11.1)(@emotion/styled@11.11.0)(react-dom@17.0.2)(react@17.0.2)
   gatsby:
-    specifier: ^4.12.1
+    specifier: ^4.25.7
     version: 4.25.7(babel-eslint@10.1.0)(react-dom@17.0.2)(react@17.0.2)(typescript@5.3.3)
   gatsby-plugin-advanced-sitemap:
     specifier: ^2.1.0
@@ -100,6 +100,9 @@ devDependencies:
   prettier:
     specifier: 2.2.1
     version: 2.2.1
+  typescript:
+    specifier: ^5.3.3
+    version: 5.3.3
 
 packages:
 
@@ -12445,7 +12448,6 @@ packages:
     resolution: {integrity: sha512-pXWcraxM0uxAS+tN0AG/BF2TyqmHO014Z070UsJ+pFvYuRSq8KH8DmWpnbXe0pEPDHXZV3FcAbJkijJ5oNEnWw==}
     engines: {node: '>=14.17'}
     hasBin: true
-    dev: false
 
   /ua-parser-js@1.0.37:
     resolution: {integrity: sha512-bhTyI94tZofjo+Dn8SN6Zv8nBDvyXTymAdM3LDI/0IboIUwTu1rEhW7v2TfiVsoYWgkQ4kOVqnI8APUFbIQIFQ==}

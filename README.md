@@ -1,9 +1,6 @@
 # hyunjin
 
-## TODO
-
-- pnpm 기반의 모노레포로 변경
-- 기존에 작성한 글 정리
+생각을 적자
 
 <!-- <h1 align="center">
   Zoomkoding Gatsby Blog

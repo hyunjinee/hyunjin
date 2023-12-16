@@ -7,7 +7,7 @@
   "dependencies": {
     "@mui/icons-material": "^5.1.0",
     "@mui/material": "^5.1.0",
-    "gatsby": "^4.12.1",
+    "gatsby": "^4.25.7",
     "gatsby-plugin-advanced-sitemap": "^2.1.0",
     "gatsby-plugin-google-analytics": "^4.25.0",
     "gatsby-plugin-image": "^2.12.1",
@@ -37,7 +37,8 @@
   },
   "devDependencies": {
     "gh-pages": "^3.2.3",
-    "prettier": "2.2.1"
+    "prettier": "2.2.1",
+    "typescript": "^5.3.3"
   },
   "keywords": [
     "gatsby",
