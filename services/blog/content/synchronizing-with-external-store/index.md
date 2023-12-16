@@ -1,12 +1,13 @@
 ---
 title: Concurrent Mode에서 외부 시스템과의 동기화
+emoji: ''
 date: '2023-07-26'
 author: 이현진
 tags: React
 categories: 블로그
 ---
 
-![synchronize-with-external-store](https://velog.velcdn.com/images/hyunjine/post/8467f9c3-907c-41ba-920d-735f88f88e6b/image.png)
+![synchronizing-with-external-store](https://velog.velcdn.com/images/hyunjine/post/8467f9c3-907c-41ba-920d-735f88f88e6b/image.png)
 
 리액트에서 외부 시스템과 동기화할 때 useEffect라는 훅을 사용합니다.
 
