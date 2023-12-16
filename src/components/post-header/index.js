@@ -8,7 +8,7 @@ function PostHeader({ post }) {
       {post.emoji && <div className="emoji">{post.emoji}</div>}
       <div className="info">
         <div className="categories">
-          {post.categories.map((category) => (
+          {post.categories?.map((category) => (
             <Link className="category" key={category} to={`/posts/${category}`}>
               {category}
             </Link>

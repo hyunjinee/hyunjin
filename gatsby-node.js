@@ -1,4 +1,4 @@
-const { createFilePath } = require(`gatsby-source-filesystem`);
+const { createFilePath } = require('gatsby-source-filesystem');
 
 exports.onCreateNode = ({ node, getNode, actions }) => {
   const { createNodeField } = actions;
@@ -30,8 +30,13 @@ const createPostsPages = ({ createPage, results }) => {
   const { edges } = results.data.allMarkdownRemark;
 
   edges.forEach(({ node }) => {
-    const postCategories = node.frontmatter.categories.split(' ');
-    postCategories.forEach((category) => categorySet.add(category));
+    // const { categories } = edge.node.frontmatter;
+    // const categoriesArr = categories.split(' ');
+    const postCategories = node.frontmatter.categories?.split(' ');
+
+    if (postCategories && postCategories.length > 0) {
+      postCategories.forEach((category) => categorySet.add(category));
+    }
   });
 
   const categories = [...categorySet];
@@ -49,7 +54,7 @@ const createPostsPages = ({ createPage, results }) => {
       context: {
         currentCategory,
         categories,
-        edges: edges.filter(({ node }) => node.frontmatter.categories.includes(currentCategory)),
+        edges: edges.filter(({ node }) => node.frontmatter.categories?.includes(currentCategory)),
       },
     });
   });
