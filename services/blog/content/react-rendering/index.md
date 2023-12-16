@@ -13,7 +13,7 @@ categories: 블로그
 
 [**렌더링이란 리액트가 컴포넌트에게 현재의 props와 state를 기반으로 UI가 어떻게 생겼으면 좋겠는지 설명하도록 요청하는 프로세스입니다.**](<(https://blog.isquaredsoftware.com/2020/05/blogged-answers-a-mostly-complete-guide-to-react-rendering-behavior/#what-is-rendering)>)
 
-함수 컴포넌트에서 렌더링은 함수의 **실행(execution)**입니다. [함수가 실행되어 JSX를 반환하고 JSX는 리액트 엘리먼트들로 변환](https://beta.reactjs.org/reference/react/createElement)됩니다.
+함수 컴포넌트에서 렌더링은 함수의 **실행**(execution)입니다. [함수가 실행되어 JSX를 반환하고 JSX는 리액트 엘리먼트들로 변환](https://beta.reactjs.org/reference/react/createElement)됩니다.
 
 ### React Element
 
@@ -24,7 +24,11 @@ return <h1>Hello</h1>;
 return React.createElement('h1', null, 'Hello');
 ```
 
+<br />
+
 (1)과 (2)는 동일한 것이고 결국 컴포넌트에서 반환하는 것은 리액트 엘리먼트입니다. 이 리액트 엘리먼트를 `console.log(React.createElement('h1', null, 'Hello')`를 통해 확인해보면 다음과 같습니다.
+
+<br />
 
 ![](https://velog.velcdn.com/images/hyunjine/post/1a6e946b-11f6-4f48-ae55-4bb7fc4e3734/image.png)
 
@@ -63,6 +67,8 @@ function D() {
 }
 ```
 
+<br />
+
 예를 들어 위와 같은 코드에서 컴포넌트 A를 브라우저에 렌더링 했을 때 아래와 같은 코드가 실행됩니다.
 
 ```js
@@ -89,7 +95,12 @@ function D() {
 }
 ```
 
-!codesandbox[holy-violet-n1w15m]
+<iframe src="https://codesandbox.io/embed/holy-violet-n1w15m?fontsize=14&hidenavigation=1&theme=dark"
+     style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
+     title="holy-violet-n1w15m"
+     allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+     sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+   ></iframe>
 
 코드 샌드박스에서 console 탭을 열어 console에 기록되는 순서를 확인해보세요.(A -> B -> C -> D)
 
@@ -122,8 +133,7 @@ Dirty Checking은 모든 노드의 데이터를 일정한 간격으로 검사하
 ### Render Phase와 Commit Phase
 
 렌더링은 Render 단계와 Commit 단계로 쪼갤 수 있습니다.
-
-JSX를 리액트 엘리먼트들로 바꾸거나 Diffing 연산을 하는 부분을 렌더링에서는 Render Phase라고 합니다.
+JSX를 리액트 엘리먼트들로 바꾸거나 Diffing 연산을 하는 부분을 렌더링에서는 `Render Phase`라고 합니다.
 
 ![](https://velog.velcdn.com/images/hyunjine/post/ae86f129-7369-4c93-8e54-d789cb9d9151/image.png)
 
