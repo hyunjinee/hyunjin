@@ -30,8 +30,14 @@ export default function App() {
 }
 ```
 
-!codesandbox[agitated-feynman-rfi9im?fontsize=14&hidenavigation=1&theme=dark]
+<iframe src="https://codesandbox.io/embed/rfi9im?view=Editor+%2B+Preview&module=%2Fsrc%2Fapp.tsx&hidenavigation=1"
+     style="width:100%; height: 500px; border:0; border-radius: 4px; overflow:hidden;"
+     title="agitated-feynman-rfi9im"
+     allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+     sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+   ></iframe>
 
+<br/>
 <br/>
 
 버튼을 누르면 `increment` 함수가 실행되고 차례대로 `setCount(count + 1)`, `alert(count)`가 실행됩니다. 만약 `setCount(count + 1)`이 동기적으로 실행되었다면 `alert(count)`가 출력하는 것은 1이여야 합니다. 하지만 결과는 0이 출력됩니다.
@@ -179,7 +185,7 @@ Component.prototype.setState = (nextState) => {
 
 첫번째로는 리액트 **내부 일관성 보장**의 이유입니다. 리액트에서 state, props, refs는 내부적으로 서로 일관성이 있습니다. **이 의미는 이 객체들을 사용하는 경우 완전히 조정(reconciled)된 트리를 참조하도록 보장된다는 것입니다.**(리액트에서 JSX를 React.createElement라는 함수를 통해 자바스크립트 객체의 트리형태로 표현)
 
-리액트에서 가장 많이 하는 리팩토링중 하나인 **[상태 끌어올리기](https://velog.io/@hyunjine/Thinking-in-React#%EC%83%81%ED%83%9C-%EB%81%8C%EC%96%B4%EC%98%AC%EB%A6%AC%EA%B8%B0lifting-state-up)**를 예로 들어보면, 하위 컴포넌트에서 상위 컴포넌트의 상태를 바꿨을 때 동기적으로 반영이 된다하더라도 상태를 props를 통해서 하위 컴포넌트에 전달해주기 때문에 렌더링(함수 컴포넌트 호출)을 하지 않으면 업데이트된 상태를 props를 통해서 내려줄 수 없다는 이유입니다.
+리액트에서 가장 많이 하는 리팩토링중 하나인 [`상태 끌어올리기`](https://velog.io/@hyunjine/Thinking-in-React#%EC%83%81%ED%83%9C-%EB%81%8C%EC%96%B4%EC%98%AC%EB%A6%AC%EA%B8%B0lifting-state-up)를 예로 들어보면, 하위 컴포넌트에서 상위 컴포넌트의 상태를 바꿨을 때 동기적으로 반영이 된다하더라도 상태를 props를 통해서 하위 컴포넌트에 전달해주기 때문에 렌더링(함수 컴포넌트 호출)을 하지 않으면 업데이트된 상태를 props를 통해서 내려줄 수 없다는 이유입니다.
 
 즉 state, props, refs 들은 완전히 조정된 트리를 참조하도록 보장되는데 부모의 상태는 업데이트 되었는데 렌더링이 되지 않아서 최신 상태를 props로 받지 못하는 상태는 완전히 조정된 트리를 참조한다고 볼 수 없습니다.
 
@@ -226,8 +232,10 @@ Component.prototype.setState = function (partialState, callback) {
 };
 ```
 
-주목해야할 부분은 마지막 줄입니다. 상태를 업데이트할 때는 큐에 상태를 업데이트하는 동작을 넣을 뿐입니다.
+주목해야할 부분은 마지막 줄입니다. **상태를 업데이트할 때는 큐에 상태를 업데이트하는 동작을 넣을 뿐입니다.**
 
 ## 결론
 
 상태를 업데이트하는데에는 다양한 방법이 있을 수 있습니다. 리액트에서는 상태를 비동기적으로 업데이트하도록 설계했고 이를 통해 리액트 내부의 일관성을 보장하고, 동시성 기능 통해 상태 업데이트의 우선 순위를 고려할 수 있으며, 상태 업데이트의 일괄 처리(batching)을 가능하게 합니다.
+
+<br/>
