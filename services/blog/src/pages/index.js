@@ -24,6 +24,7 @@ function HomePage({ data }) {
   return (
     <Layout>
       <Seo title="Home" />
+
       {/* TODO 이건 변경 */}
       {/* <Bio author={author} language={language} /> */}
       <PostTabs

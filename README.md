@@ -2,9 +2,7 @@
 
 생각을 적자
 
-<!-- <h1 align="center">
-  Zoomkoding Gatsby Blog
-</h1>
+<!--
 
 <p align="center">
   <a href="https://github.com/zoomkoding/zoomkoding-gatsby-blog/blob/master/LICENSE">
