@@ -1,8 +1,7 @@
 {
   "name": "@hyunjin/blog",
-  "private": false,
-  "description": "A neat blog theme for developers",
-  "version": "3.0.0",
+  "private": true,
+  "description": "이현진 블로그",
   "author": "hyunjin",
   "dependencies": {
     "@mui/icons-material": "^5.1.0",
@@ -47,7 +46,6 @@
     "gatsby-plugin",
     "gatsby-theme"
   ],
-  "license": "0BSD",
   "scripts": {
     "build": "gatsby clean && gatsby build",
     "dev": "gatsby develop",
