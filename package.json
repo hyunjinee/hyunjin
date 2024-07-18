@@ -1,5 +1,6 @@
 {
   "name": "hyunjin",
+  "private": "true",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -11,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "eslint": "8.14.0"
+    "eslint": "8.14.0",
+    "prettier": "2.2.1"
   }
 }
