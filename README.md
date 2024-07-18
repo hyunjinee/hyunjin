@@ -16,22 +16,16 @@
 
 [**English README.md**](https://github.com/zoomkoding/zoomkoding-gatsby-blog/blob/master/README.en.md)
 
-## 👋 소개
 
-블로그를 직접 운영하면서 조금씩 그려봤던 이상적인 개발 블로그 테마를 Gatsby를 통해 만들어보게 되었습니다.
 이 테마가 블로그를 운영하고자 하시는 분들에게 자신의 이야기를 잘 담을 수 있는 공간이 되었으면 좋겠습니다.🙌
 
-블로그 테마가 맘에 드셨다면 아래 과정을 통해 자신의 블로그를 만들어보시길 바랍니다!
-
-> 혹시 만드시는 과정에서 궁금하신 점이나 어려움이 있으시다면 [이슈](https://github.com/zoomKoding/zoomkoding-gatsby-blog/issues/new)를 통해 문의 남겨주세요!
-> ⭐️는 블로그 운영에 큰 힘이 됩니다!😊
+> 혹시 만드시는 과정에서 궁금하신 점이나 어려움이 있으시다면 [이슈](https://github.com/zoomKoding/zoomkoding-gatsby-blog/issues/new)를 통
 
 ## ✨ 기능
 
 - 😛 미모지와 문자 애니메이션를 통한 자기 소개
 - 🔍 포스팅 검색 지원
 - 🌘 다크모드 지원
-- 💅 코드 하이라이팅 지원
 - 👉 글 목차 자동 생성(ToC)
 - 💬 Utterances 댓글 기능 지원
 - ⚙️ meta-config를 통한 세부 설정 가능
