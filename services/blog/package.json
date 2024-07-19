@@ -1,8 +1,6 @@
 {
   "name": "@hyunjin/blog",
   "private": true,
-  "description": "이현진 블로그",
-  "author": "hyunjin",
   "dependencies": {
     "@mui/icons-material": "^5.1.0",
     "@mui/material": "^5.1.0",
@@ -28,7 +26,7 @@
     "gatsby-theme-material-ui": "^5.1.0",
     "gatsby-transformer-remark": "^5.9.1",
     "gatsby-transformer-sharp": "^4.12.1",
-    "next": "12.1.5",
+    "next": "14",
     "prismjs": "^1.24.1",
     "react": "^18.3.1",
     "react-dom": "18.0.0",
@@ -38,6 +36,8 @@
     "typeface-montserrat": "^1.1.13"
   },
   "devDependencies": {
+    "@types/react": "18.0.7",
+    "@types/react-dom": "18.0.0",
     "gatsby-plugin-pnpm": "^1.2.10",
     "gh-pages": "^3.2.3",
     "prettier": "2.2.1",
@@ -49,11 +49,12 @@
     "gatsby-theme"
   ],
   "scripts": {
-    "build": "gatsby clean && gatsby build",
-    "dev": "gatsby develop",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
     "deploy": "gatsby clean && gatsby build && gh-pages -d public",
-    "start": "npm run develop",
     "serve": "gatsby serve",
     "clean": "gatsby clean",
     "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\" && exit 1"

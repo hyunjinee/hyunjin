@@ -8,11 +8,14 @@
     "blog": "pnpm -F @hyunjin/blog",
     "dev": "pnpm -r dev"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
     "eslint": "8.14.0",
     "prettier": "2.2.1"
+  },
+  "engines": {
+    "node": ">=20.11.0",
+    "pnpm": ">=8.14.1",
+    "npm": "⚠️use pnpm instead⚠️",
+    "yarn": "⚠️use pnpm instead⚠️"
   }
 }

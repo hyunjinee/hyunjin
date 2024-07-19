@@ -1,6 +1,6 @@
 module.exports = {
   title: `hyunjin`,
-  description: `공부 기록`,
+  description: `블로그`,
   language: `ko`,
   siteUrl: `https://www.hyunjinlee.com`,
   ogImage: `/og-image.png`, // Path to your in the 'static' folder
@@ -19,8 +19,8 @@ module.exports = {
     },
     social: {
       github: `https://github.com/hyunjinee`,
-      linkedIn: ``, // `https://www.linkedin.com/in/jinhyeok-jeong-800871192`,
-      email: `leehj0110@kakao.com`, // `zoomkoding@gmail.com`,
+      linkedIn: `https://www.linkedin.com/in/leehj0110`,
+      email: `leehj0110@kakao.com`,
     },
   },
 
