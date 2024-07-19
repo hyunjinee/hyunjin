@@ -5,7 +5,9 @@ import Image from '../image';
 import './style.scss';
 
 function Bio({ author, language = 'ko' }) {
-  if (!author) return null;
+  if (!author) {
+    return null;
+  }
   const { bio, social, name } = author;
   return (
     <div className="bio">
