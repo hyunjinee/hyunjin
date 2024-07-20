@@ -20,8 +20,6 @@
 
 ## ✨ 기능
 
-- 🌘 다크모드 지원
-- 💬 Utterances 댓글 기능 지원
 - ⚙️ meta-config를 통한 세부 설정 가능
 - 👨‍💻 About Page 내용 변경 가능
 - 📚 Posts Page 자동 생성

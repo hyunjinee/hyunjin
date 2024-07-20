@@ -5,6 +5,8 @@
     "@mui/icons-material": "^5.1.0",
     "@mui/material": "^5.1.0",
     "@toss/rollup-config": "^0.2.0",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
     "gatsby": "^4.25.7",
     "gatsby-plugin-advanced-sitemap": "^2.1.0",
     "gatsby-plugin-google-analytics": "^4.25.0",
@@ -26,6 +28,7 @@
     "gatsby-theme-material-ui": "^5.1.0",
     "gatsby-transformer-remark": "^5.9.1",
     "gatsby-transformer-sharp": "^4.12.1",
+    "lucide-react": "^0.408.0",
     "next": "14",
     "prismjs": "^1.24.1",
     "react": "^18.3.1",
@@ -33,6 +36,8 @@
     "react-helmet": "^6.1.0",
     "react-rotating-text": "^1.4.1",
     "sass": "^1.43.4",
+    "tailwind-merge": "^2.4.0",
+    "tailwindcss-animate": "^1.0.7",
     "typeface-montserrat": "^1.1.13"
   },
   "devDependencies": {
