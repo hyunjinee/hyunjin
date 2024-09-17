@@ -1,0 +1,20 @@
+{
+  "name": "@hyunjin/rollup-config",
+  "version": "0.0.2",
+  "main": "./src/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.18.2",
+    "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-commonjs": "^26.0.1",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "builtin-modules": "^4.0.0",
+    "rollup": "^4.21.3"
+  },
+  "peerDependencies": {
+    "rollup": "^4"
+  }
+}
