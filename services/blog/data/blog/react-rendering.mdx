@@ -1,0 +1,170 @@
+---
+title: 리액트 렌더링에 대한 이해
+date: '2023-03-04'
+tags: ['react']
+draft: false
+layout: PostBanner
+images: ['/static/images/canada/mountains.jpg']
+summary: The scenic lands of Canada featuring maple leaves, snow-capped mountains, turquoise lakes and Toronto. Take in the sights in this photo gallery exhibition and see how easy it is to replicate with some MDX magic and tailwind classes.
+---
+
+이 글에서는 리액트의 렌더링을 **렌더 단계**와 **커밋 단계**로 구분하여 전체적인 렌더링 프로세스에 대해 이해해봅니다.
+
+## Rendering in React
+
+[**렌더링이란 리액트가 컴포넌트에게 현재의 props와 state를 기반으로 UI가 어떻게 생겼으면 좋겠는지 설명하도록 요청하는 프로세스입니다.**](<(https://blog.isquaredsoftware.com/2020/05/blogged-answers-a-mostly-complete-guide-to-react-rendering-behavior/#what-is-rendering)>)
+
+함수 컴포넌트에서 렌더링은 함수의 **실행**(execution)입니다. [함수가 실행되어 JSX를 반환하고 JSX는 리액트 엘리먼트들로 변환](https://beta.reactjs.org/reference/react/createElement)됩니다.
+
+### React Element
+
+```jsx
+// JSX (1)
+
+return <h1>Hello</h1>;
+
+// React.createElement (2)
+
+return React.createElement('h1', null, 'Hello');
+```
+
+(1)과 (2)는 동일한 것이고 결국 컴포넌트에서 반환하는 것은 리액트 엘리먼트입니다. 이 리액트 엘리먼트를 `console.log(React.createElement('h1', null, 'Hello')`를 통해 확인해보면 다음과 같습니다.
+
+![](https://velog.velcdn.com/images/hyunjine/post/1a6e946b-11f6-4f48-ae55-4bb7fc4e3734/image.png)
+
+![](https://velog.velcdn.com/images/hyunjine/post/b83323af-b052-47d0-a8e4-2e04dc8810bf/image.png)
+
+여기서 주목할 점은 [React.createElement](https://beta.reactjs.org/reference/react/createElement)를 호출하는 것은 UI의 구조를 설명할 수 있는 **자바스크립트 객체**를 만든다는 것입니다. 이 메모리상에 존재하는 객체를 우리는 virtual DOM이라고 부릅니다.
+
+### Virtual DOM
+
+[Virtual DOM](https://reactjs.org/docs/faq-internals.html#what-is-the-virtual-dom)이라는 컨셉은 UI를 자바스크립트 객체 형태의 값으로 표현한 것입니다. UI의 가상적인 표현이 메모리에 유지되고 ReactDOM과 같은 라이브러리에 의해 실제 DOM에 동기화되는 프로그래밍 개념입니다.([Reconciliation](https://velog.io/@hyunjine/Thinking-in-React#reconciliation%EC%9E%AC%EC%A1%B0%EC%A0%95)) 그리고 그 UI를 자바스크립트 객체 형태로 표현하기 위해 React.createElement의 연쇄적인 호출이 일어납니다.
+
+```js
+function A() {
+  console.log('A 렌더링');
+
+  return (
+    <>
+      <B />
+
+      <D />
+    </>
+  );
+}
+
+function B() {
+  console.log('B 렌더링');
+
+  return <C />;
+}
+
+function C() {
+  console.log('C 렌더링');
+
+  return null;
+}
+
+function D() {
+  console.log('D 렌더링');
+
+  return null;
+}
+```
+
+예를 들어 위와 같은 코드에서 컴포넌트 A를 브라우저에 렌더링 했을 때 아래와 같은 코드가 실행됩니다.
+
+```js
+function A() {
+  console.log('A 렌더링');
+
+  return React.createElement(React.Fragment, null, React.createElement(B, null), React.createElement(D, null));
+}
+
+function B() {
+  console.log('B 렌더링');
+
+  return React.createElement(C, null);
+}
+
+function C() {
+  console.log('C 렌더링');
+
+  return null;
+}
+
+function D() {
+  console.log('D 렌더링');
+
+  return null;
+}
+```
+
+<iframe
+  src="https://codesandbox.io/embed/holy-violet-n1w15m?fontsize=14&hidenavigation=1&theme=dark"
+  style={{ width: '100%', height: '500px', border: '0', borderRadius: '4px', overflow: 'hidden' }}
+  title="holy-violet-n1w15m"
+  allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+  sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+/>
+
+코드 샌드박스에서 console 탭을 열어 console에 기록되는 순서를 확인해보세요.(A -> B -> C -> D)
+
+![](https://velog.velcdn.com/images/hyunjine/post/34050742-b6f5-4ca8-917c-26c84c8d8cfa/image.png)
+
+React.createElement의 재귀 호출을 통해서 자바스크립트 객체 형태의 트리(Plain JavaScript Object Tree)가 만들어지게 되고 이는 메모리상에 존재하게 됩니다.
+
+![](https://velog.velcdn.com/images/hyunjine/post/3df29b0c-7f7a-47a4-85d8-77fe455f49f8/image.png)
+
+리액트 애플리케이션의 첫번째 렌더링 동안에는 Virtual DOM과 Real DOM 트리가 모두 생성됩니다. 그리고 컴포넌트의 상태에서 상태를 업데이트하는 함수를 호출하면 **업데이트가 필요하다는 표시**를 합니다.(**Dirty Check**)
+
+> ![](https://velog.velcdn.com/images/hyunjine/post/d7a6d3b1-603c-44a4-b586-42b295dd1a4f/image.png)
+
+>
+
+> [Dan Abramov](https://twitter.com/dan_abramov)는 Virtual DOM이라는 용어를 폐기하자고 주장합니다. 실제로 [React Docs Beta](https://beta.reactjs.org/)에는 virtual DOM이라는 용어를 사용하지 않습니다.
+
+>
+
+> 따라서 Virtual DOM이라는 용어가 중요하다기 보다는 Virtual DOM이라는 것 자체가 리액트 엘리먼트들(리액트의 DOM)을 자바스크립트 객체 형태로 표현한 것이며, 이를 사용하는 이유는 UI를 값 형태로 표현(Value UI)하여 이전 UI와 상태 업데이트 후의 UI를 비교하여 Real DOM을 조작하는 것을 최소화하고([Reconciliation, 재조정](https://velog.io/@hyunjine/Thinking-in-React#reconciliation%EC%9E%AC%EC%A1%B0%EC%A0%95)) 선언적인 코드를 작성할 수 있기 때문입니다.
+
+### Dirty Checking
+
+Dirty Checking은 모든 노드의 데이터를 일정한 간격으로 검사하여 변경사항이 있는지 확인하는 방법입니다. 데이터가 최신 상태인지를 검사하기 위해 모든 노드를 재귀적으로 순회해야합니다. 반면에 Observable은 모든 노드가 상태 업데이트가 발생하는 시점을 수신할 책임이 있습니다.
+
+리액트에서는 각각의 컴포넌트에서 setState를 호출하면 렌더링을 큐에 넣습니다. 각각의 컴포넌트가 변경 사항을 수신할 수 있으므로 Dirty Checking을 하지 않아도 됩니다.(Observable)
+
+리액트에서는 각 컴포넌트가 렌더링을 예약할 수 있기 때문에 일정 주기마다 **Dirty Checking**을 하지는 않지만 **Diffing** 알고리즘 자체는 **Dirty Checker** 입니다. 즉 모든 노드를 순회하면서 Dirty한 컴포넌트를 발견하면 그 컴포넌트를 렌더링 시킵니다.(함수 컴포넌트의 경우 함수의 실행, 클래스 컴포넌트의 경우 render() 메서드 실행)
+
+자연스럽게 그 컴포넌트의 하위에 있는 컴포넌트들은 중첩함수 형태(React.createElement의 연쇄적인 호출)로 되어 있기 때문에 모두 다 실행되게 됩니다.
+
+**재조정**([**Reconciliation**](https://velog.io/@hyunjine/Thinking-in-React#reconciliation%EC%9E%AC%EC%A1%B0%EC%A0%95)) 과정에서 상태 업데이트 전후 트리를 비교하여 변경사항을 계산합니다. 이 계산 과정은 많은 비용이 들기 때문에 [**하위 트리를 메모이제이션**](https://velog.io/@hyunjine/React-Rendering-Optimization)하는등 최적화를 하곤 합니다.
+
+### Render Phase와 Commit Phase
+
+렌더링은 Render 단계와 Commit 단계로 쪼갤 수 있습니다.
+
+JSX를 리액트 엘리먼트들로 바꾸거나 Diffing 연산을 하는 부분을 렌더링에서는 `Render Phase`라고 합니다.
+
+![](https://velog.velcdn.com/images/hyunjine/post/ae86f129-7369-4c93-8e54-d789cb9d9151/image.png)
+
+초기 렌더링에서는 위와 같이 리액트 엘리먼트를 만들고(**Render Phase**) 바로 Real DOM에 커밋(**Commit Phase**)을 합니다.
+
+![](https://velog.velcdn.com/images/hyunjine/post/862b55d7-77e1-4461-a0be-4804e31a661e/image.png)
+
+리렌더링이 일어날 때는 렌더링 전의 리액트 엘리먼트 트리와 이후의 리액트 엘리먼트 트리를 비교하여 최소한의 연산을 계산(**Render Phase**)한 후에 Real DOM에 반영(**Commit Phase**)시킵니다.
+
+이렇게 각각 렌더 단계와 커밋단계로 나누었을 때 알 수 있는 것은 컴포넌트가 렌더링 된다고 해서 Real DOM 조작(manipulation)이 무조건 일어나는 것은 아니라는 것입니다. 바뀐 부분이 존재하지 않으면 리액트는 Diffing 과정에서 Real DOM에 커밋할 사항을 만들지 않습니다.
+
+또한 커밋 단계는 개발자가 조작할 수 없습니다. ReactDOM 라이브러리에게 책임을 맡긴 것이죠. 하지만 렌더 단계는 개발자가 조작할 수 있습니다.
+
+우리는 리액트 엘리먼트의 트리를 잘 설계하여 렌더 단계를 컨트롤 할 수 있습니다. [공식문서에 의하면](https://reactjs.org/docs/strict-mode.html#detecting-unexpected-side-effects) 커밋 단계는 엄청 빠르지만 **렌더 단계는 느릴 수 있다**고 표현합니다. 따라서 리액트 엘리먼트의 트리의 깊이가 깊어지고 노드들이 많아질수록 우리는 React.memo를 사용하여 하위 트리 렌더링을 막는 등의 최적화를 해줘야 합니다.
+
+**Rendering = Render Phase + Commit Phase**
+
+## Reference
+
+- [A (Mostly) Complete Guide to React Rendering Behavior - Mark Erickson](https://blog.isquaredsoftware.com/2020/05/blogged-answers-a-mostly-complete-guide-to-react-rendering-behavior/)
+- [What is the Virtual DOM? - React Docs](https://reactjs.org/docs/faq-internals.html#what-is-the-virtual-dom)
+- [I wish we could retire the term "virtualDOM". - Dan Abramov](https://twitter.com/dan_abramov/status/1066328666341294080?lang=en)
+- [Detecting unexpected side effects - React Docs](https://reactjs.org/docs/strict-mode.html#detecting-unexpected-side-effects)

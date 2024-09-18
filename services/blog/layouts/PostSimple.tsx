@@ -1,23 +1,23 @@
-import { ReactNode } from 'react'
-import { formatDate } from 'pliny/utils/formatDate'
-import { CoreContent } from 'pliny/utils/contentlayer'
-import type { Blog } from 'contentlayer/generated'
-import Comments from '@/components/Comments'
-import Link from '@/components/Link'
-import PageTitle from '@/components/PageTitle'
-import SectionContainer from '@/components/SectionContainer'
-import siteMetadata from '@/data/siteMetadata'
-import ScrollTopAndComment from '@/components/ScrollTopAndComment'
+import { ReactNode } from 'react';
+import { formatDate } from 'pliny/utils/formatDate';
+import { CoreContent } from 'pliny/utils/contentlayer';
+import type { Blog } from 'contentlayer/generated';
+import Comments from '@/components/Comments';
+import Link from '@/components/Link';
+import PageTitle from '@/components/PageTitle';
+import SectionContainer from '@/components/SectionContainer';
+import siteMetadata from '@/data/siteMetadata';
+import ScrollTopAndComment from '@/components/ScrollTopAndComment';
 
 interface LayoutProps {
-  content: CoreContent<Blog>
-  children: ReactNode
-  next?: { path: string; title: string }
-  prev?: { path: string; title: string }
+  content: CoreContent<Blog>;
+  children: ReactNode;
+  next?: { path: string; title: string };
+  prev?: { path: string; title: string };
 }
 
 export default function PostLayout({ content, next, prev, children }: LayoutProps) {
-  const { path, slug, date, title } = content
+  const { path, slug, date, title } = content;
 
   return (
     <SectionContainer>
@@ -41,7 +41,7 @@ export default function PostLayout({ content, next, prev, children }: LayoutProp
           </header>
           <div className="grid-rows-[auto_1fr] divide-y divide-gray-200 pb-8 dark:divide-gray-700 xl:divide-y-0">
             <div className="divide-y divide-gray-200 dark:divide-gray-700 xl:col-span-3 xl:row-span-2 xl:pb-0">
-              <div className="prose max-w-none pb-8 pt-10 dark:prose-invert">{children}</div>
+              <div className="prose dark:prose-invert max-w-none pb-8 pt-10">{children}</div>
             </div>
             {siteMetadata.comments && (
               <div className="pb-6 pt-6 text-center text-gray-700 dark:text-gray-300" id="comment">
@@ -78,5 +78,5 @@ export default function PostLayout({ content, next, prev, children }: LayoutProp
         </div>
       </article>
     </SectionContainer>
-  )
+  );
 }

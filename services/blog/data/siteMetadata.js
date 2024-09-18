@@ -1,10 +1,10 @@
 /** @type {import("pliny/config").PlinyConfig } */
 const siteMetadata = {
-  title: 'Next.js Starter Blog',
-  author: 'Tails Azimuth',
-  headerTitle: 'TailwindBlog',
+  title: '이현진 블로그',
+  author: 'hyunjin',
+  headerTitle: 'hyunjin',
   description: 'A blog created with Next.js and Tailwind.css',
-  language: 'en-us',
+  language: 'ko-KR',
   theme: 'system', // system, dark or light
   siteUrl: 'https://tailwind-nextjs-starter-blog.vercel.app',
   siteRepo: 'https://github.com/timlrx/tailwind-nextjs-starter-blog',
@@ -14,14 +14,12 @@ const siteMetadata = {
   email: 'address@yoursite.com',
   github: 'https://github.com',
   x: 'https://twitter.com/x',
-  // twitter: 'https://twitter.com/Twitter',
   facebook: 'https://facebook.com',
   youtube: 'https://youtube.com',
   linkedin: 'https://www.linkedin.com',
   threads: 'https://www.threads.net',
   instagram: 'https://www.instagram.com',
-  locale: 'en-US',
-  // set to true if you want a navbar fixed to the top
+  locale: 'ko-KR',
   stickyNav: false,
   analytics: {
     // If you want to use an analytics provider you have to add it to the
@@ -96,6 +94,6 @@ const siteMetadata = {
     //   indexName: 'docsearch',
     // },
   },
-}
+};
 
-module.exports = siteMetadata
+module.exports = siteMetadata;
