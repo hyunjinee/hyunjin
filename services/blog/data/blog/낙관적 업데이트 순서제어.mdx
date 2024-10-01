@@ -1,10 +1,247 @@
 ---
 title: 낙관적 업데이트 순서제어
-date: 2021-08-07T15:32:14Z
-lastmod: '2021-02-01'
-tags: ['next-js', 'tailwind', 'guide']
+date: '2024-02-13'
+lastmod: '2024-02-13'
+tags: ['react-query']
 draft: false
-summary: 'An overview of the new features released in v1 - code block copy, multiple authors, frontmatter layout and more'
-layout: PostSimple
+summary: react-query에서 낙관적 업데이트를 구현할 때 잘못 생각하고 있었던 부분을 바로잡고, 낙관적 업데이트를 구현하면서 발생할 수 있는 순서문제를 제어하는 방법에 대한 글이다.
+layout: PostBanner
+images: ['/images/thumbnails/낙관적-업데이트-순서제어.png']
 bibliography: references-data.bib
+authors: ['default']
 ---
+
+[사진 출처: unsplash.com](https://unsplash.com/ko/%EC%82%AC%EC%A7%84/%EB%B8%8C%EB%9D%BC%EC%9A%B4-%EC%9C%A1%EC%83%81-%EA%B2%BD%EA%B8%B0-7BpeiA0bhxs)
+
+이 글은 react-query에서 낙관적 업데이트를 구현할 때 잘못 생각하고 있었던 부분을 바로잡고, 낙관적 업데이트를 구현하면서 발생할 수 있는 순서문제를 제어하는 방법에 대한 글이다.
+
+서버에 mutation을 수행하기 했을 때 응답과는 무관하게 낙관적으로 UI를 업데이트하는 경우 아래 케이스를 고려해야한다.
+
+- mutation 요청 성공
+- mutation 요청 실패
+
+react-query에서는 `queryClient.setQueryData` 메서드를 사용하여 캐시를 직접 수정할 수 있다. 위 두가지 케이스를 고려해보면 일반적으로 아래와 같이 생각할 수 있다.
+
+![](https://velog.velcdn.com/images/hyunjine/post/52d7613e-bc24-47df-bacb-0f6e1e40fde2/image.png)
+
+- 성공한 케이스의 경우 이미 낙관적으로 UI를 업데이트(queryClient.setQueryData)를 했으므로 목적을 달성했다.
+- 실패한 케이스의 경우 유저에게 알려주고, 원래 데이터로 돌려놓으면 된다.
+
+이제 간단한 TODO 앱을 만들어서 위 두가지 시나리오를 구현해보자.
+
+- [전체 소스코드](https://github.com/hyunjinee/optimistic-update-examples)
+- 서버는 [json-server](https://www.npmjs.com/package/json-server)를 사용하였다.
+
+![](https://velog.velcdn.com/images/hyunjine/post/bda30d08-7631-4a97-adc1-fdf2a7e16d1b/image.gif)
+
+```tsx
+const App = () => {
+  const [input, setInput] = useState('');
+  const queryClient = useQueryClient();
+
+  const { data: todos } = useQuery<Todo[]>({
+    queryKey: ['todos'],
+    queryFn: async () => {
+      await delay(3000);
+      const response = await axios.get('http://localhost:3000/todos');
+
+      return response.data;
+    },
+  });
+  const { mutate: 할일추가 } = useMutation({
+    mutationFn: async (todo: string) => {
+      await delay(1000);
+      return axios.post('http://localhost:3000/todos', {
+        title: todo,
+        id: uuid(),
+      });
+    },
+    onMutate: async (todo: string) => {
+      const previousTodos = queryClient.getQueryData<Todo[]>(['todos']);
+
+      queryClient.setQueryData<Todo[]>(['todos'], (prev) => {
+        if (prev) {
+          return [...prev, { title: todo, id: uuid() }];
+        }
+
+        return [{ title: todo, id: uuid() }];
+      });
+
+      return { previousTodos };
+    },
+    onError: (err, todo, context) => {
+      toast.error('mutation 실패로 롤백처리');
+      if (context?.previousTodos) {
+        queryClient.setQueryData<Todo[]>(['todos'], context.previousTodos);
+      }
+    },
+  });
+
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    할일추가(input);
+  };
+
+  return (
+    <div className="App">
+      {!todos || todos?.length === 0 ? (
+        <>할 일이 없습니다</>
+      ) : (
+        todos?.map((todo) => <div key={todo.id}>{todo.title}</div>)
+      )}
+      <form onSubmit={onSubmit}>
+        <input value={input} onChange={(e) => setInput(e.target.value)} />
+        <button>할 일 추가</button>
+      </form>
+    </div>
+  );
+};
+```
+
+App 컴포넌트에서 todo들을 fetch해서 UI에 뿌려주고 있다. 또한 form을 submit하면 setQueryData를 사용해 캐시를 직접 변경하여 UI를 리렌더시키고 있다.
+
+"밥 먹기" 추가가 성공하면 아무 문제가 없고, 추가가 실패하면 onError 콜백에서 TODO를 추가하기 이전의 TODO 리스트에 접근하여 이전 값으로 캐시를 돌려 놓아야한다. 이를 위해서 useMutation의 onMutate 콜백에 나중에 onError 및 onSettled 콜백에 전달할 값을 반환할 수 있는데 위 코드에서 `previousTodos`를 반환한 것을 볼 수 있다.
+
+여기서 나는 setQueryData를 하는 행위가 refetch를 트리거할 것이라고 예상했다.
+
+![](https://velog.velcdn.com/images/hyunjine/post/4a42ae63-e0d8-47c8-b577-83fb9499ead4/image.png)
+
+setQueryData를 호출하면 컴포넌트가 리렌더링될 것이고 staleTime이 0이기 때문에 `useQuery`가 다시 트리거 될 것이라고 생각했다.
+
+하지만 위 영상에서 볼 수 있듯이 setQueryData를 사용하여 캐시를 변경하는 것은 데이터를 다시 불러오도록 유도하는 것이 아니라 그냥 쿼리의 상태를 `fresh`로 바꾸는 것이다.(**staleTime이 0인데 리렌더된다고해서 리페치가 일어나지 않는다.**)
+
+queryClient.setQueryData의 호출은 캐시된 쿼리의 데이터를 동기적으로 변형시키고 컴포넌트는 리렌더되지만 새롭게 데이터의 refetching이 발생하지는 않는다.
+
+따라서 처음 데이터를 가져온 이후 사용자의 UI 상호작용으로 낙관적 업데이트가 발생한 이후에 직접 데이터를 가져오는 로직을 추가해야한다.(이 로직을 추가하지 않으면 FE에 있는 데이터는 stale해진다.)
+
+![](https://velog.velcdn.com/images/hyunjine/post/00f9650e-d358-4696-97a3-e0dbd1b45a79/image.png)
+
+queryClient.setQueryData의 호출은 데이터를 refetch 해오는것과는 무관하므로 onSettled 시점에 아래와 같이 query를 invalidation하여 데이터를 새로 가져와야 한다.
+
+```ts
+const { mutate: 할일추가 } = useMutation({
+	...
+  	onSettled: () => queryClient.invalidateQueries({ queryKey: ["todos"] }), <= 성공 실패 모두 query invalidation
+})
+```
+
+mutation중에 에러가 난 경우는 어떻게 해야할까? 에러가 난 케이스는 아래와 같이 테스트 해 볼 수 있다.
+
+```ts
+const { mutate: 할일추가 } = useMutation({
+  mutationFn: async (todo: string) => {
+    await delay(1000)
+    throw new Error("mutation 실패")
+    ...
+  },
+})
+```
+
+![](https://velog.velcdn.com/images/hyunjine/post/540073ee-e0b7-4325-9c48-75b9b1f1dc29/image.gif)
+
+"밥 먹기"가 추가되었다가 에러가 발생하면 다시 이전 데이터로 롤백하고, onSettled 콜백에서 query invalidation이 되면서 refetch하므로 다시 fresh한 데이터를 유지할 수 있다.
+
+이렇게 했을 때 낙관적 업데이트의 목적은 달성할 수 있다. 하지만 유저가 페이지에 접근해서 쿼리가 fetching 상태가 되고, 데이터가 도착하기 전에 낙관적 업데이트를 수행한 경우 올바르지 않은 데이터를 표시하는 상황이 생길 수 있다.
+
+그림으로 정리해보면 아래와 같다.
+
+![](https://velog.velcdn.com/images/hyunjine/post/31abe270-4a15-4443-8475-abc20cb5cf90/image.png)
+
+1. 해당 페이지에서 먼저 데이터를 가져오는 쿼리가 나간다.
+2. 데이터를 가져오기 전에 유저의 액션으로 낙관적 업데이트가 일어난다.
+3. mutation 요청이 서버에 반영되기 전에 이전에 요청했던 데이터가 도착한다.
+4. 이후 실제 mutation이 서버에 반영되고, onSettled 시점에 다시 데이터를 새롭게 가져온다.
+
+이를 코드로 재현해보자. 현재 서버에는 아래와 같이 두가지의 TODO가 있다.
+
+```ts
+{
+  "todos": [
+    {
+      "title": "밥 먹기",
+      "id": "52e40c97-ef64-4c38-9b1d-24315d1b5ae3"
+    },
+    {
+      "title": "책 읽기",
+      "id": "17d20089-04a3-4667-acab-69c82fbfbb93"
+    }
+  ]
+}
+```
+
+```ts
+const { data: todos } = useQuery<Todo[]>({
+  queryKey: ['todos'],
+  queryFn: async () => {
+    await delay(3000);
+    const response = await axios.get('http://localhost:3000/todos');
+
+    return response.data;
+  },
+});
+```
+
+우리 API는 delay가 있기 때문에 처음에 유저가 보는 화면은 아래와 같을 것이다.
+
+![](https://velog.velcdn.com/images/hyunjine/post/d2dbb61a-aaca-4eee-9163-34aafbf14d45/image.png)
+
+![](https://velog.velcdn.com/images/hyunjine/post/f264c85f-136b-44c2-826d-9101bfcccbac/image.gif)
+
+위 영상의 flow는 다음과 같다.
+
+1.  페이지 인입 => query(fetching) (["밥 먹기, "책 읽기"])
+2.  데이터를 가져오는 와중에 낙관적 업데이트 실행 (낙관적 업데이트로 ["놀기"] 추가)
+3.  데이터가 도착했고 데이터를 렌더링(["밥 먹기, "책 읽기"]을 가져오므로 낙관적 업데이트는 무시됨)
+4.  mutation이 완료되는 시점에 (onSettled) query invalidation이 일어나므로 실제 반영된 데이터 가져옴(["밥 먹기", "책 읽기", "놀기"])
+
+![](https://velog.velcdn.com/images/hyunjine/post/4bb3737b-dbf6-4b62-8602-318d9ecfd598/image.png)
+
+따라서 낙관적 업데이트를 실행하는 도중에 이미 진행중인 query를 취소해줘야 이전 데이터를 가져와서 보여주지 않게 된다.
+
+mutation할 때 최종 코드는 아래와 같다.
+
+```ts
+const { mutate: 할일추가 } = useMutation({
+  mutationFn: async (todo: string) => {
+    await delay(1000);
+    return axios.post('http://localhost:3000/todos', {
+      title: todo,
+      id: uuid(),
+    });
+  },
+  onMutate: async (todo: string) => {
+    // mutate 시에 기존에 진행중인 쿼리에 대해서 취소를 해야함
+    await queryClient.cancelQueries({ queryKey: ['todos'] });
+
+    const previousTodos = queryClient.getQueryData<Todo[]>(['todos']);
+
+    queryClient.setQueryData<Todo[]>(['todos'], (prev) => {
+      if (prev) {
+        return [...prev, { title: todo, id: uuid() }];
+      }
+
+      return [{ title: todo, id: uuid() }];
+    });
+
+    return { previousTodos };
+  },
+  onError: (err, todo, context) => {
+    toast.error('mutation 실패로 롤백처리');
+    if (context?.previousTodos) {
+      queryClient.setQueryData<Todo[]>(['todos'], context.previousTodos);
+    }
+  },
+  onSettled: () => queryClient.invalidateQueries({ queryKey: ['todos'] }),
+});
+```
+
+![](https://velog.velcdn.com/images/hyunjine/post/f5597e9b-d22b-4173-8307-9f6b6bcf4b37/image.gif)
+
+위 영상의 react-query devtools를 보면 낙관적 업데이트를 시작할 때 이미 진행중인 쿼리를 취소하여 낙관적 업데이트 이전에 요청한 데이터를 받지 않도록 처리하고 mutation이 완료되면 query를 invalidate하는 것을 볼 수 있다.
+
+이렇게 함으로써 낙관적 업데이트를 진행할 때 UI의 순서를 제어할 수 있다.
+
+## Reference
+
+- https://tanstack.com/query/v5/docs/framework/react/guides/optimistic-updates
