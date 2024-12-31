@@ -1,5 +1,9 @@
 # hyunjin
 
+blog
+
+rollup-config
+
 <!--
 
   <a href="https://github.com/zoomkoding/zoomkoding-gatsby-blog/blob/master/LICENSE">
@@ -78,7 +82,6 @@ author: {
     },
     social: {
       github: 'https://github.com/zoomKoding',
-      linkedIn: 'https://www.linkedin.com/in/jinhyeok-jeong-800871192',
       email: 'zoomkoding@gmail.com',
     },
 },
