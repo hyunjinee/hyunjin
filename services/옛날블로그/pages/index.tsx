@@ -1,9 +1,3 @@
-import type { NextPage } from 'next';
-import styled from 'styled-components';
-
-import Card from 'components/common/card';
-import Header from 'components/common/header';
-
 const color = ['#F2003C', '#DD63A7', '#6748B6', '#94C2F3', '#73BE68'];
 
 const contents = [
@@ -104,8 +98,7 @@ const contents = [
     date: 'Oct 23, 2022',
     category: 'Blog',
     place: 'swmaestro center',
-    contentUrl:
-      'https://velog.io/@hyunjine/PWA%EC%97%90-%EB%8C%80%ED%95%9C-%EC%83%9D%EA%B0%81',
+    contentUrl: 'https://velog.io/@hyunjine/PWA%EC%97%90-%EB%8C%80%ED%95%9C-%EC%83%9D%EA%B0%81',
     color: '#73BE68',
   },
 
@@ -207,15 +200,13 @@ const AboutMeSection = styled.section`
     font-weight: 700;
     margin-bottom: 2.4rem;
     width: 100%;
-    font-family: 'Thicccboi', -apple-system, BlinkMacSystemFont, Segoe UI,
-      Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
-      sans-serif;
+    font-family: 'Thicccboi', -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans,
+      Droid Sans, Helvetica Neue, sans-serif;
   }
 
   p {
-    font-family: Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-      Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
-      sans-serif;
+    font-family: Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans,
+      Droid Sans, Helvetica Neue, sans-serif;
 
     margin-bottom: 3.2rem;
     line-height: 1.9;

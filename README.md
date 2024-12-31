@@ -1,7 +1,5 @@
 # hyunjin
 
-블로그 만들기
-
 <!--
 
   <a href="https://github.com/zoomkoding/zoomkoding-gatsby-blog/blob/master/LICENSE">
@@ -16,17 +14,12 @@
 
 
 
-> 혹시 만드시는 과정에서 궁금하신 점이나 어려움이 있으시다면 [이슈](https://github.com/zoomKoding/zoomkoding-gatsby-blog/issues/new)를 통
-
-## ✨ 기능
-
-- ⚙️ meta-config를 통한 세부 설정 가능
 - 👨‍💻 About Page 내용 변경 가능
 - 📚 Posts Page 자동 생성
 - 🛠 sitemap.xml, robots.txt 자동 생성
 - 📈 Google Analytics 지원
 
-## 🚀 시작하기
+
 
 Github Page나 Netlify 중 원하시는 배포 환경에 따라 다음 과정을 진행하시면 빠르게 블로그를 만드실 수 있습니다.
 
@@ -170,7 +163,6 @@ categories: tutorial
 ```
 
 
-### 💡 버그 리포트 & 문의
 
 궁금하신 점이 있으시다면 [이슈](https://github.com/zoomKoding/zoomkoding-gatsby-blog/issues/new)로 남겨주시면 최대한 빠르게 답변 드리도록 하겠습니다!🙋‍♂️
 

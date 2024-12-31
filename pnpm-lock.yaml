@@ -49,7 +49,7 @@ importers:
     dependencies:
       '@headlessui/react':
         specifier: 1.7.19
-        version: 1.7.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 1.7.19(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@next/bundle-analyzer':
         specifier: 14.2.3
         version: 14.2.3
@@ -85,25 +85,25 @@ importers:
         version: 1.0.0
       next:
         specifier: 15.0.3
-        version: 15.0.3(@babel/core@7.23.6)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.69.5)
+        version: 15.0.3(@babel/core@7.23.6)(@opentelemetry/api@1.9.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.69.5)
       next-contentlayer2:
         specifier: 0.5.1
-        version: 0.5.1(contentlayer2@0.5.1(esbuild@0.20.2))(esbuild@0.20.2)(next@15.0.3(@babel/core@7.23.6)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.69.5))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 0.5.1(contentlayer2@0.5.1(esbuild@0.20.2))(esbuild@0.20.2)(next@15.0.3(@babel/core@7.23.6)(@opentelemetry/api@1.9.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.69.5))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       next-themes:
         specifier: ^0.3.0
-        version: 0.3.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 0.3.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       pliny:
         specifier: 0.2.1
-        version: 0.2.1(@algolia/client-search@4.24.0)(@types/react-dom@18.3.0)(@types/react@18.3.6)(esbuild@0.20.2)(next@15.0.3(@babel/core@7.23.6)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.69.5))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(search-insights@2.17.2)
+        version: 0.2.1(@algolia/client-search@4.24.0)(@types/react-dom@18.3.0)(@types/react@18.3.6)(esbuild@0.20.2)(next@15.0.3(@babel/core@7.23.6)(@opentelemetry/api@1.9.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.69.5))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(search-insights@2.17.2)
       postcss:
         specifier: ^8.4.24
         version: 8.4.39
       react:
-        specifier: 18.3.1
-        version: 18.3.1
+        specifier: '19'
+        version: 19.0.0
       react-dom:
-        specifier: 18.3.1
-        version: 18.3.1(react@18.3.1)
+        specifier: '19'
+        version: 19.0.0(react@19.0.0)
       reading-time:
         specifier: 1.5.0
         version: 1.5.0
@@ -7680,10 +7680,10 @@ packages:
     peerDependencies:
       react: ^18.0.0
 
-  react-dom@18.3.1:
-    resolution: {integrity: sha512-5m4nQKp+rZRb09LNH59GM4BxTh9251/ylbKIbpe7TpGxfJ+9kv6BLkLBXIjjspbgbnIBNqlI23tRnTWT0snUIw==}
+  react-dom@19.0.0:
+    resolution: {integrity: sha512-4GV5sHFG0e/0AD4X+ySy6UJd3jVl1iNsNHdpad0qhABJ11twS3TTBnseqsKurKcsNqCEFeGL3uLpVChpIO3QfQ==}
     peerDependencies:
-      react: ^18.3.1
+      react: ^19.0.0
 
   react-element-to-jsx-string@14.3.4:
     resolution: {integrity: sha512-t4ZwvV6vwNxzujDQ+37bspnLwA4JlgUPWhLjBJWsNIDceAf6ZKUTCjdm08cN6WeZ5pTMKiCJkmAYnpmR4Bm+dg==}
@@ -7723,6 +7723,10 @@ packages:
 
   react@18.3.1:
     resolution: {integrity: sha512-wS+hAgJShR0KhEvPJArfuPVN1+Hz1t0Y6n5jLrGQbkb4urgPE/0Rve+1kMB1v/oWgHgm4WIcV+i7F2pTVj+2iQ==}
+    engines: {node: '>=0.10.0'}
+
+  react@19.0.0:
+    resolution: {integrity: sha512-V8AVnmPIICiWpGfm6GLzCR/W5FXLchHop40W4nXBmdlEceh16rCN8O8LNWm5bh5XUX91fh7KpA+W0TgMKmgTpQ==}
     engines: {node: '>=0.10.0'}
 
   read-cache@1.0.0:
@@ -8108,8 +8112,8 @@ packages:
   scheduler@0.21.0:
     resolution: {integrity: sha512-1r87x5fz9MXqswA2ERLo0EbOAU74DpIUO090gIasYTqlVoJeMcl+Z1Rg7WHz+qtPujhS/hGIt9kxZOYBV3faRQ==}
 
-  scheduler@0.23.2:
-    resolution: {integrity: sha512-UOShsPwz7NrMUqhR6t0hWjFduvOzbtv7toDH1/hIrfRNIDBnnBWd0CwJTGvTpngVlmwGCdP9/Zl/tVrDqcuYzQ==}
+  scheduler@0.25.0:
+    resolution: {integrity: sha512-xFVuu11jh+xcO7JOAGJNOXld8/TcEHK/4CituBUeUb5hqxJLj9YuemAEuvm9gQ/+pgXYfbQuqAkiYu+u7YEsNA==}
 
   schema-utils@1.0.0:
     resolution: {integrity: sha512-i27Mic4KovM/lnGsy8whRCHhc7VicJajAjTrYg11K9zfZXnYIt4k5F+kZkwjnrhKzLic/HLU4j11mjsz2G/75g==}
@@ -10712,7 +10716,7 @@ snapshots:
 
   '@docsearch/css@3.6.1': {}
 
-  '@docsearch/react@3.6.1(@algolia/client-search@4.24.0)(@types/react@18.3.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(search-insights@2.17.2)':
+  '@docsearch/react@3.6.1(@algolia/client-search@4.24.0)(@types/react@18.3.6)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(search-insights@2.17.2)':
     dependencies:
       '@algolia/autocomplete-core': 1.9.3(@algolia/client-search@4.24.0)(algoliasearch@4.24.0)(search-insights@2.17.2)
       '@algolia/autocomplete-preset-algolia': 1.9.3(@algolia/client-search@4.24.0)(algoliasearch@4.24.0)
@@ -10720,8 +10724,8 @@ snapshots:
       algoliasearch: 4.24.0
     optionalDependencies:
       '@types/react': 18.3.6
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
       search-insights: 2.17.2
     transitivePeerDependencies:
       - '@algolia/client-search'
@@ -10888,11 +10892,11 @@ snapshots:
 
   '@gar/promisify@1.1.3': {}
 
-  '@giscus/react@3.0.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@giscus/react@3.0.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
       giscus: 1.5.0
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
 
   '@grpc/grpc-js@1.11.2':
     dependencies:
@@ -10906,12 +10910,12 @@ snapshots:
       protobufjs: 7.4.0
       yargs: 17.7.2
 
-  '@headlessui/react@1.7.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@headlessui/react@1.7.19(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
-      '@tanstack/react-virtual': 3.10.8(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@tanstack/react-virtual': 3.10.8(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       client-only: 0.0.1
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
 
   '@humanwhocodes/config-array@0.13.0':
     dependencies:
@@ -11472,41 +11476,41 @@ snapshots:
 
   '@protobufjs/utf8@1.1.0': {}
 
-  '@radix-ui/react-compose-refs@1.1.0(@types/react@18.3.6)(react@18.3.1)':
+  '@radix-ui/react-compose-refs@1.1.0(@types/react@18.3.6)(react@19.0.0)':
     dependencies:
-      react: 18.3.1
+      react: 19.0.0
     optionalDependencies:
       '@types/react': 18.3.6
 
-  '@radix-ui/react-portal@1.1.1(@types/react-dom@18.3.0)(@types/react@18.3.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@radix-ui/react-portal@1.1.1(@types/react-dom@18.3.0)(@types/react@18.3.6)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
-      '@radix-ui/react-primitive': 2.0.0(@types/react-dom@18.3.0)(@types/react@18.3.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@radix-ui/react-use-layout-effect': 1.1.0(@types/react@18.3.6)(react@18.3.1)
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
-    optionalDependencies:
-      '@types/react': 18.3.6
-      '@types/react-dom': 18.3.0
-
-  '@radix-ui/react-primitive@2.0.0(@types/react-dom@18.3.0)(@types/react@18.3.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
-    dependencies:
-      '@radix-ui/react-slot': 1.1.0(@types/react@18.3.6)(react@18.3.1)
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
+      '@radix-ui/react-primitive': 2.0.0(@types/react-dom@18.3.0)(@types/react@18.3.6)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@radix-ui/react-use-layout-effect': 1.1.0(@types/react@18.3.6)(react@19.0.0)
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
     optionalDependencies:
       '@types/react': 18.3.6
       '@types/react-dom': 18.3.0
 
-  '@radix-ui/react-slot@1.1.0(@types/react@18.3.6)(react@18.3.1)':
+  '@radix-ui/react-primitive@2.0.0(@types/react-dom@18.3.0)(@types/react@18.3.6)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
-      '@radix-ui/react-compose-refs': 1.1.0(@types/react@18.3.6)(react@18.3.1)
-      react: 18.3.1
+      '@radix-ui/react-slot': 1.1.0(@types/react@18.3.6)(react@19.0.0)
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
+    optionalDependencies:
+      '@types/react': 18.3.6
+      '@types/react-dom': 18.3.0
+
+  '@radix-ui/react-slot@1.1.0(@types/react@18.3.6)(react@19.0.0)':
+    dependencies:
+      '@radix-ui/react-compose-refs': 1.1.0(@types/react@18.3.6)(react@19.0.0)
+      react: 19.0.0
     optionalDependencies:
       '@types/react': 18.3.6
 
-  '@radix-ui/react-use-layout-effect@1.1.0(@types/react@18.3.6)(react@18.3.1)':
+  '@radix-ui/react-use-layout-effect@1.1.0(@types/react@18.3.6)(react@19.0.0)':
     dependencies:
-      react: 18.3.1
+      react: 19.0.0
     optionalDependencies:
       '@types/react': 18.3.6
 
@@ -12856,11 +12860,11 @@ snapshots:
       postcss-selector-parser: 6.0.10
       tailwindcss: 3.4.6
 
-  '@tanstack/react-virtual@3.10.8(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@tanstack/react-virtual@3.10.8(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
       '@tanstack/virtual-core': 3.10.8
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
 
   '@tanstack/virtual-core@3.10.8': {}
 
@@ -15310,7 +15314,7 @@ snapshots:
       eslint: 8.14.0
       eslint-import-resolver-node: 0.3.4
       eslint-import-resolver-typescript: 2.4.0(eslint-plugin-import@2.25.2(eslint@8.14.0))(eslint@8.14.0)
-      eslint-plugin-import: 2.25.2(@typescript-eslint/parser@5.10.1(eslint@8.14.0)(typescript@4.6.3))(eslint-import-resolver-typescript@2.4.0)(eslint@8.14.0)
+      eslint-plugin-import: 2.25.2(@typescript-eslint/parser@5.10.1(eslint@8.14.0)(typescript@4.6.3))(eslint-import-resolver-typescript@2.4.0(eslint-plugin-import@2.25.2(eslint@8.14.0))(eslint@8.14.0))(eslint@8.14.0)
       eslint-plugin-jsx-a11y: 6.5.1(eslint@8.14.0)
       eslint-plugin-react: 7.29.1(eslint@8.14.0)
       eslint-plugin-react-hooks: 4.3.0(eslint@8.14.0)
@@ -15363,7 +15367,7 @@ snapshots:
     dependencies:
       debug: 4.3.4(supports-color@5.5.0)
       eslint: 8.14.0
-      eslint-plugin-import: 2.25.2(@typescript-eslint/parser@5.10.1(eslint@8.14.0)(typescript@4.6.3))(eslint-import-resolver-typescript@2.4.0)(eslint@8.14.0)
+      eslint-plugin-import: 2.25.2(@typescript-eslint/parser@5.10.1(eslint@8.14.0)(typescript@4.6.3))(eslint-import-resolver-typescript@2.4.0(eslint-plugin-import@2.25.2(eslint@8.14.0))(eslint@8.14.0))(eslint@8.14.0)
       glob: 7.2.3
       is-glob: 4.0.3
       resolve: 1.22.8
@@ -15412,7 +15416,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-import@2.25.2(@typescript-eslint/parser@5.10.1(eslint@8.14.0)(typescript@4.6.3))(eslint-import-resolver-typescript@2.4.0)(eslint@8.14.0):
+  eslint-plugin-import@2.25.2(@typescript-eslint/parser@5.10.1(eslint@8.14.0)(typescript@4.6.3))(eslint-import-resolver-typescript@2.4.0(eslint-plugin-import@2.25.2(eslint@8.14.0))(eslint@8.14.0))(eslint@8.14.0):
     dependencies:
       array-includes: 3.1.7
       array.prototype.flat: 1.3.2
@@ -17313,14 +17317,14 @@ snapshots:
     dependencies:
       commander: 8.3.0
 
-  kbar@0.1.0-beta.45(@types/react-dom@18.3.0)(@types/react@18.3.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  kbar@0.1.0-beta.45(@types/react-dom@18.3.0)(@types/react@18.3.6)(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
     dependencies:
-      '@radix-ui/react-portal': 1.1.1(@types/react-dom@18.3.0)(@types/react@18.3.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@radix-ui/react-portal': 1.1.1(@types/react-dom@18.3.0)(@types/react@18.3.6)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       fast-equals: 2.0.4
       fuse.js: 6.6.2
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
-      react-virtual: 2.10.4(react@18.3.1)
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
+      react-virtual: 2.10.4(react@19.0.0)
       tiny-invariant: 1.3.1
     transitivePeerDependencies:
       - '@types/react'
@@ -18301,38 +18305,38 @@ snapshots:
 
   nested-error-stacks@2.1.1: {}
 
-  next-contentlayer2@0.4.6(contentlayer2@0.4.6(esbuild@0.20.2))(esbuild@0.20.2)(next@15.0.3(@babel/core@7.23.6)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.69.5))(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  next-contentlayer2@0.4.6(contentlayer2@0.4.6(esbuild@0.20.2))(esbuild@0.20.2)(next@15.0.3(@babel/core@7.23.6)(@opentelemetry/api@1.9.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.69.5))(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
     dependencies:
       '@contentlayer2/core': 0.4.3(esbuild@0.20.2)
       '@contentlayer2/utils': 0.4.3
       contentlayer2: 0.4.6(esbuild@0.20.2)
-      next: 15.0.3(@babel/core@7.23.6)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.69.5)
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
+      next: 15.0.3(@babel/core@7.23.6)(@opentelemetry/api@1.9.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.69.5)
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
     transitivePeerDependencies:
       - '@effect-ts/otel-node'
       - esbuild
       - markdown-wasm
       - supports-color
 
-  next-contentlayer2@0.5.1(contentlayer2@0.5.1(esbuild@0.20.2))(esbuild@0.20.2)(next@15.0.3(@babel/core@7.23.6)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.69.5))(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  next-contentlayer2@0.5.1(contentlayer2@0.5.1(esbuild@0.20.2))(esbuild@0.20.2)(next@15.0.3(@babel/core@7.23.6)(@opentelemetry/api@1.9.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.69.5))(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
     dependencies:
       '@contentlayer2/core': 0.5.1(esbuild@0.20.2)
       '@contentlayer2/utils': 0.5.1
       contentlayer2: 0.5.1(esbuild@0.20.2)
-      next: 15.0.3(@babel/core@7.23.6)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.69.5)
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
+      next: 15.0.3(@babel/core@7.23.6)(@opentelemetry/api@1.9.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.69.5)
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
     transitivePeerDependencies:
       - '@effect-ts/otel-node'
       - esbuild
       - markdown-wasm
       - supports-color
 
-  next-themes@0.3.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  next-themes@0.3.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
     dependencies:
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
 
   next@12.1.5(@babel/core@7.23.6)(react-dom@18.0.0(react@18.0.0))(react@18.0.0)(sass@1.69.5):
     dependencies:
@@ -18360,7 +18364,7 @@ snapshots:
       - '@babel/core'
       - babel-plugin-macros
 
-  next@15.0.3(@babel/core@7.23.6)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.69.5):
+  next@15.0.3(@babel/core@7.23.6)(@opentelemetry/api@1.9.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.69.5):
     dependencies:
       '@next/env': 15.0.3
       '@swc/counter': 0.1.3
@@ -18368,9 +18372,9 @@ snapshots:
       busboy: 1.6.0
       caniuse-lite: 1.0.30001642
       postcss: 8.4.31
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
-      styled-jsx: 5.1.6(@babel/core@7.23.6)(react@18.3.1)
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
+      styled-jsx: 5.1.6(@babel/core@7.23.6)(react@19.0.0)
     optionalDependencies:
       '@next/swc-darwin-arm64': 15.0.3
       '@next/swc-darwin-x64': 15.0.3
@@ -18845,22 +18849,22 @@ snapshots:
     dependencies:
       find-up: 5.0.0
 
-  pliny@0.2.1(@algolia/client-search@4.24.0)(@types/react-dom@18.3.0)(@types/react@18.3.6)(esbuild@0.20.2)(next@15.0.3(@babel/core@7.23.6)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.69.5))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(search-insights@2.17.2):
+  pliny@0.2.1(@algolia/client-search@4.24.0)(@types/react-dom@18.3.0)(@types/react@18.3.6)(esbuild@0.20.2)(next@15.0.3(@babel/core@7.23.6)(@opentelemetry/api@1.9.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.69.5))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(search-insights@2.17.2):
     dependencies:
-      '@docsearch/react': 3.6.1(@algolia/client-search@4.24.0)(@types/react@18.3.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(search-insights@2.17.2)
-      '@giscus/react': 3.0.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@docsearch/react': 3.6.1(@algolia/client-search@4.24.0)(@types/react@18.3.6)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(search-insights@2.17.2)
+      '@giscus/react': 3.0.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@mailchimp/mailchimp_marketing': 3.0.80
       contentlayer2: 0.4.6(esbuild@0.20.2)
       copyfiles: 2.4.1
       github-slugger: 2.0.0
       js-yaml: 4.1.0
-      kbar: 0.1.0-beta.45(@types/react-dom@18.3.0)(@types/react@18.3.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      next: 15.0.3(@babel/core@7.23.6)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.69.5)
-      next-contentlayer2: 0.4.6(contentlayer2@0.4.6(esbuild@0.20.2))(esbuild@0.20.2)(next@15.0.3(@babel/core@7.23.6)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.69.5))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      next-themes: 0.3.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      kbar: 0.1.0-beta.45(@types/react-dom@18.3.0)(@types/react@18.3.6)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      next: 15.0.3(@babel/core@7.23.6)(@opentelemetry/api@1.9.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.69.5)
+      next-contentlayer2: 0.4.6(contentlayer2@0.4.6(esbuild@0.20.2))(esbuild@0.20.2)(next@15.0.3(@babel/core@7.23.6)(@opentelemetry/api@1.9.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.69.5))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      next-themes: 0.3.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       probe-image-size: 7.2.3
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
       remark: 15.0.1
       unist-util-visit: 5.0.0
     transitivePeerDependencies:
@@ -19210,11 +19214,10 @@ snapshots:
       react: 18.0.0
       scheduler: 0.21.0
 
-  react-dom@18.3.1(react@18.3.1):
+  react-dom@19.0.0(react@19.0.0):
     dependencies:
-      loose-envify: 1.4.0
-      react: 18.3.1
-      scheduler: 0.23.2
+      react: 19.0.0
+      scheduler: 0.25.0
 
   react-element-to-jsx-string@14.3.4(react-dom@18.0.0(react@18.0.0))(react@18.0.0):
     dependencies:
@@ -19241,10 +19244,10 @@ snapshots:
 
   react-refresh@0.11.0: {}
 
-  react-virtual@2.10.4(react@18.3.1):
+  react-virtual@2.10.4(react@19.0.0):
     dependencies:
       '@reach/observe-rect': 1.2.0
-      react: 18.3.1
+      react: 19.0.0
 
   react@18.0.0:
     dependencies:
@@ -19253,6 +19256,8 @@ snapshots:
   react@18.3.1:
     dependencies:
       loose-envify: 1.4.0
+
+  react@19.0.0: {}
 
   read-cache@1.0.0:
     dependencies:
@@ -19948,9 +19953,7 @@ snapshots:
     dependencies:
       loose-envify: 1.4.0
 
-  scheduler@0.23.2:
-    dependencies:
-      loose-envify: 1.4.0
+  scheduler@0.25.0: {}
 
   schema-utils@1.0.0:
     dependencies:
@@ -20504,10 +20507,10 @@ snapshots:
     optionalDependencies:
       '@babel/core': 7.23.6
 
-  styled-jsx@5.1.6(@babel/core@7.23.6)(react@18.3.1):
+  styled-jsx@5.1.6(@babel/core@7.23.6)(react@19.0.0):
     dependencies:
       client-only: 0.0.1
-      react: 18.3.1
+      react: 19.0.0
     optionalDependencies:
       '@babel/core': 7.23.6
 
