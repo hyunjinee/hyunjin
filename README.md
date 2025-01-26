@@ -2,7 +2,7 @@
 
 blog
 
-rollup-config
+rollup, rolldown, webpack, turbopack
 
 <!--
 
@@ -18,8 +18,7 @@ rollup-config
 
 
 
-- 👨‍💻 About Page 내용 변경 가능
-- 📚 Posts Page 자동 생성
+
 - 🛠 sitemap.xml, robots.txt 자동 생성
 - 📈 Google Analytics 지원
 
