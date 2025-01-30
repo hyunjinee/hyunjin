@@ -1,9 +1,7 @@
 {
   "name": "hyunjin",
   "private": "true",
-  "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
     "blog": "pnpm -F @hyunjin/blog",
     "dev": "pnpm -r dev"
