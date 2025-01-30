@@ -12,6 +12,7 @@ import Footer from '@/components/Footer';
 import siteMetadata from '@/data/siteMetadata';
 import { ThemeProviders } from './theme-providers';
 import { pretendard } from 'fonts/pretendard';
+import { Analytics as NextAnalytics } from '@vercel/analytics/next';
 
 const space_grotesk = Space_Grotesk({
   subsets: ['latin'],
@@ -82,6 +83,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <SearchProvider searchConfig={siteMetadata.search as SearchConfig}>
               <Header />
               <main className="mb-auto">{children}</main>
+              <NextAnalytics />
             </SearchProvider>
             <Footer />
           </SectionContainer>
