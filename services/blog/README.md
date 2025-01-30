@@ -129,7 +129,7 @@ I wanted it to be nearly as feature-rich as popular blogging templates like [bea
 - Near perfect lighthouse score - [Lighthouse report](https://www.webpagetest.org/result/230805_BiDcBQ_4H7)
 - Lightweight, 85kB first load JS
 - Mobile-friendly view
-- Light and dark theme
+
 - Font optimization with [next/font](https://nextjs.org/docs/app/api-reference/components/font)
 - Integration with [pliny](https://github.com/timlrx/pliny) that provides:
   - Multiple analytics options including [Umami](https://umami.is/), [Plausible](https://plausible.io/), [Simple Analytics](https://simpleanalytics.com/), Posthog and Google Analytics
