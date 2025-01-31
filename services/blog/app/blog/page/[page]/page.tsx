@@ -12,9 +12,10 @@ export const generateStaticParams = async () => {
 };
 
 export default async function Page({ params }: { params: Promise<{ page: string }> }) {
-  const test = await params;
+  const { page } = await params;
+
   const posts = allCoreContent(sortPosts(allBlogs));
-  const pageNumber = parseInt(test.page as string);
+  const pageNumber = parseInt(page);
   const initialDisplayPosts = posts.slice(POSTS_PER_PAGE * (pageNumber - 1), POSTS_PER_PAGE * pageNumber);
   const pagination = {
     currentPage: pageNumber,

@@ -1,6 +1,7 @@
 import 'css/prism.css';
 import 'katex/dist/katex.css';
 
+import type { Metadata } from 'next';
 import PageTitle from '@/components/PageTitle';
 import { components } from '@/components/MDXComponents';
 import { MDXLayoutRenderer } from 'pliny/mdx-components';
@@ -10,7 +11,6 @@ import type { Authors, Blog } from 'contentlayer/generated';
 import PostSimple from '@/layouts/PostSimple';
 import PostLayout from '@/layouts/PostLayout';
 import PostBanner from '@/layouts/PostBanner';
-import { Metadata } from 'next';
 import siteMetadata from '@/data/siteMetadata';
 import { notFound } from 'next/navigation';
 

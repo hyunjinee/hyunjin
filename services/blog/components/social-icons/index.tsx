@@ -1,15 +1,4 @@
-import {
-  Mail,
-  Github,
-  Facebook,
-  Youtube,
-  Linkedin,
-  Twitter,
-  X,
-  Mastodon,
-  Threads,
-  Instagram,
-} from './icons'
+import { Mail, Github, Facebook, Youtube, Linkedin, Twitter, X, Mastodon, Threads, Instagram } from './icons';
 
 const components = {
   mail: Mail,
@@ -22,22 +11,20 @@ const components = {
   mastodon: Mastodon,
   threads: Threads,
   instagram: Instagram,
-}
+};
 
 type SocialIconProps = {
-  kind: keyof typeof components
-  href: string | undefined
-  size?: number
-}
+  kind: keyof typeof components;
+  href: string | undefined;
+  size?: number;
+};
 
 const SocialIcon = ({ kind, href, size = 8 }: SocialIconProps) => {
-  if (
-    !href ||
-    (kind === 'mail' && !/^mailto:[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(href))
-  )
-    return null
+  if (!href || (kind === 'mail' && !/^mailto:[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(href))) {
+    return null;
+  }
 
-  const SocialSvg = components[kind]
+  const SocialSvg = components[kind];
 
   return (
     <a
@@ -51,7 +38,7 @@ const SocialIcon = ({ kind, href, size = 8 }: SocialIconProps) => {
         className={`fill-current text-gray-700 hover:text-primary-500 dark:text-gray-200 dark:hover:text-primary-400 h-${size} w-${size}`}
       />
     </a>
-  )
-}
+  );
+};
 
-export default SocialIcon
+export default SocialIcon;
