@@ -6,14 +6,14 @@ import type { Metadata } from 'next';
 import { Space_Grotesk } from 'next/font/google';
 import { Analytics, AnalyticsConfig } from 'pliny/analytics';
 import { SearchProvider, SearchConfig } from 'pliny/search';
+import { pretendard } from 'fonts/pretendard';
+import { Analytics as NextAnalytics } from '@vercel/analytics/next';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import Header from '@/components/Header';
 import SectionContainer from '@/components/SectionContainer';
 import Footer from '@/components/Footer';
 import siteMetadata from '@/data/siteMetadata';
 import { ThemeProviders } from './theme-providers';
-import { pretendard } from 'fonts/pretendard';
-import { Analytics as NextAnalytics } from '@vercel/analytics/next';
-import { SpeedInsights } from '@vercel/speed-insights/next';
 
 const space_grotesk = Space_Grotesk({
   subsets: ['latin'],
