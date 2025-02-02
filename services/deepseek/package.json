@@ -11,7 +11,7 @@
 	"dependencies": {
 		"@radix-ui/react-slot": "^1.1.0",
 		"@tanstack/react-router": "^1.76.1",
-		"@tanstack/start": "^1.99.1",
+		"@tanstack/start": "^1.76.1",
 		"@vitejs/plugin-react": "^4.3.3",
 		"class-variance-authority": "^0.7.0",
 		"clsx": "^2.1.1",
@@ -25,6 +25,7 @@
 	},
 	"devDependencies": {
 		"@tailwindcss/typography": "^0.5.15",
+		"@tanstack/start-vite-plugin": "1.66.1",
 		"@types/node": "^22.5.4",
 		"@types/react": "^18.2.65",
 		"@types/react-dom": "^18.2.21",

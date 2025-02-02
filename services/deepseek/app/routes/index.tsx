@@ -77,7 +77,7 @@ const chat = createServerFn(
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "deepseek-r1:32b",
+        model: "deepseek-r1:latest",
         streaming: true,
         options: {
           temperature: 0.1,
@@ -133,25 +133,25 @@ function AIChat() {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-900">
-      <div className="p-4 container mx-auto max-w-4xl space-y-4">
+      <div className="container max-w-4xl p-4 mx-auto space-y-4">
         <label htmlFor={"premise"}>
           Premise:
           <textarea name={"premise"} style={{ color: "black", padding: "5px 10px", width: "100%" }} value={premise} onChange={(e) => setPremise(e.target.value)} />
         </label>
       </div>
-      <div className="flex-1 p-4 container mx-auto max-w-4xl space-y-4 pb-32">
+      <div className="container flex-1 max-w-4xl p-4 pb-32 mx-auto space-y-4">
         {messagesWithThinkingSplit
           .filter(({ role }) => role === "user" || role === "assistant")
           .map((m, index) => <AIMessage key={index} message={m} />)}
       </div>
 
       <div className="fixed bottom-0 left-0 right-0 p-4 bg-gray-800 border-t border-gray-700">
-        <form onSubmit={handleSubmit} className="container mx-auto max-w-4xl">
+        <form onSubmit={handleSubmit} className="container max-w-4xl mx-auto">
           <div className="flex gap-2">
-            <div className="flex-1 relative">
-              <MessageSquare className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <div className="relative flex-1">
+              <MessageSquare className="absolute w-4 h-4 text-gray-400 transform -translate-y-1/2 left-3 top-1/2" />
               <Input
-                className="flex-1 bg-gray-900 border-gray-700 text-gray-100 pl-10"
+                className="flex-1 pl-10 text-gray-100 bg-gray-900 border-gray-700"
                 value={input}
                 disabled={loading}
                 placeholder="Ask your local DeepSeek..."
@@ -164,9 +164,9 @@ function AIChat() {
               className="bg-primary hover:bg-primary/90"
             >
               {loading ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Loader2 className="w-4 h-4 animate-spin" />
               ) : (
-                <Send className="h-4 w-4" />
+                <Send className="w-4 h-4" />
               )}
               <span className="sr-only">Send message</span>
             </Button>
@@ -193,9 +193,9 @@ const AIMessage: React.FC<{ message: MessageWithThinking }> = ({ message }) => {
         <div className="flex items-center gap-2 mb-2" style={{ justifyContent: "space-between" }}>
           <span className="text-sm font-medium" style={{ display: "flex", gap: 10 }}>
             {message.role === "user" ? (
-              <User2 className="h-4 w-4" />
+              <User2 className="w-4 h-4" />
             ) : (
-              !message.finishedThinking ? <Loader2 className="h-4 w-4 animate-spin" /> : <Bot className="h-4 w-4" />
+              !message.finishedThinking ? <Loader2 className="w-4 h-4 animate-spin" /> : <Bot className="w-4 h-4" />
             )}
 
             <span>{message.role === "user" ? "You" : "DeepSeek R1 (32b)"}</span>
@@ -219,7 +219,7 @@ const AIMessage: React.FC<{ message: MessageWithThinking }> = ({ message }) => {
         )}
 
         {message.think && (
-          <div style={{ display: collapsed ? "none" : "block" }} className="mb-2 text-sm italic border-l-2 border-gray-600 pl-2 py-1 text-gray-300">
+          <div style={{ display: collapsed ? "none" : "block" }} className="py-1 pl-2 mb-2 text-sm italic text-gray-300 border-l-2 border-gray-600">
             <Markdown>{message.think}</Markdown>
           </div>
         )}
