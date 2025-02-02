@@ -13,6 +13,7 @@ import siteMetadata from '@/data/siteMetadata';
 import { ThemeProviders } from './theme-providers';
 import { pretendard } from 'fonts/pretendard';
 import { Analytics as NextAnalytics } from '@vercel/analytics/next';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 const space_grotesk = Space_Grotesk({
   subsets: ['latin'],
@@ -84,6 +85,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <Header />
               <main className="mb-auto">{children}</main>
               <NextAnalytics />
+              <SpeedInsights />
             </SearchProvider>
             <Footer />
           </SectionContainer>
