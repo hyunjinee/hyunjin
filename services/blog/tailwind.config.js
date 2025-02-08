@@ -23,6 +23,7 @@ module.exports = {
       },
       fontFamily: {
         sans: ['var(--font-space-grotesk)', ...fontFamily.sans],
+        pretendard: ['var(--font-pretendard)'],
       },
       colors: {
         primary: colors.pink,
