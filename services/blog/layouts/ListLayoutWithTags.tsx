@@ -29,7 +29,7 @@ function Pagination({ totalPages, currentPage }: PaginationProps) {
   const nextPage = currentPage + 1 <= totalPages
 
   return (
-    <div className="space-y-2 pb-8 pt-6 md:space-y-5">
+    <div className="pt-6 pb-8 space-y-2 md:space-y-5">
       <nav className="flex justify-between">
         {!prevPage && (
           <button className="cursor-auto disabled:opacity-50" disabled={!prevPage}>
@@ -37,10 +37,7 @@ function Pagination({ totalPages, currentPage }: PaginationProps) {
           </button>
         )}
         {prevPage && (
-          <Link
-            href={currentPage - 1 === 1 ? `/${basePath}/` : `/${basePath}/page/${currentPage - 1}`}
-            rel="prev"
-          >
+          <Link href={currentPage - 1 === 1 ? `/${basePath}/` : `/${basePath}/page/${currentPage - 1}`} rel="prev">
             Previous
           </Link>
         )}
@@ -62,12 +59,7 @@ function Pagination({ totalPages, currentPage }: PaginationProps) {
   )
 }
 
-export default function ListLayoutWithTags({
-  posts,
-  title,
-  initialDisplayPosts = [],
-  pagination,
-}: ListLayoutProps) {
+export default function ListLayoutWithTags({ posts, title, initialDisplayPosts = [], pagination }: ListLayoutProps) {
   const pathname = usePathname()
   const tagCounts = tagData as Record<string, number>
   const tagKeys = Object.keys(tagCounts)
@@ -78,7 +70,7 @@ export default function ListLayoutWithTags({
   return (
     <>
       <div>
-        <div className="pb-6 pt-6">
+        <div className="pt-6 pb-6">
           <h1 className="text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:hidden sm:text-4xl sm:leading-10 md:text-6xl md:leading-14">
             {title}
           </h1>
@@ -91,7 +83,7 @@ export default function ListLayoutWithTags({
               ) : (
                 <Link
                   href={`/blog`}
-                  className="font-bold uppercase text-gray-700 hover:text-primary-500 dark:text-gray-300 dark:hover:text-primary-500"
+                  className="font-bold text-gray-700 uppercase hover:text-primary-500 dark:text-gray-300 dark:hover:text-primary-500"
                 >
                   All Posts
                 </Link>
@@ -107,7 +99,7 @@ export default function ListLayoutWithTags({
                       ) : (
                         <Link
                           href={`/tags/${slug(t)}`}
-                          className="px-3 py-2 text-sm font-medium uppercase text-gray-500 hover:text-primary-500 dark:text-gray-300 dark:hover:text-primary-500"
+                          className="px-3 py-2 text-sm font-medium text-gray-500 uppercase hover:text-primary-500 dark:text-gray-300 dark:hover:text-primary-500"
                           aria-label={`View posts tagged ${t}`}
                         >
                           {`${t} (${tagCounts[t]})`}
@@ -141,13 +133,9 @@ export default function ListLayoutWithTags({
                               {title}
                             </Link>
                           </h2>
-                          <div className="flex flex-wrap">
-                            {tags?.map((tag) => <Tag key={tag} text={tag} />)}
-                          </div>
+                          <div className="flex flex-wrap">{tags?.map((tag) => <Tag key={tag} text={tag} />)}</div>
                         </div>
-                        <div className="prose max-w-none text-gray-500 dark:text-gray-400">
-                          {summary}
-                        </div>
+                        <div className="prose text-gray-500 max-w-none dark:text-gray-400">{summary}</div>
                       </div>
                     </article>
                   </li>

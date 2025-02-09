@@ -1,33 +1,33 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import { usePathname } from 'next/navigation';
-import { formatDate } from 'pliny/utils/formatDate';
-import { CoreContent } from 'pliny/utils/contentlayer';
-import type { Blog } from 'contentlayer/generated';
-import Link from '@/components/Link';
-import Tag from '@/components/Tag';
-import siteMetadata from '@/data/siteMetadata';
+import { useState } from 'react'
+import { usePathname } from 'next/navigation'
+import { formatDate } from 'pliny/utils/formatDate'
+import { CoreContent } from 'pliny/utils/contentlayer'
+import type { Blog } from 'contentlayer/generated'
+import Link from '@/components/Link'
+import Tag from '@/components/Tag'
+import siteMetadata from '@/data/siteMetadata'
 
 interface PaginationProps {
-  totalPages: number;
-  currentPage: number;
+  totalPages: number
+  currentPage: number
 }
 interface ListLayoutProps {
-  posts: CoreContent<Blog>[];
-  title: string;
-  initialDisplayPosts?: CoreContent<Blog>[];
-  pagination?: PaginationProps;
+  posts: CoreContent<Blog>[]
+  title: string
+  initialDisplayPosts?: CoreContent<Blog>[]
+  pagination?: PaginationProps
 }
 
 function Pagination({ totalPages, currentPage }: PaginationProps) {
-  const pathname = usePathname();
-  const basePath = pathname.split('/')[1];
-  const prevPage = currentPage - 1 > 0;
-  const nextPage = currentPage + 1 <= totalPages;
+  const pathname = usePathname()
+  const basePath = pathname.split('/')[1]
+  const prevPage = currentPage - 1 > 0
+  const nextPage = currentPage + 1 <= totalPages
 
   return (
-    <div className="space-y-2 pb-8 pt-6 md:space-y-5">
+    <div className="pt-6 pb-8 space-y-2 md:space-y-5">
       <nav className="flex justify-between">
         {!prevPage && (
           <button className="cursor-auto disabled:opacity-50" disabled={!prevPage}>
@@ -54,24 +54,24 @@ function Pagination({ totalPages, currentPage }: PaginationProps) {
         )}
       </nav>
     </div>
-  );
+  )
 }
 
 export default function ListLayout({ posts, title, initialDisplayPosts = [], pagination }: ListLayoutProps) {
-  const [searchValue, setSearchValue] = useState('');
+  const [searchValue, setSearchValue] = useState('')
   const filteredBlogPosts = posts.filter((post) => {
-    const searchContent = post.title + post.summary + post.tags?.join(' ');
-    return searchContent.toLowerCase().includes(searchValue.toLowerCase());
-  });
+    const searchContent = post.title + post.summary + post.tags?.join(' ')
+    return searchContent.toLowerCase().includes(searchValue.toLowerCase())
+  })
 
   // If initialDisplayPosts exist, display it if no searchValue is specified
-  const displayPosts = initialDisplayPosts.length > 0 && !searchValue ? initialDisplayPosts : filteredBlogPosts;
+  const displayPosts = initialDisplayPosts.length > 0 && !searchValue ? initialDisplayPosts : filteredBlogPosts
 
   return (
     <>
       <div className="divide-y divide-gray-200 dark:divide-gray-700">
-        <div className="space-y-2 pb-8 pt-6 md:space-y-5">
-          <h1 className="md:leading-14 text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-6xl">
+        <div className="pt-6 pb-8 space-y-2 md:space-y-5">
+          <h1 className="text-3xl font-extrabold leading-9 tracking-tight text-gray-900 md:leading-14 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-6xl">
             {title}
           </h1>
           <div className="relative max-w-lg">
@@ -82,11 +82,11 @@ export default function ListLayout({ posts, title, initialDisplayPosts = [], pag
                 type="text"
                 onChange={(e) => setSearchValue(e.target.value)}
                 placeholder="Search articles"
-                className="focus:border-primary-500 focus:ring-primary-500 block w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-gray-900 dark:border-gray-900 dark:bg-gray-800 dark:text-gray-100"
+                className="block w-full px-4 py-2 text-gray-900 bg-white border border-gray-300 rounded-md focus:border-primary-500 focus:ring-primary-500 dark:border-gray-900 dark:bg-gray-800 dark:text-gray-100"
               />
             </label>
             <svg
-              className="absolute right-3 top-3 h-5 w-5 text-gray-400 dark:text-gray-300"
+              className="absolute w-5 h-5 text-gray-400 right-3 top-3 dark:text-gray-300"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -104,7 +104,7 @@ export default function ListLayout({ posts, title, initialDisplayPosts = [], pag
         <ul>
           {!filteredBlogPosts.length && 'No posts found.'}
           {displayPosts.map((post) => {
-            const { path, date, title, summary, tags } = post;
+            const { path, date, title, summary, tags } = post
             return (
               <li key={path} className="py-4">
                 <article className="space-y-2 xl:grid xl:grid-cols-4 xl:items-baseline xl:space-y-0">
@@ -123,11 +123,11 @@ export default function ListLayout({ posts, title, initialDisplayPosts = [], pag
                       </h3>
                       <div className="flex flex-wrap">{tags?.map((tag) => <Tag key={tag} text={tag} />)}</div>
                     </div>
-                    <div className="prose max-w-none text-gray-500 dark:text-gray-400">{summary}</div>
+                    <div className="prose text-gray-500 max-w-none dark:text-gray-400">{summary}</div>
                   </div>
                 </article>
               </li>
-            );
+            )
           })}
         </ul>
       </div>
@@ -135,5 +135,5 @@ export default function ListLayout({ posts, title, initialDisplayPosts = [], pag
         <Pagination currentPage={pagination.currentPage} totalPages={pagination.totalPages} />
       )}
     </>
-  );
+  )
 }

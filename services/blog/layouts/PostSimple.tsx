@@ -1,23 +1,23 @@
-import { ReactNode } from 'react';
-import { formatDate } from 'pliny/utils/formatDate';
-import { CoreContent } from 'pliny/utils/contentlayer';
-import type { Blog } from 'contentlayer/generated';
-import Comments from '@/components/Comments';
-import Link from '@/components/Link';
-import PageTitle from '@/components/PageTitle';
-import SectionContainer from '@/components/SectionContainer';
-import siteMetadata from '@/data/siteMetadata';
-import ScrollTopAndComment from '@/components/ScrollTopAndComment';
+import { ReactNode } from 'react'
+import { formatDate } from 'pliny/utils/formatDate'
+import { CoreContent } from 'pliny/utils/contentlayer'
+import type { Blog } from 'contentlayer/generated'
+import Comments from '@/components/Comments'
+import Link from '@/components/Link'
+import PageTitle from '@/components/PageTitle'
+import SectionContainer from '@/components/SectionContainer'
+import siteMetadata from '@/data/siteMetadata'
+import ScrollTopAndComment from '@/components/ScrollTopAndComment'
 
 interface LayoutProps {
-  content: CoreContent<Blog>;
-  children: ReactNode;
-  next?: { path: string; title: string };
-  prev?: { path: string; title: string };
+  content: CoreContent<Blog>
+  children: ReactNode
+  next?: { path: string; title: string }
+  prev?: { path: string; title: string }
 }
 
 export default function PostLayout({ content, next, prev, children }: LayoutProps) {
-  const { path, slug, date, title } = content;
+  const { path, slug, date, title } = content
 
   return (
     <SectionContainer>
@@ -25,7 +25,7 @@ export default function PostLayout({ content, next, prev, children }: LayoutProp
       <article>
         <div>
           <header>
-            <div className="space-y-1 border-b border-gray-200 pb-10 text-center dark:border-gray-700">
+            <div className="pb-10 space-y-1 text-center border-b border-gray-200 dark:border-gray-700">
               <dl>
                 <div>
                   <dt className="sr-only">Published on</dt>
@@ -41,10 +41,10 @@ export default function PostLayout({ content, next, prev, children }: LayoutProp
           </header>
           <div className="grid-rows-[auto_1fr] divide-y divide-gray-200 pb-8 dark:divide-gray-700 xl:divide-y-0">
             <div className="divide-y divide-gray-200 dark:divide-gray-700 xl:col-span-3 xl:row-span-2 xl:pb-0">
-              <div className="prose dark:prose-invert max-w-none pb-8 pt-10">{children}</div>
+              <div className="pt-10 pb-8 prose dark:prose-invert max-w-none">{children}</div>
             </div>
             {siteMetadata.comments && (
-              <div className="pb-6 pt-6 text-center text-gray-700 dark:text-gray-300" id="comment">
+              <div className="pt-6 pb-6 text-center text-gray-700 dark:text-gray-300" id="comment">
                 <Comments slug={slug} />
               </div>
             )}
@@ -78,5 +78,5 @@ export default function PostLayout({ content, next, prev, children }: LayoutProp
         </div>
       </article>
     </SectionContainer>
-  );
+  )
 }

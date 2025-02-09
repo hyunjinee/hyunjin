@@ -1,32 +1,32 @@
-import { ReactNode } from 'react';
-import Image from '@/components/Image';
-import Bleed from 'pliny/ui/Bleed';
-import { CoreContent } from 'pliny/utils/contentlayer';
-import type { Blog } from 'contentlayer/generated';
-import Comments from '@/components/Comments';
-import Link from '@/components/Link';
-import PageTitle from '@/components/PageTitle';
-import SectionContainer from '@/components/SectionContainer';
-import siteMetadata from '@/data/siteMetadata';
-import ScrollTopAndComment from '@/components/ScrollTopAndComment';
+import { ReactNode } from 'react'
+import Image from '@/components/Image'
+import Bleed from 'pliny/ui/Bleed'
+import { CoreContent } from 'pliny/utils/contentlayer'
+import type { Blog } from 'contentlayer/generated'
+import Comments from '@/components/Comments'
+import Link from '@/components/Link'
+import PageTitle from '@/components/PageTitle'
+import SectionContainer from '@/components/SectionContainer'
+import siteMetadata from '@/data/siteMetadata'
+import ScrollTopAndComment from '@/components/ScrollTopAndComment'
 
 interface LayoutProps {
-  content: CoreContent<Blog>;
-  children: ReactNode;
-  next?: { path: string; title: string };
-  prev?: { path: string; title: string };
+  content: CoreContent<Blog>
+  children: ReactNode
+  next?: { path: string; title: string }
+  prev?: { path: string; title: string }
 }
 
 export default function PostMinimal({ content, next, prev, children }: LayoutProps) {
-  const { slug, title, images } = content;
-  const displayImage = images && images.length > 0 ? images[0] : 'https://picsum.photos/seed/picsum/800/400';
+  const { slug, title, images } = content
+  const displayImage = images && images.length > 0 ? images[0] : 'https://picsum.photos/seed/picsum/800/400'
 
   return (
     <SectionContainer>
       <ScrollTopAndComment />
       <article>
         <div>
-          <div className="space-y-1 pb-10 text-center dark:border-gray-700">
+          <div className="pb-10 space-y-1 text-center dark:border-gray-700">
             <div className="w-full">
               <Bleed>
                 <div className="relative aspect-[2/1] w-full">
@@ -38,9 +38,9 @@ export default function PostMinimal({ content, next, prev, children }: LayoutPro
               <PageTitle>{title}</PageTitle>
             </div>
           </div>
-          <div className="prose dark:prose-invert max-w-none py-4">{children}</div>
+          <div className="py-4 prose dark:prose-invert max-w-none">{children}</div>
           {siteMetadata.comments && (
-            <div className="pb-6 pt-6 text-center text-gray-700 dark:text-gray-300" id="comment">
+            <div className="pt-6 pb-6 text-center text-gray-700 dark:text-gray-300" id="comment">
               <Comments slug={slug} />
             </div>
           )}
@@ -73,5 +73,5 @@ export default function PostMinimal({ content, next, prev, children }: LayoutPro
         </div>
       </article>
     </SectionContainer>
-  );
+  )
 }
