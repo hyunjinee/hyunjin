@@ -96,6 +96,9 @@ module.exports = () => {
 
       return config
     },
+    experimental: {
+      viewTransition: true,
+    },
     images: {
       domains: ['velog.velcdn.com'],
       // remotePatterns: [
