@@ -9,7 +9,7 @@ import PageTitle from '@/components/PageTitle'
 import SectionContainer from '@/components/SectionContainer'
 import siteMetadata from '@/data/siteMetadata'
 import ScrollTopAndComment from '@/components/ScrollTopAndComment'
-
+import { unstable_ViewTransition as ViewTransition } from 'react'
 interface LayoutProps {
   content: CoreContent<Blog>
   children: ReactNode
@@ -35,7 +35,11 @@ export default function PostMinimal({ content, next, prev, children }: LayoutPro
               </Bleed>
             </div>
             <div className="relative pt-10">
-              <PageTitle>{title}</PageTitle>
+              <PageTitle>
+                <ViewTransition name={`title`}>
+                  <span>{title}</span>
+                </ViewTransition>
+              </PageTitle>
             </div>
           </div>
           <div className="py-4 prose dark:prose-invert max-w-none">{children}</div>
