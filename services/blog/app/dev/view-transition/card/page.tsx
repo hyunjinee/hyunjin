@@ -91,7 +91,7 @@ export default function Page() {
   )
 }
 
-export function DynamicBackground({ className }: { className?: string }) {
+function DynamicBackground({ className }: { className?: string }) {
   return (
     <div
       className={cx(
