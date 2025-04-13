@@ -16,7 +16,7 @@ const siteMetadata = {
   // x: 'https://twitter.com/x',
   // facebook: 'https://facebook.com',
   // youtube: 'https://youtube.com',
-  linkedin: 'https://www.linkedin.com',
+  linkedin: 'https://www.linkedin.com/in/leehj0110/',
   // threads: 'https://www.threads.net',
   // instagram: 'https://www.instagram.com',
   locale: 'ko-KR',
@@ -94,6 +94,6 @@ const siteMetadata = {
     //   indexName: 'docsearch',
     // },
   },
-};
+}
 
-module.exports = siteMetadata;
+module.exports = siteMetadata
