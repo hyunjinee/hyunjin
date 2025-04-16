@@ -1,4 +1,5 @@
-import { ReactNode } from 'react'
+import type { ReactNode } from 'react'
+import { unstable_ViewTransition as ViewTransition } from 'react'
 import Image from '@/components/Image'
 import Bleed from 'pliny/ui/Bleed'
 import { CoreContent } from 'pliny/utils/contentlayer'
@@ -9,7 +10,7 @@ import PageTitle from '@/components/PageTitle'
 import SectionContainer from '@/components/SectionContainer'
 import siteMetadata from '@/data/siteMetadata'
 import ScrollTopAndComment from '@/components/ScrollTopAndComment'
-import { unstable_ViewTransition as ViewTransition } from 'react'
+
 interface LayoutProps {
   content: CoreContent<Blog>
   children: ReactNode
@@ -36,7 +37,7 @@ export default function PostMinimal({ content, next, prev, children }: LayoutPro
             </div>
             <div className="relative pt-10">
               <PageTitle>
-                <ViewTransition name={`title`}>
+                <ViewTransition name={`title-${title}`}>
                   <span>{title}</span>
                 </ViewTransition>
               </PageTitle>
