@@ -28,7 +28,7 @@
     "gray-matter": "^4.0.2",
     "hast-util-from-html-isomorphic": "^2.0.0",
     "image-size": "1.0.0",
-    "next": "15.2.4",
+    "next": "15.3.0",
     "next-contentlayer2": "0.5.3",
     "next-themes": "^0.4.4",
     "pliny": "0.4.0",
@@ -47,7 +47,8 @@
     "remark-github-blockquote-alert": "^1.2.1",
     "remark-math": "^6.0.0",
     "tailwindcss": "^3.4.3",
-    "unist-util-visit": "^5.0.0"
+    "unist-util-visit": "^5.0.0",
+    "zod": "3.24.2"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^3.2.4",
