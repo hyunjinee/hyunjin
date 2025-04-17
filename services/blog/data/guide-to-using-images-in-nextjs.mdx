@@ -14,7 +14,7 @@ The tailwind starter blog has out of the box support for [Next.js's built-in ima
 # Usage
 
 ```js
-import Image from 'next/image';
+import Image from 'next/image'
 
 function Home() {
   return (
@@ -23,10 +23,10 @@ function Home() {
       <Image src="/me.png" alt="Picture of the author" width={500} height={500} />
       <p>Welcome to my homepage!</p>
     </>
-  );
+  )
 }
 
-export default Home;
+export default Home
 ```
 
 For a markdown file, the default image tag can be used and the default `img` tag gets replaced by the `Image` component in the build process.
@@ -65,6 +65,3 @@ on [Unsplash](https://unsplash.com/s/photos/sea?utm_source=unsplash&utm_medium=r
   If you do not want to be tied to Vercel, you can remove `imgToJsx` in `remarkPlugins` in `lib/mdx.js`. This would avoid substituting the default `img` tag.
 
   Alternatively, one could wait for image optimization at build time to be supported. A different library, [next-optimized-images](https://github.com/cyrilwanner/next-optimized-images) does that, although it requires transforming the images through webpack which is not done here.
-
-- Images from external links are not passed through `next/image`
-- All images have to be stored in the `public` folder e.g `/static/images/ocean.jpeg`
