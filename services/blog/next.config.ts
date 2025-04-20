@@ -96,6 +96,7 @@ const config: NextConfig = {
   },
   experimental: {
     viewTransition: true,
+    reactCompiler: true,
   },
 }
 
