@@ -10,6 +10,7 @@
 import { SnackbarProvider } from 'notistack'
 import React from 'react'
 import { StoreProvider } from '../components'
+import Editor from '../components/EditorImpl'
 import Header from '../components/Header'
 
 export default function page() {
@@ -17,6 +18,7 @@ export default function page() {
     <StoreProvider>
       <SnackbarProvider>
         <Header />
+        <Editor />
       </SnackbarProvider>
     </StoreProvider>
   )
