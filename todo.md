@@ -1,4 +1,4 @@
-# React Compiler 이해 가이드
+# React Compiler 완벽 이해 가이드 📚
 
 ## 🎯 목표
 
@@ -38,20 +38,30 @@ React Compiler의 내부 동작 원리를 완벽하게 이해하고, 실제 코�
   - [ ] **Babel Plugin 단계**
     - [ ] 컴파일 대상 함수 결정 메커니즘
     - [ ] opt-in/opt-out 지시어 동작 원리
-    - [ ] `compiler/packages/babel-plugin-react-compiler/src/index.ts` 분석
+    - [ ] `compiler/packages/babel-plugin-react-compiler/src/Babel/BabelPlugin.ts` - Babel 플러그인 진입점
+    - [ ] `compiler/packages/babel-plugin-react-compiler/src/Entrypoint/Program.ts` - compileProgram 핵심 로직
+    - [ ] `compiler/packages/babel-plugin-react-compiler/src/Entrypoint/Pipeline.ts` - 컴파일 파이프라인 구현
+    - [ ] `compiler/packages/babel-plugin-react-compiler/src/Entrypoint/Options.ts` - 플러그인 옵션 파싱
   - [ ] **Lowering (BuildHIR) 단계**
     - [ ] Babel AST → HIR 변환 과정
     - [ ] JavaScript 평가 순서 의미론 보존 방법
     - [ ] Control Flow Graph 구성 원리
-    - [ ] `compiler/packages/babel-plugin-react-compiler/src/HIR/` 디렉토리 탐색
+    - [ ] `compiler/packages/babel-plugin-react-compiler/src/HIR/BuildHIR.ts` - 핵심 변환 로직 (4315줄!)
+    - [ ] `compiler/packages/babel-plugin-react-compiler/src/HIR/HIR.ts` - HIR 자료구조 정의
+    - [ ] `compiler/packages/babel-plugin-react-compiler/src/HIR/HIRBuilder.ts` - HIR 빌더 유틸리티
+    - [ ] `compiler/packages/babel-plugin-react-compiler/src/HIR/Environment.ts` - 환경 설정과 타입 정보
   - [ ] **SSA Conversion 단계**
     - [ ] SSA(Static Single Assignment)란?
     - [ ] SSA 형태의 장점과 필요성
-    - [ ] `compiler/packages/babel-plugin-react-compiler/src/SSA/` 코드 분석
+    - [ ] `compiler/packages/babel-plugin-react-compiler/src/SSA/EnterSSA.ts` - SSA 변환 구현
+    - [ ] `compiler/packages/babel-plugin-react-compiler/src/SSA/EliminateRedundantPhi.ts` - Phi 노드 최적화
   - [ ] **Validation 단계**
     - [ ] React 규칙 검증 메커니즘
     - [ ] 조건부 Hook 호출 감지 방법
-    - [ ] `compiler/packages/babel-plugin-react-compiler/src/Validation/` 탐색
+    - [ ] `compiler/packages/babel-plugin-react-compiler/src/Validation/ValidateHooksUsage.ts` - Hook 사용 규칙 검증
+    - [ ] `compiler/packages/babel-plugin-react-compiler/src/Validation/ValidateNoRefAccessInRender.ts` - ref 접근 검증
+    - [ ] `compiler/packages/babel-plugin-react-compiler/src/Validation/ValidateNoSetStateInRender.ts` - 렌더링 중 setState 방지
+    - [ ] `compiler/packages/babel-plugin-react-compiler/src/Validation/ValidatePreservedManualMemoization.ts` - 수동 메모이제이션 보존
   - [ ] **Optimization 단계**
     - [ ] Dead Code Elimination 구현
     - [ ] Constant Propagation 구현
@@ -63,7 +73,11 @@ React Compiler의 내부 동작 원리를 완벽하게 이해하고, 실제 코�
   - [ ] **Reactive Scopes 추론**
     - [ ] Reactive Scope의 정의와 개념
     - [ ] Scope 그룹화 알고리즘
-    - [ ] `compiler/packages/babel-plugin-react-compiler/src/ReactiveScopes/` 분석
+    - [ ] `compiler/packages/babel-plugin-react-compiler/src/ReactiveScopes/BuildReactiveFunction.ts` - ReactiveFunction 구성 (1494줄)
+    - [ ] `compiler/packages/babel-plugin-react-compiler/src/ReactiveScopes/InferReactiveScopeVariables.ts` - Scope 변수 추론
+    - [ ] `compiler/packages/babel-plugin-react-compiler/src/ReactiveScopes/CodegenReactiveFunction.ts` - 코드 생성 (2694줄!)
+    - [ ] `compiler/packages/babel-plugin-react-compiler/src/ReactiveScopes/MergeReactiveScopesThatInvalidateTogether.ts` - Scope 병합 최적화
+    - [ ] `compiler/packages/babel-plugin-react-compiler/src/ReactiveScopes/PruneNonEscapingScopes.ts` - 불필요한 Scope 제거
   - [ ] **Codegen 단계**
     - [ ] ReactiveFunction → Babel AST 변환
     - [ ] 생성된 코드의 최적화 보장
@@ -281,11 +295,10 @@ React Compiler의 내부 동작 원리를 완벽하게 이해하고, 실제 코�
 
 ## 💡 학습 팁
 
-1. **코드를 직접 실행하며 학습하기**: 이론만 공부하지 말고 실제 코드를 돌려보며 이해하기
-2. **작은 것부터 시작하기**: 복잡한 최적화보다 간단한 패턴부터 이해하기
-3. **질문하고 토론하기**: 커뮤니티에 적극적으로 참여하여 의문점 해결하기
-4. **문서화하기**: 학습한 내용을 자신만의 언어로 정리하여 문서화하기
-5. **실패를 두려워하지 않기**: 컴파일러 수정 시 에러는 당연한 것, 에러에서 배우기
+1. **작은 것부터 시작하기**: 복잡한 최적화보다 간단한 패턴부터 이해하기
+2. **질문하고 토론하기**: 커뮤니티에 적극적으로 참여하여 의문점 해결하기
+3. **문서화하기**: 학습한 내용을 자신만의 언어로 정리하여 문서화하기
+4. **실패를 두려워하지 않기**: 컴파일러 수정 시 에러는 당연한 것, 에러에서 배우기
 
 ---
 
