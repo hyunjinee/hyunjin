@@ -324,3 +324,57 @@ graph TD
     style H fill:#fbf,stroke:#333,stroke-width:2px
 
 ```
+
+# optin optout
+
+```mermaid
+graph TD
+    A[함수 발견] --> B{compilationMode 확인}
+    B -->|annotation| C[opt-in 지시어 필수]
+    B -->|infer| D[컴포넌트/Hook 패턴 감지]
+    B -->|syntax| E[명시적 선언 확인]
+    B -->|all| F[최상위 함수 모두]
+
+    C --> G{opt-in 있음?}
+    G -->|예| H[컴파일 진행]
+    G -->|아니오| I[스킵]
+
+    D --> J{opt-out 있음?}
+    E --> J
+    F --> J
+    J -->|예| I[스킵]
+    J -->|아니오| H[컴파일 진행]
+
+    H --> K{컴파일 성공?}
+    K -->|실패| L{opt-out 있음?}
+    L -->|예| M[에러 로그만]
+    L -->|아니오| N[빌드 실패]
+    K -->|성공| O[코드 변환]
+```
+
+```mermaid
+graph TB
+    A[JavaScript 파일] --> B[Babel 시작]
+    B --> C[BabelPluginReactCompiler 진입]
+    C --> D{Program visitor<br/>enter 함수}
+
+    D --> E[1. 성능 측정 시작]
+    D --> F[2. 옵션 파싱]
+    D --> G[3. 개발 환경 체크]
+    D --> H[4. Reanimated 체크]
+    D --> I[5. compileProgram 실행]
+    D --> J[6. 검증]
+    D --> K[7. 성능 측정 종료]
+
+    I --> L[함수들 최적화]
+    L --> M[AST 변환]
+
+    K --> N{Program visitor<br/>exit 함수}
+    N --> O[성능 로깅]
+
+    O --> P[변환 완료]
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style P fill:#9f9,stroke:#333,stroke-width:2px
+    style I fill:#bbf,stroke:#333,stroke-width:4px
+```
