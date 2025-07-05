@@ -16,7 +16,7 @@ module.exports = function (babel) {
           t.isIdentifier(callee.property, { name: 'log' })
         ) {
           // myLogger.log로 변환
-          path.node.callee = t.memberExpression(t.identifier('myLogger'), t.identifier('log'))
+          path.node.callee = t.memberExpression(t.identifier('logger'), t.identifier('log'))
         }
       },
     },

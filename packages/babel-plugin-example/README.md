@@ -1,177 +1,85 @@
-# 바벨 플러그인 개발 가이드 (TypeScript)
+# @hyunjin/babel-plugin-example
 
-## 1. 바벨 플러그인이란?
+console.log를 myLogger.log로 변환하는 Babel 플러그인 예제입니다.
 
-바벨 플러그인은 JavaScript 코드를 AST(추상 구문 트리)로 파싱한 후, 이를 순회하며 변환하는 도구입니다.
-
-## 2. 핵심 개념
-
-### AST (Abstract Syntax Tree)
-
-코드를 트리 구조로 표현한 것입니다. 각 노드는 코드의 구조적 요소를 나타냅니다.
-
-```javascript
-// 코드
-const x = 1;
-
-// AST
-{
-  type: "VariableDeclaration",
-  declarations: [{
-    type: "VariableDeclarator",
-    id: { type: "Identifier", name: "x" },
-    init: { type: "NumericLiteral", value: 1 }
-  }],
-  kind: "const"
-}
-```
-
-### Visitor 패턴
-
-AST의 각 노드를 방문하면서 변환을 수행합니다.
-
-```javascript
-visitor: {
-  Identifier(path) {
-    // 모든 Identifier 노드 방문
-  },
-  FunctionDeclaration(path) {
-    // 모든 함수 선언 방문
-  }
-}
-```
-
-### Path API
-
-노드를 조작하는 강력한 API입니다.
-
-```javascript
-// 주요 메서드들
-path.node // 현재 노드
-path.parent // 부모 노드
-path.replaceWith() // 노드 교체
-path.remove() // 노드 제거
-path.insertBefore() // 앞에 삽입
-path.insertAfter() // 뒤에 삽입
-path.traverse() // 하위 노드 순회
-```
-
-## 3. 개발 단계
-
-### 1단계: 프로젝트 설정 (TypeScript)
+## 설치
 
 ```bash
-pnpm init
-pnpm add -D @babel/core @babel/types @babel/traverse
-pnpm add -D typescript @types/babel__core @types/babel__traverse @types/node
-pnpm add -D ts-node # 테스트용
+npm install --save-dev @hyunjin/babel-plugin-example
+# 또는
+pnpm add -D @hyunjin/babel-plugin-example
+# 또는
+yarn add -D @hyunjin/babel-plugin-example
 ```
 
-TypeScript 설정 (tsconfig.json):
+## 사용법
+
+### .babelrc 또는 babel.config.js 설정
 
 ```json
 {
-  "compilerOptions": {
-    "target": "ES2020",
-    "module": "commonjs",
-    "strict": true,
-    "esModuleInterop": true,
-    "outDir": "./dist",
-    "rootDir": "./src"
-  }
+  "plugins": ["@hyunjin/babel-plugin-example"]
 }
 ```
 
-### 2단계: 플러그인 작성 (TypeScript)
-
-```typescript
-import type { PluginObj, PluginPass } from '@babel/core'
-import type { NodePath } from '@babel/traverse'
-import type * as BabelTypes from '@babel/types'
-
-export default function myPlugin(babel: typeof import('@babel/core')): PluginObj<PluginPass> {
-  const { types: t } = babel
-
-  return {
-    name: 'my-plugin',
-    visitor: {
-      Identifier(path: NodePath<BabelTypes.Identifier>) {
-        // 타입 안전한 변환 로직
-      },
-    },
-  }
-}
-```
-
-### 3단계: 테스트
+또는
 
 ```javascript
-const babel = require('@babel/core')
-const plugin = require('./my-plugin')
-
-const result = babel.transformSync(code, {
-  plugins: [plugin],
-})
+module.exports = {
+  plugins: ['@hyunjin/babel-plugin-example'],
+}
 ```
 
-## 4. 유용한 도구들
+### 변환 예제
 
-### AST Explorer
+변환 전:
 
-https://astexplorer.net/
+```javascript
+console.log('Hello World!')
+console.log('Debug:', value)
+```
 
-- 코드를 AST로 시각화
-- 실시간 플러그인 테스트
+변환 후:
 
-### Babel Types
+```javascript
+myLogger.log('Hello World!')
+myLogger.log('Debug:', value)
+```
 
-모든 노드 타입과 생성 함수 제공
+## myLogger 구현 예제
 
-- `t.identifier('name')`
-- `t.stringLiteral('value')`
-- `t.callExpression(callee, args)`
+플러그인은 `console.log`를 `myLogger.log`로 변환하므로, 실행하려면 `myLogger` 객체를 구현해야 합니다:
 
-## 5. 실전 팁
+```javascript
+// myLogger.js
+const myLogger = {
+  log: (...args) => {
+    const timestamp = new Date().toISOString()
+    console.log(`[${timestamp}]`, ...args)
+  },
+}
 
-1. **노드 타입 확인**: `t.isIdentifier()`, `t.isCallExpression()` 등 사용
-2. **스코프 관리**: `path.scope`로 변수 스코프 추적
-3. **바인딩**: `path.scope.getBinding(name)`으로 변수 정의 찾기
-4. **성능**: 불필요한 순회 최소화
-5. **디버깅**: `path.node`를 console.log로 확인
+// 전역으로 사용하려면
+global.myLogger = myLogger
+// 또는 window.myLogger = myLogger; (브라우저)
 
-## 6. 주의사항
+// 또는 모듈로 export
+module.exports = myLogger
+```
 
-- AST 구조를 깨뜨리지 않도록 주의
-- 무한 루프 방지 (노드 생성 시 재방문 주의)
-- 옵션 처리: `this.opts`로 플러그인 옵션 접근
-- 에러 처리: 예외 상황 고려
-
-## 7. 예제 플러그인들 (TypeScript)
-
-### JavaScript 예제 (기존)
-
-- `index.js`: console.log 변환
-- `advanced-example.js`: 고급 기능들
-- `test-plugin.js`: 테스트 방법
-- `typed-example.js`: JSDoc을 사용한 타입 안전 플러그인
-
-### TypeScript 예제 (src 디렉토리)
-
-- `src/index.ts`: 기본 console.log 변환 (TypeScript)
-- `src/advanced-example.ts`: 고급 기능들 (TypeScript)
-- `src/practical-example.ts`: 실용적인 예제 - 성능 모니터링, 에러 처리
-- `src/utils.ts`: 유틸리티 함수와 타입 정의
-- `src/test-plugin.ts`: TypeScript 테스트 방법
-
-### 빌드 및 실행
+## 개발
 
 ```bash
-# TypeScript 빌드
+# 의존성 설치
+pnpm install
+
+# 빌드
 pnpm build
 
-# 개발 모드 (watch)
-pnpm dev
-
-# 테스트 실행
-pnpm test
+# 테스트
+pnpm test:jest
 ```
+
+## 라이선스
+
+MIT

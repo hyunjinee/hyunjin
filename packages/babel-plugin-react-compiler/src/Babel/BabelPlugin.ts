@@ -12,8 +12,11 @@ export default function BabelPluginReactCompiler(_bable: typeof BabelCore): Babe
     name: 'react-forget',
     visitor: {
       Program: {
-        enter(prog, pass): void {},
+        enter(prog, pass): void {
+          console.log('enter')
+        },
         exit(_, pass): void {
+          console.log('exit')
           if (ENABLE_REACT_COMPILER_TIMINGS === true) {
           }
         },

@@ -1,0 +1,24 @@
+{
+  "name": "babel-plugin-test",
+  "version": "1.0.0",
+  "description": "@hyunjin/babel-plugin-example 테스트 프로젝트",
+  "main": "index.js",
+  "scripts": {
+    "build": "babel src/index.js -o dist/index.js",
+    "b": "babel src/index.js -o dist/index.js",
+    "start": "node run.js",
+    "dev": "npm run build && npm run start",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.4.1",
+  "devDependencies": {
+    "@babel/cli": "^7.28.0",
+    "@babel/core": "^7.28.0"
+  },
+  "dependencies": {
+    "@hyunjin/babel-plugin-example": "1.0.1"
+  }
+}

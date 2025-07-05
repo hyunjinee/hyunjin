@@ -1,0 +1,21 @@
+# 소스 파일
+src/
+*.ts
+!*.d.ts
+
+# 테스트 파일
+test-example.js
+test-example-transformed.js
+run-transform.ts
+run-transformed.js
+jest.config.js
+myLogger.js
+*.test.*
+
+# 설정 파일
+tsconfig.json
+.gitignore
+
+# 기타
+node_modules/
+.DS_Store 

@@ -1,0 +1,3 @@
+{
+  "plugins": ["@hyunjin/babel-plugin-example"]
+}

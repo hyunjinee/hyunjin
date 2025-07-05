@@ -6,3 +6,5 @@ export type PluginOptions = {
 }
 
 export type Logger = {}
+
+export type LoggerEvent = 1
