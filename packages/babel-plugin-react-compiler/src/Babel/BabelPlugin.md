@@ -2,16 +2,13 @@
 
 ## 📌 개요
 
-`BabelPlugin.ts`는 React Compiler가 Babel 빌드 과정에 통합되는 진입점입니다. 이 파일은 **"Babel이 React 코드를 변환할 때 React Compiler를 끼워넣는 다리 역할"**을 합니다.
+`BabelPlugin.ts`는 React Compiler가 Babel 빌드 과정에 통합되는 진입점입니다. 이 파일은 Babel이 React 코드를 변환할 때 React Compiler를 끼워넣는 다리 역할을 합니다.
 
 ## 🌟 Babel 플러그인 기본 개념
 
 ### Babel의 변환 과정
 
 ```
-원본 코드 → Babel → 변환된 코드
-
-// 플러그인을 추가하면
 원본 코드 → Babel + 플러그인들 → 변환된 코드
 ```
 

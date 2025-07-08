@@ -10,7 +10,7 @@ import { z } from 'zod'
  * 로거 이벤트의 기본 타입
  * 현재는 CompileErrorEvent만 지원하지만, 추후 확장 가능합니다.
  */
-export type LoggerEvent = CompileErrorEvent | TimingEvent
+export type LoggerEvent = CompileSuccessEvent | CompileErrorEvent | TimingEvent
 
 /**
  * 컴파일 오류 이벤트 타입
@@ -23,6 +23,35 @@ export type CompileErrorEvent = {
   fnLoc: t.SourceLocation | null
 }
 
+export type CompileSuccessEvent = {
+  kind: 'CompileSuccess'
+  fnLoc: t.SourceLocation | null
+  fnName: string | null
+  memoSlots: number
+  memoBlocks: number
+  memoValues: number
+  prunedMemoBlocks: number
+  prunedMemoValues: number
+}
+
+export type CompileSkipEvent = {
+  kind: 'CompileSkip'
+  fnLoc: t.SourceLocation | null
+  reason: string
+  loc: t.SourceLocation | null
+}
+
+export type PipelineErrorEvent = {
+  kind: 'PipelineError'
+  fnLoc: t.SourceLocation | null
+  data: string
+}
+
+export type TimingEvent = {
+  kind: 'Timing'
+  measurement: PerformanceMeasure
+}
+
 /**
  * React Compiler 플러그인 옵션
  * Babel 플러그인에 전달되는 설정 옵션들을 정의합니다.
@@ -30,6 +59,14 @@ export type CompileErrorEvent = {
 export type PluginOptions = {
   /** 컴파일 과정을 로깅하는 로거 인스턴스 (선택사항) */
   logger: Logger | null
+
+  /**
+   * The minimum major version of React that the compiler should emit code for. If the target is 19
+   * or higher, the compiler emits direct imports of React runtime APIs needed by the compiler. On
+   * versions prior to 19, an extra runtime package react-compiler-runtime is necessary to provide
+   * a userspace approximation of runtime APIs.
+   */
+  target: CompilerReactTarget
 }
 
 /**
@@ -46,7 +83,21 @@ export type Logger = {
   logEvent: (filename: string | null, event: LoggerEvent) => void
 }
 
-export type TimingEvent = {
-  kind: 'Timing'
-  measurement: PerformanceMeasure
+const CompilerReactTargetSchema = z.union([
+  z.literal('17'),
+  z.literal('18'),
+  z.literal('19'),
+  z.object({
+    kind: z.literal('donotuse_meta_internal'),
+    runtimeModule: z.string().default('react'),
+  }),
+])
+export type CompilerReactTarget = z.infer<typeof CompilerReactTargetSchema>
+
+export const defaultOptions: PluginOptions = {
+  compilationMode: 'infer',
+}
+
+export function parsePluginOptions(obj: unknown): PluginOptions {
+  return defaultOptions
 }

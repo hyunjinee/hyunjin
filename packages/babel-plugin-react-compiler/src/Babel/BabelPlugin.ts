@@ -1,4 +1,5 @@
 import type * as BabelCore from '@babel/core'
+import { compileProgram } from '../EntryPoint/Program'
 // import { compileProgram, Logger, parsePluginOptions } from '../Entrypoint'
 // import { injectReanimatedFlag, pipelineUsesReanimatedPlugin } from '../Entrypoint/Reanimated'
 // import validateNoUntransformedReferences from '../Entrypoint/ValidateNoUntransformedReferences'
@@ -20,7 +21,15 @@ export default function BabelPluginReactCompiler(_babel: typeof BabelCore): Babe
          * prior to B, if A does not have a Program visitor and B does, B will run first. We always
          * want Forget to run true to source as possible.
          */
-        enter(path, state) {
+        enter(prog, pass) {
+          let opts = parsePluginOptions(pass.opts)
+
+          const result = compileProgram(prog, {
+            opts,
+            filename: pass.filename ?? null,
+            comments: pass.file.ast.comments ?? [],
+            code: pass.file.code,
+          })
           // const { opts } = state.file.opts
         },
         exit(path, state) {

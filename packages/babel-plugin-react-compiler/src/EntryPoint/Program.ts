@@ -15,6 +15,8 @@
 import { NodePath } from '@babel/core'
 import * as t from '@babel/types'
 import { PluginOptions } from './Options'
+import { CompilerError } from '../CompileError'
+import { ProgramContext } from './Imports'
 
 export type CompilerPass = {
   opts: PluginOptions
@@ -76,4 +78,48 @@ const DYNAMIC_GATING_DIRECTIVE = new RegExp('^use memo if\\(([^\\)]*)\\)$')
 export function tryFindDirectiveEnablingMemoization(): null {
   // TODO: 구현 필요
   return null
+}
+
+export type BabelFn =
+  | NodePath<t.FunctionDeclaration>
+  | NodePath<t.FunctionExpression>
+  | NodePath<t.ArrowFunctionExpression>
+
+export type CompileProgramMetadata = {
+  retryErrors: Array<{ fn: BabelFn; error: CompilerError }>
+  inferredEffectLocations: Set<t.SourceLocation>
+}
+
+/**
+ * Main entrypoint for React Compiler.
+ *
+ * @param program The Babel program node to compile
+ * @param pass Compiler configuration and context
+ * @returns Compilation results or null if compilation was skipped
+ */
+export function compileProgram(program: NodePath<t.Program>, pass: CompilerPass): CompileProgramMetadata | null {
+  const programContext = new ProgramContext({
+    program,
+  })
+
+  return {
+    retryErrors: [],
+    inferredEffectLocations: new Set(),
+  }
+}
+
+function isNonNode(node?: t.Expression | null): boolean {
+  if (!node) {
+    return true
+  }
+  switch (node.type) {
+    case 'ObjectExpression':
+    case 'ArrowFunctionExpression':
+    case 'FunctionExpression':
+    case 'BigIntLiteral':
+    case 'ClassExpression':
+    case 'NewExpression': // technically `new Array()` is legit, but unlikely
+      return true
+  }
+  return false
 }
