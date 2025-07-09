@@ -123,3 +123,5 @@ function isNonNode(node?: t.Expression | null): boolean {
   }
   return false
 }
+
+function shouldSkipCompilation(program: NodePath<t.Program>, pass: CompilerPass): boolean {}

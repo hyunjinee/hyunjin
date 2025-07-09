@@ -6,6 +6,14 @@
 import * as t from '@babel/types'
 import { z } from 'zod'
 
+const DynamicGatingOptionsSchema = z.object({
+  source: z.string(),
+})
+export type DynamicGatingOptions = z.infer<typeof DynamicGatingOptionsSchema>
+
+const CustomOptOutDirectiveSchema = z.nullable(z.array(z.string())).default(null)
+type CustomOptOutDirective = z.infer<typeof CustomOptOutDirectiveSchema>
+
 /**
  * 로거 이벤트의 기본 타입
  * 현재는 CompileErrorEvent만 지원하지만, 추후 확장 가능합니다.
@@ -57,8 +65,27 @@ export type TimingEvent = {
  * Babel 플러그인에 전달되는 설정 옵션들을 정의합니다.
  */
 export type PluginOptions = {
+  environment: EnvironmentConfig
+
   /** 컴파일 과정을 로깅하는 로거 인스턴스 (선택사항) */
   logger: Logger | null
+  flowSuppressions: boolean
+
+  /*
+   * When enabled, Forget will continue statically analyzing and linting code, but skip over codegen
+   * passes.
+   *
+   * Defaults to false
+   */
+  noEmit: boolean
+
+  sources: Array<string> | ((filename: string) => boolean) | null
+
+  /**
+   * The compiler has customized support for react-native-reanimated, intended as a temporary workaround.
+   * Set this flag (on by default) to automatically check for this library and activate the support.
+   */
+  enableReanimatedCheck: boolean
 
   /**
    * The minimum major version of React that the compiler should emit code for. If the target is 19
@@ -96,6 +123,7 @@ export type CompilerReactTarget = z.infer<typeof CompilerReactTargetSchema>
 
 export const defaultOptions: PluginOptions = {
   compilationMode: 'infer',
+  panicThreshold: 'none',
 }
 
 export function parsePluginOptions(obj: unknown): PluginOptions {
