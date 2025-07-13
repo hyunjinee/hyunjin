@@ -1,7 +1,7 @@
 {
   "name": "hyunjin",
   "private": "true",
-  "description": "",
+  "description": "learning",
   "scripts": {
     "blog": "pnpm -F @hyunjin/blog",
     "dev": "pnpm -r dev"

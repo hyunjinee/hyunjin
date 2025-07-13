@@ -1,5 +1,9 @@
 # @hyunjin/babel-plugin-undefined-to-void
 
+Some JavaScript implementations allow undefined to be overwritten, this may lead to peculiar bugs that are extremely hard to track down.
+
+This plugin transforms undefined into void 0 which returns undefined regardless of if it's been reassigned.
+
 `undefined`를 `void 0`으로 변환하는 Babel 플러그인입니다.
 
 ## 왜 사용하나요?
@@ -28,7 +32,7 @@ pnpm add -D @hyunjin/babel-plugin-undefined-to-void
 
 ```javascript
 module.exports = {
-  plugins: ['@hyunjin/babel-plugin-undefined-to-void']
+  plugins: ['@hyunjin/babel-plugin-undefined-to-void'],
 }
 ```
 
@@ -38,7 +42,7 @@ module.exports = {
 const babel = require('@babel/core')
 
 const result = babel.transformSync(code, {
-  plugins: ['@hyunjin/babel-plugin-undefined-to-void']
+  plugins: ['@hyunjin/babel-plugin-undefined-to-void'],
 })
 ```
 
@@ -48,7 +52,8 @@ const result = babel.transformSync(code, {
 
 ```javascript
 // 비교 연산
-if (foo === undefined) { }
+if (foo === undefined) {
+}
 
 // 변수 할당
 let bar = undefined
@@ -65,7 +70,7 @@ const arr = [1, undefined, 3]
 const obj = { prop: undefined }
 
 // 기본 매개변수
-function fn(a = undefined) { }
+function fn(a = undefined) {}
 
 // 삼항 연산자
 const result = condition ? undefined : 'value'
@@ -75,7 +80,8 @@ const result = condition ? undefined : 'value'
 
 ```javascript
 // 비교 연산
-if (foo === void 0) { }
+if (foo === void 0) {
+}
 
 // 변수 할당
 let bar = void 0
@@ -92,7 +98,7 @@ const arr = [1, void 0, 3]
 const obj = { prop: void 0 }
 
 // 기본 매개변수
-function fn(a = void 0) { }
+function fn(a = void 0) {}
 
 // 삼항 연산자
 const result = condition ? void 0 : 'value'
@@ -121,7 +127,3 @@ pnpm test
 # 테스트 watch 모드
 pnpm test:watch
 ```
-
-## 라이센스
-
-MIT
