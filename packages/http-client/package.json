@@ -1,0 +1,33 @@
+{
+  "name": "@hyunjin/http-client",
+  "version": "1.0.0",
+  "description": "Axios 기반 HTTP 클라이언트 패키지",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:run": "vitest run",
+    "lint": "eslint src --config eslint.config.mjs",
+    "clean": "rm -rf dist"
+  },
+  "keywords": ["http", "client", "axios", "api"],
+  "author": "hyunjin",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "eslint": "^8.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^2.0.0",
+    "@vitest/ui": "^2.0.0"
+  },
+  "peerDependencies": {
+    "axios": "^1.6.0"
+  }
+} 
