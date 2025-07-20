@@ -4,9 +4,16 @@
   "description": "learning",
   "scripts": {
     "blog": "pnpm -F @hyunjin/blog",
-    "dev": "pnpm -r dev"
+    "dev": "pnpm -r dev",
+    "changeset": "changeset",
+    "version": "changeset version",
+    "release": "pnpm build && changeset publish",
+    "build": "pnpm -r build",
+    "test": "pnpm -r test:run",
+    "lint": "pnpm -r lint"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.29.5",
     "eslint": "8.14.0",
     "prettier": "2.2.1"
   },

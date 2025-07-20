@@ -1,6 +1,6 @@
 {
   "name": "@hyunjin/http-client",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Axios 기반 HTTP 클라이언트 패키지",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -13,7 +13,12 @@
     "lint": "eslint src --config eslint.config.mjs",
     "clean": "rm -rf dist"
   },
-  "keywords": ["http", "client", "axios", "api"],
+  "keywords": [
+    "http",
+    "client",
+    "axios",
+    "api"
+  ],
   "author": "hyunjin",
   "license": "MIT",
   "dependencies": {
@@ -30,4 +35,4 @@
   "peerDependencies": {
     "axios": "^1.6.0"
   }
-} 
+}
