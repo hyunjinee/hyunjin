@@ -4,9 +4,10 @@
 
 import pytest
 from unittest.mock import Mock, patch, MagicMock
-from extractor import ResumeExtractor, extract_from_text
-from models import ResumeInfo, ContactInfo
-from exceptions import InvalidURLError, ExtractionError
+from resume_extract.extractor import ResumeExtractor
+from resume_extract.models import ResumeInfo, ContactInfo
+from resume_extract.exceptions import InvalidURLError, ExtractionError
+from resume_extract import extract_from_url
 
 
 class TestResumeExtractor:
@@ -119,22 +120,22 @@ class TestResumeExtractor:
 class TestConvenienceFunctions:
     """편의 함수 테스트"""
     
-    @patch('resume_extract.extractor.ResumeExtractor')
-    def test_extract_from_text_function(self, mock_extractor_class):
-        """extract_from_text 편의 함수 테스트"""
+    @patch('resume_extract.ResumeExtractor')
+    def test_extract_from_url_function(self, mock_extractor_class):
+        """extract_from_url 편의 함수 테스트"""
         # Mock ResumeExtractor with context manager support
         mock_extractor = MagicMock()
-        mock_extractor.extract_from_text.return_value = ResumeInfo(name="테스트")
+        mock_extractor.extract_from_url.return_value = ResumeInfo(name="테스트")
         mock_extractor.__enter__.return_value = mock_extractor
         mock_extractor.__exit__.return_value = None
         mock_extractor_class.return_value = mock_extractor
         
         # 편의 함수 호출
-        result = extract_from_text("test text", langextract_api_key="test-key")
+        result = extract_from_url("http://test.com/resume.pdf", langextract_api_key="test-key")
         
         # ResumeExtractor가 올바르게 생성되고 호출되었는지 확인
         mock_extractor_class.assert_called_once_with(langextract_api_key="test-key")
-        mock_extractor.extract_from_text.assert_called_once_with("test text")
+        mock_extractor.extract_from_url.assert_called_once_with("http://test.com/resume.pdf")
         mock_extractor.__enter__.assert_called_once()
         mock_extractor.__exit__.assert_called_once()
         

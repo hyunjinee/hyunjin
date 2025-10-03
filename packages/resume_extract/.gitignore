@@ -127,3 +127,7 @@ Thumbs.db
 *.tmp
 *.temp
 temp_resume_*
+
+# PyPI credentials
+.pypirc
+*.pypirc

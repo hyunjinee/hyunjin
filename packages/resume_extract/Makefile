@@ -46,7 +46,10 @@ clean:	## Clean build artifacts
 build:	## Build package
 	uv build
 
-publish:	## Publish to PyPI
+publish-test:	## Publish to TestPyPI (테스트 배포)
+	uv run twine upload --repository testpypi dist/*
+
+publish:	## Publish to PyPI (실제 배포)
 	uv run twine upload dist/*
 
 dev-setup:	## Set up development environment

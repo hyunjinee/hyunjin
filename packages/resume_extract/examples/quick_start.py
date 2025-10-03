@@ -6,7 +6,7 @@ def main():
     # 샘플 텍스트로 테스트
     sample_text = """
     이현진
-    이메일: chulsoo.kim@example.com
+    이메일: leehj0110@kakao.com
     전화: 010-1234-5678
     주소: 서울특별시 강남구
     
@@ -15,7 +15,7 @@ def main():
     - React, Node.js를 이용한 웹 애플리케이션 개발
     
     ## 학력
-    서울대학교 컴퓨터공학과 학사 (2016.03 ~ 2020.02)
+    충남대학교 컴퓨터공학과 학사 (2016.03 ~ 2020.02)
     
     ## 기술
     JavaScript, React, Node.js, Python, AWS

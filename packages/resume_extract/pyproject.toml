@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "resume_extract"
 version = "0.0.1"
-description = "이력서 URL에서 정보를 추출하는 파이썬 라이브러리 (Google LangExtract 기반)"
+description = "A library for extracting information contained in resumes"
 authors = [
     {name = "hyunjin", email = "leehj0110@kakao.com"}
 ]

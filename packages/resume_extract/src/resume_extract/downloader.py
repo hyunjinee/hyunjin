@@ -7,7 +7,6 @@ import requests
 import validators
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
-
 from .exceptions import DownloadError, InvalidURLError, UnsupportedFileTypeError
 from .parsers import WebPageParser
 

@@ -3,7 +3,7 @@
 """
 
 import pytest
-from models import (
+from resume_extract.models import (
     ContactInfo, ExperienceInfo, EducationInfo, 
     ProjectInfo, CertificationInfo, ResumeInfo
 )
