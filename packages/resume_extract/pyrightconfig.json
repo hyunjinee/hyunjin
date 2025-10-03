@@ -1,0 +1,9 @@
+{
+  "venvPath": "/Users/hyunjin/hyunjin/packages/resume_extract",
+  "venv": ".venv",
+  "pythonVersion": "3.10",
+  "typeCheckingMode": "basic",
+  "reportMissingImports": true,
+  "reportMissingTypeStubs": false,
+  "include": ["src"]
+}
