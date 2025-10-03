@@ -57,7 +57,7 @@ dev-setup:	## Set up development environment
 	uv run pre-commit install
 
 example:	## Run example
-	cd examples && uv run python basic_usage.py
+	uv run python examples/quick_start.py
 
 lock:	## Update lockfile
 	uv lock

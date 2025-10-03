@@ -1,8 +1,8 @@
 """
-Resume Extract - A library for extracting information from resumes.
+resume_extract - A library for extracting information from resumes.
 
-이력서 URL을 입력하면 정보를 추출하는 파이썬 라이브러리입니다.
-Google의 LangExtract를 활용하여 구조화된 정보 추출을 제공합니다.
+A Python library that extracts information from resume URLs.
+Provides structured information extraction using Google's LangExtract.
 """
 
 __version__ = "0.0.1"
@@ -26,17 +26,17 @@ from .exceptions import (
     LangExtractAPIError,
 )
 
-# 편의 함수
+# Convenience functions
 def extract_from_url(url: str, **kwargs) -> ResumeInfo:
     """
-    URL에서 이력서 정보를 추출하는 편의 함수.
+    Convenience function to extract resume information from a URL.
     
     Args:
-        url: 이력서 파일 URL
-        **kwargs: ResumeExtractor 생성자에 전달될 키워드 인자
+        url: Resume file URL
+        **kwargs: Keyword arguments to pass to ResumeExtractor constructor
         
     Returns:
-        ResumeInfo: 추출된 이력서 정보
+        ResumeInfo: Extracted resume information
     """
     with ResumeExtractor(**kwargs) as extractor:
         return extractor.extract_from_url(url)
@@ -44,31 +44,46 @@ def extract_from_url(url: str, **kwargs) -> ResumeInfo:
 
 def extract_from_file(file_path: str, **kwargs) -> ResumeInfo:
     """
-    로컬 파일에서 이력서 정보를 추출하는 편의 함수.
+    Convenience function to extract resume information from a local file.
     
     Args:
-        file_path: 로컬 이력서 파일 경로
-        **kwargs: ResumeExtractor 생성자에 전달될 키워드 인자
+        file_path: Local resume file path
+        **kwargs: Keyword arguments to pass to ResumeExtractor constructor
         
     Returns:
-        ResumeInfo: 추출된 이력서 정보
+        ResumeInfo: Extracted resume information
     """
     with ResumeExtractor(**kwargs) as extractor:
         return extractor.extract_from_file(file_path)
 
 
+def extract_from_text(text: str, **kwargs) -> ResumeInfo:
+    """
+    Convenience function to extract resume information directly from text.
+    
+    Args:
+        text: Resume text content
+        **kwargs: Keyword arguments to pass to ResumeExtractor constructor
+        
+    Returns:
+        ResumeInfo: Extracted resume information
+    """
+    with ResumeExtractor(**kwargs) as extractor:
+        return extractor.extract_from_text(text)
+
+
 __all__ = [
     "__version__",
-    # 메인 클래스
+    # Main class
     "ResumeExtractor",
-    # 모델
+    # Models
     "ResumeInfo",
     "ContactInfo",
     "ExperienceInfo",
     "EducationInfo",
     "ProjectInfo",
     "CertificationInfo",
-    # 예외
+    # Exceptions
     "ResumeExtractError",
     "InvalidURLError",
     "UnsupportedFileTypeError",
@@ -76,8 +91,9 @@ __all__ = [
     "ParseError",
     "ExtractionError",
     "LangExtractAPIError",
-    # 편의 함수
+    # Convenience functions
     "extract_from_url",
     "extract_from_file",
+    "extract_from_text",
 ]
 
