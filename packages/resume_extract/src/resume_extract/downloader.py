@@ -53,7 +53,6 @@ class URLDownloader:
         Returns:
             Tuple[str, Optional[str]]: (추출된 텍스트, 임시 파일 경로)
         """
-        # URL 유효성 검사
         if not validators.url(url):
             raise InvalidURLError(url)
         

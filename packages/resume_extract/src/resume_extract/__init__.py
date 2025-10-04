@@ -1,7 +1,7 @@
 """
-resume_extract - A library for extracting information from resumes.
+resume_extract
 
-A Python library that extracts information from resume URLs.
+A library that extracts information from resume resumes.
 Provides structured information extraction using Google's LangExtract.
 """
 

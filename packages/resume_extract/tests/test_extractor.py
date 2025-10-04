@@ -1,7 +1,3 @@
-"""
-메인 추출기 테스트
-"""
-
 import pytest
 from unittest.mock import Mock, patch, MagicMock
 from resume_extract.extractor import ResumeExtractor
