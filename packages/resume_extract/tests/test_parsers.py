@@ -10,7 +10,6 @@ from pathlib import Path
 from resume_extract.parsers import FileParser, WebPageParser
 from resume_extract.exceptions import ParseError, UnsupportedFileTypeError
 
-
 class TestFileParser:
     """FileParser 테스트"""
     
