@@ -1,0 +1,38 @@
+{
+  "name": "@hyunjin/drizzle",
+  "version": "1.0.2",
+  "description": "Drizzle ORM database client",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "scripts": {
+    "dev": "tsup --watch",
+    "build": "tsup",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "drizzle",
+    "orm",
+    "database"
+  ],
+  "author": "hyunjin",
+  "peerDependencies": {
+    "drizzle-orm": ">=0.44.0",
+    "postgres": ">=3.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "20.11.0",
+    "drizzle-orm": "0.44.6",
+    "postgres": "3.4.5",
+    "tsup": "8.0.1",
+    "typescript": "5.3.3"
+  }
+}
+
