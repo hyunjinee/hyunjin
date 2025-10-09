@@ -1,0 +1,55 @@
+.heroBanner {
+  padding: 4rem 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+@media screen and (max-width: 996px) {
+  .heroBanner {
+    padding: 2rem;
+  }
+}
+
+.buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.box {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  animation: drop 0.8s ease-out both;
+  /* animation: drop 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both; */
+}
+
+/* @keyframes drop {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+} */
+
+@keyframes drop {
+  0% {
+    opacity: 0;
+    transform: translateY(-100%) rotateX(-90deg);
+  }
+  80% {
+    transform: translateY(30px) rotateX(30deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) rotateX(0);
+  }
+}

@@ -1,0 +1,62 @@
+Remember how an LLM works; it’s a prediction engine. The model takes sequential text as
+an input and then predicts what the following token should be, based on the data it was
+trained on. The LLM is operationalized to do this over and over again, adding the previously
+predicted token to the end of the sequential text for predicting the following token. The next
+token prediction is based on the relationship between what’s in the previous tokens and what
+the LLM has seen during its training.
+
+A temperature of 0 (greedy decoding) is deterministic: the highest probability token is always selected (though note that if two tokens
+have the same highest predicted probability, depending on how tiebreaking is implemented
+you may not always get the same output with temperature 0).
+
+Another important configuration setting is the number of tokens to generate in a response.
+Be aware, generating more tokens requires more computation from the LLM, leading
+to higher energy consumption and potentially slower response times, which leads to
+higher costs.
+
+As a general starting point, a temperature of .2, top-P of .95, and top-K of 30 will give you
+relatively coherent results that can be creative but not excessively so. If you want especially
+creative results, try starting with a temperature of .9, top-P of .99, and top-K of 40. And if you
+want less creative results, try starting with a temperature of .1, top-P of .9, and top-K of 20.
+Finally, if your task always has a single correct answer (e.g., answering a math problem), start
+with a temperature of 0.
+
+With more freedom (higher temperature, top-K, top-P, and output tokens), the LLM
+might generate text that is less relevant.
+
+But LLMs aren’t perfect; the clearer your
+prompt text, the better it is for the LLM to predict the next likely text. Additionally, specific
+techniques that take advantage of how LLMs are trained and how LLMs work will help you get
+the relevant results from LLMs.
+
+General prompting / zero shot
+
+release/MELONFE-830-comment-image-upload
+
+A zero-shot 예시 없이 명령만 줌 => 모델이 추론해서 작업을 수행
+prompt is the simplest type of prompt. It only provides a description of a task
+and some text for the LLM to get started with. This input could be anything: a question, a
+start of a story, or instructions. The name zero-shot stands for ’no examples’.
+
+One-shot
+예시 1개 제공 후, 같은 방식으로 처리 요구
+Few-shot
+예시 여러 개 제공 후, 유사한 결과 생성 요청
+
+A one-shot prompt, provides a single example, hence the name one-shot. The idea is the
+model has an example it can imitate to best complete the task.
+A few-shot prompt 7 provides multiple examples to the model. This approach shows the
+model a pattern that it needs to follow. The idea is similar to one-shot, but multiple examples
+of the desired pattern increases the chance the model follows the pattern.
+
+System prompting sets the overall context and purpose for the language model. It
+defines the ‘big picture’ of what the model should be doing, like translating a language,
+classifying a review etc.
+
+Contextual prompting provides specific details or background information relevant to
+the current conversation or task. It helps the model to understand the nuances of what’s
+being asked and tailor the response accordingly.
+
+Role prompting assigns a specific character or identity for the language model to adopt.
+This helps the model generate responses that are consistent with the assigned role and its
+associated knowledge and behavior.

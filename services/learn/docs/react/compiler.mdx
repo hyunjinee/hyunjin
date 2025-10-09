@@ -1,0 +1,68 @@
+---
+title: React Compiler
+---
+
+# https://www.recompiled.dev/blog/alias-analysis/
+
+컴파일한다는것은 리액트를 언어의 컨셉으로까지 보는것이아닌가 ?
+
+_[Forget](https://react.dev/blog/2023/03/22/react-labs-what-we-have-been-working-on-march-2023#react-optimizing-compiler) was the code name for the React Compiler._
+
+rules of react를 활용하여 react compiler는 코드를 최적화한다.
+
+# [react compiler(react docs)](https://react.dev/learn/react-compiler)
+
+- It is a build-time only tool that automatically optimizes your React app. It works with plain JavaScript, and understands the [Rules of React](https://react.dev/reference/rules), so you don’t need to rewrite any code to use it.
+
+- useMemoCache
+
+# [React Without Memo](https://www.youtube.com/watch?v=lGEMwh32soc)
+
+2021년 리액트 컨퍼런스에서 공개된 이 컴파일러는 React.memo 또는 React.useCallback의 필요성을 감지하여 컴포넌트 리렌더링 성능을 향상시킨다. 컴파일러는 이러한 구조와 유사한 동작을 하는 코드를 삽입하여 리액트 애플리케이션의 성능을 최적화한다.
+상태값이 의미 있게 변경될 때만 애플리케이션이 다시 렌더링되도록 보장한다.
+`useMemo`와 `useCallback`은 성능을 최적화하는 훌륭한 도구이지만 코드에 복잡성을 추가하고 올바르게 사용하기 어려울 수 있습니다. 의존성 배열을 올바르게 지정하지 않으면 혼란스러운 버그와 성능 문제가 발생할 수 있습니다. 또한 이러한 Hook을 사용하면 코드를 읽고 이해하기 어려울 수 있습니다.
+
+리액트 Forget은 메모화 프로세스를 자동화하여 이러한 문제를 해결하는 것을 목표로 합니다. 새로운 컴파일러를 사용하면 개발자가 수동으로 `useMemo`나 `useCallback`을 사용할 필요가 없습니다. 대신 컴파일러가 메모화가 필요한 시점을 자동으로 판단하여 적용하므로 개발자의 정신적 부담이 줄어들고 코드를 읽고 이해하기 쉬워집니다.
+
+React makes it easier to build great user experiences.
+React Forget
+
+React의 핵심 아이디어는 현재 상태의 함수로 UI를 정의하는 것이다.  이는 개발자가 애플리케이션(이하 앱)의 각 상태에 대한 UI를 선언적으로 정의하고, 상태 변경 시 React가 자동으로 UI를 업데이트하는 방식을 의미합니다.
+
+UI is a function of a state.
+
+https://developers.kakaomobility.com/docs/techblogs/react-compiler/
+
+# [Rules of React](https://react.dev/reference/rules)
+
+Compiler REPL: [https://github.com/jherr/compiler-repl](https://www.youtube.com/redirect?event=video_description&redir_token=QUFFLUhqbGh4aHd3aVBTdFBKRG9MUENjc2hRVTlhLVNld3xBQ3Jtc0trd2NWWjFLTlZTRkIwaG9sQm9aeXhndFRmZjdJRWhOdVB2VDVKNTZuOG9URDNiSmtsbkwzS0lJbV8xdEdqNVk0ZDZ2NzdaU1RHWDBCLUdVTlJZMHJ5ZVJrQUVDSC1nOGw3dGJfWWp1eWhPbzJFVWIzMA&q=https%3A%2F%2Fgithub.com%2Fjherr%2Fcompiler-repl&v=PYHBHK37xlE) Meta REPL: [https://playground.react.dev/](https://www.youtube.com/redirect?event=video_description&redir_token=QUFFLUhqbWtpYktZaE9haTk4cnNndF9WMWR6QWpzLXRJUXxBQ3Jtc0trSFdvSHM2dEowcHBDRzJwOE14QzBsdjFuUXlMVkp3eTRYS0J6WlNqcnROdms3SkJJaDVhd0xSZ2hnb0dqVzViZXFlZ1RaME9zTzFKa3lSUXZNYXZ5U0s3SlItVzlldG1JcGczSERWR2J4cUI5Q19XVQ&q=https%3A%2F%2Fplayground.react.dev%2F&v=PYHBHK37xlE)
+
+https://github.com/facebook/react/pull/29061
+
+# [What's next for the React Compiler?](https://www.youtube.com/watch?v=qd5yk2gxbtg)
+
+- the complier uses its knowledge of javascript and the rules of react to automatically memoize values within your components and hooks so if it detects any breakages of the rules it will automatically skip over them and continue to compile the rest of your app.
+- our recommendation for library authors to independently complie and test thier libraries and then ship the compiled code to npm so that applications can just start using the compiled code
+
+env 모든 환경에 통일 제안해봅니다
+
+현재는 커머스와 커뮤니티에서 각각 env변수를 정의하고 있는데, env 변수를 모든 환경에 통일하는 것을 제안합니다.
+internal/env 폴더에 프로젝트에서 공통으로 사용되는 env 통합
+
+이유. shared에서 process.env.(어떤값)을 참조할 때 어디서 커머스 프로젝트, 커뮤니티 프로젝트 실행되느냐에 따라서 env를 따라가야하는데, 이게 헷갈린다고 생각했습니다.
+이거 의견한번 주시면 굉장히 감사하겠습니다!
+
+# [React Labs: What We've Been Working On - March 2023](https://react.dev/blog/2023/03/22/react-labs-what-we-have-been-working-on-march-2023#react-optimizing-compiler)
+
+- A better way to understand React Forget is an automatic reactivity compiler.
+- The core idea of React is that developers define their UI as a function of the current state.
+- The mental model is that React will re-render whenever the application state changes.
+- We believe this simple mental model and keeping close to JavaScript semantics is an important principle in React’s programming model.
+- The catch is that React can sometimes be _too_ reactive: it can re-render too much. For example, in JavaScript we don’t have cheap ways to compare if two objects or arrays are equivalent (having the same keys and values), so creating a new object or array on each render may cause React to do more work than it strictly needs to. This means developers have to explicitly memoize components so as to not over-react to changes.
+- Our goal with React Forget is to ensure that React apps have just the right amount of reactivity by default: that apps re-render only when state values _meaningfully_ change.
+- One way to think about this is that React currently re-renders when object identity changes. With Forget, React re-renders when the semantic value changes — but without incurring the runtime cost of deep comparisons.
+-
+
+- [i tried react compiler](https://www.developerway.com/posts/i-tried-react-compiler)
+- [react compiler: deep dive](https://www.youtube.com/watch?v=0ckOUBiuxVY&t=9309s)
+-

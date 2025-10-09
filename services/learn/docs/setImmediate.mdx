@@ -1,0 +1,7 @@
+setImmediate
+
+https://nodejs.org/en/learn/asynchronous-work/understanding-setimmediate#understanding-setimmediate
+
+Any function passed as the setImmediate() argument is a callback that's executed in the next iteration of the event loop.
+
+Event loop executes tasks in `process.nextTick queue` first, and then executes `promises microtask queue`, and then executes `macrotask queue`.
