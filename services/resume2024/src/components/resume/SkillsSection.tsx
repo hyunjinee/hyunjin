@@ -108,11 +108,11 @@ export default function SkillsSection() {
 
   return (
     <section>
-      <h2 className="font-bold text-[15px] mb-3 md:mb-4 leading-[14px]">기술</h2>
-      <ul className="text-[10px] space-y-1 md:space-y-0.5">
+      <h2 className="font-bold text-heading mb-3 md:mb-4 leading-tight">기술</h2>
+      <ul className="text-body space-y-1 md:space-y-0.5">
         {skills.map((skill, index) => (
           <li key={index} className="list-disc ms-[15px]">
-            <span className="leading-[14px]">{renderSkillText(skill)}</span>
+            <span className="leading-tight">{renderSkillText(skill)}</span>
           </li>
         ))}
       </ul>

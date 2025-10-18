@@ -21,23 +21,23 @@ export default function ExperienceItem({ title, link, period, role, squad, achie
           href={link}
           target="_blank"
           rel="noopener noreferrer"
-          className="font-bold text-[13px] leading-[14px] underline block mb-1"
+          className="font-bold text-subheading leading-tight underline block mb-1"
         >
           {title}
         </a>
       ) : (
-        <h3 className="font-bold text-[13px] leading-[14px] mb-1">{title}</h3>
+        <h3 className="font-bold text-subheading leading-tight mb-1">{title}</h3>
       )}
 
       {/* 기간 및 역할 정보 */}
-      <div className="text-[8px] leading-[14px] text-gray-600 mb-1.5 space-y-0">
+      <div className="text-meta leading-tight text-gray-600 mb-1.5 space-y-0">
         <p>{period}</p>
         {role && <p>{role}</p>}
         {squad && <p>{squad}</p>}
       </div>
 
       {/* 성과 목록 */}
-      <ul className="text-[10px] space-y-0.5 md:space-y-0">
+      <ul className="text-body space-y-0.5 md:space-y-0">
         {achievements.map((achievement, index) => (
           <li key={index} className="list-disc ms-[15px]">
             {achievement.link ? (
@@ -45,12 +45,12 @@ export default function ExperienceItem({ title, link, period, role, squad, achie
                 href={achievement.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="underline cursor-pointer leading-[14px]"
+                className="underline cursor-pointer leading-tight"
               >
                 {achievement.text}
               </a>
             ) : (
-              <span className="leading-[14px]">{achievement.text}</span>
+              <span className="leading-tight">{achievement.text}</span>
             )}
           </li>
         ))}

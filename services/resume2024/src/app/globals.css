@@ -4,6 +4,21 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  /* Font Sizes */
+  --font-size-hero: 30px;
+  --font-size-project: 28px;
+  --font-size-title: 20px;
+  --font-size-heading: 15px;
+  --font-size-subheading: 13px;
+  --font-size-section: 12px;
+  --font-size-body: 10px;
+  --font-size-meta: 8px;
+
+  /* Line Heights */
+  --line-height-tight: 14px;
+  --line-height-normal: 1.2;
+
+  /* Colors */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -35,6 +50,8 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+
+  /* Radius */
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);

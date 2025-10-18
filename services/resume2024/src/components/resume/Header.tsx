@@ -31,8 +31,8 @@ export default function Header() {
           {/* 이름, 링크, 이메일 한 줄 */}
           <div className="flex items-start justify-between gap-2">
             <div className="flex items-baseline gap-3 flex-wrap">
-              <h1 className="font-bold text-[20px] leading-[1.2]">이현진 Lee Hyun Jin</h1>
-              <div className="flex gap-3 text-[10px] leading-[14px]">
+              <h1 className="font-bold text-title leading-normal">이현진 Lee Hyun Jin</h1>
+              <div className="flex gap-3 text-body leading-tight">
                 <Link
                   href="https://github.com/hyunjinee"
                   target="_blank"
@@ -57,11 +57,11 @@ export default function Header() {
                 </Link>
               </div>
             </div>
-            <div className="text-[10px] leading-[14px] text-gray-600 whitespace-nowrap">leehj0110@kakao.com</div>
+            <div className="text-body leading-tight text-gray-600 whitespace-nowrap">leehj0110@kakao.com</div>
           </div>
 
           {/* 소개 */}
-          <div className="space-y-2 text-[10px] leading-[14px]">
+          <div className="space-y-2 text-body leading-tight">
             <p>웹 페이지 위에 내 생각을 표현할 수 있다는 것에 매력을 느껴서 프론트엔드 개발을 좋아하게 되었습니다.</p>
 
             <p>
@@ -76,18 +76,18 @@ export default function Header() {
 
             <ul className="space-y-0.5">
               <li className="list-disc ms-[15px]">
-                <span className="leading-[14px]">
+                <span className="leading-tight">
                   빠른 실행력과 커뮤니케이션 스킬을 바탕으로 유저에게 제품을 빠르고 안정적으로 제공할 수 있는 엔지니어
                 </span>
               </li>
               <li className="list-disc ms-[15px]">
-                <span className="leading-[14px]">
+                <span className="leading-tight">
                   주도적으로 업무를 파악하고 발생한 문제를 깊게 파고들어 명확하게 해결하고, 이 과정에서 스스로 학습하는
                   엔지니어
                 </span>
               </li>
               <li className="list-disc ms-[15px]">
-                <span className="leading-[14px]">
+                <span className="leading-tight">
                   프로젝트에서 협업의 중요성을 이해하고 적극적으로 커뮤니케이션하는 엔지니어
                 </span>
               </li>
