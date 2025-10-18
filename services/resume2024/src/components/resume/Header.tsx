@@ -1,13 +1,21 @@
+'use client'
+
 import Image from 'next/image'
 import Link from 'next/link'
+import { useState } from 'react'
+import PhotoViewer from '../PhotoViewer'
 
 export default function Header() {
+  const [isViewerOpen, setIsViewerOpen] = useState(false)
   return (
     <header className="mb-4 md:mb-6">
       {/* 프로필 영역 */}
       <div className="flex flex-row gap-4 mb-3 md:mb-4">
         {/* 프로필 이미지 */}
-        <div className="relative h-[130px] w-[86px] rounded-[8px] overflow-hidden flex-shrink-0">
+        <div
+          className="relative h-[160px] w-[106px] rounded-[8px] overflow-hidden flex-shrink-0 cursor-pointer hover:opacity-90 transition-opacity"
+          onClick={() => setIsViewerOpen(true)}
+        >
           <Image alt="이현진 프로필" className="rounded-[8px] object-cover" src="/profile.png" fill priority />
         </div>
 
@@ -80,6 +88,9 @@ export default function Header() {
           </div>
         </div>
       </div>
+
+      {/* 포토 뷰어 */}
+      {isViewerOpen && <PhotoViewer src="/profile.png" alt="이현진 프로필" onClose={() => setIsViewerOpen(false)} />}
     </header>
   )
 }
