@@ -1,2 +1,2 @@
-- [resume_extract](./services/resume_extract)
+- [resume_extract](./packages/resume_extract)
 - [learn](./services/learn)
