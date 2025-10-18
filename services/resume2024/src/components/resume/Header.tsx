@@ -16,7 +16,14 @@ export default function Header() {
           className="relative h-[160px] w-[106px] rounded-[8px] overflow-hidden flex-shrink-0 cursor-pointer hover:opacity-90 transition-opacity"
           onClick={() => setIsViewerOpen(true)}
         >
-          <Image alt="이현진 프로필" className="rounded-[8px] object-cover" src="/profile.png" fill priority />
+          <Image
+            alt="이현진 프로필"
+            className="rounded-[8px] object-cover"
+            src="/profile.png"
+            fill
+            priority
+            quality={100}
+          />
         </div>
 
         {/* 이름, 정보, 소개 */}

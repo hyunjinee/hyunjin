@@ -56,6 +56,7 @@ export default function PhotoViewer({ src, alt, onClose }: PhotoViewerProps) {
             fill
             className="object-contain"
             priority
+            quality={100}
             sizes="(max-width: 1024px) 100vw, 1024px"
           />
         </div>
