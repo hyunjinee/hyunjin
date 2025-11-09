@@ -64,7 +64,8 @@ iOS의 유니버설 링크와 개념적으로 유사하게, 도메인 소유권�
 ## [link.berriz.in](https://link.berriz.in) 서브 도메인이 필요한 이유
 
 berriz.in을 유니버셜/앱링크로 사용하게 되는 경우 모바일 웹 berriz 내부에서 네비게이션할 때 의도치 않게 앱이 켜지는 상황이 발생할 수 있습니다.
-[iOS의 경우 해당 상황에서 사용자의 브라우저 네비게이션 행위를 중심적으로 여기기 때문에 브라우저 네비게이션이 일어나지만](https://developer.apple.com/library/archive/documentation/General/Conceptual/AppSearch/UniversalLinks.html) 안드로이드의 경우 앱이 열립니다. 이런 상황은 베리즈를 웹에서 이용하는 중이기 때문에 갑자기 앱이 열리는 것은 오히려 UX를 해칠 수 있습니다.
+[iOS의 경우 해당 상황에서 사용자의 브라우저 네비게이션 행위를 중심적으로 여기기 때문에 브라우저 네비게이션이 일어나지만](https://developer.apple.com/library/archive/documentation/General/Conceptual/AppSearch/UniversalLinks.html) 안드로이드의 경우 앱이 열립니다.
+이런 상황은 베리즈를 웹에서 이용하는 중이기 때문에 갑자기 앱이 열리는 것은 오히려 UX를 해칠 수 있습니다.
 
 서브 도메인 link.berriz.in을 활용한다면 berriz.in 웹 내부에서의 내비게이션 동작은 그대로 유지할 수 있습니다. 베리즈의 특정 페이지를 공유하려고 한다면 link.berriz.in을 공유하면 딥링크를 통해 앱이 설치되어있는 유저는 베리즈 앱에서, 앱이 설치되어있지 않은 유저는 베리즈 웹으로 이동시킬 수 있습니다.
 
@@ -83,22 +84,22 @@ link.berriz.in 뒤에 붙는 경로로 web path로 이동할 것인지 app path�
 ## Demo
 
 <div style={{ overflowX: 'auto', marginBottom: '2rem' }}>
-  <table>
+  <table style={{ borderCollapse: 'collapse', width: '100%' }}>
     <thead>
       <tr>
-        <th>iOS</th>
-        <th>앱 설치</th>
-        <th>앱 미설치</th>
+        <th style={{ border: '1px solid #ddd', padding: '12px' }}>iOS</th>
+        <th style={{ border: '1px solid #ddd', padding: '12px' }}>앱 설치</th>
+        <th style={{ border: '1px solid #ddd', padding: '12px' }}>앱 미설치</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td rowSpan="2">
+        <td rowSpan="2" style={{ border: '1px solid #ddd', padding: '12px', verticalAlign: 'middle' }}>
           <b>iOS</b>
           <br />
           <span style={{ fontSize: '12px', color: '#888' }}>web path</span>
         </td>
-        <td style={{ verticalAlign: 'top', textAlign: 'center' }}>
+        <td style={{ border: '1px solid #ddd', padding: '12px', verticalAlign: 'top', textAlign: 'center' }}>
           <img
             src="/images/deeplink/ios-control-center.png"
             alt="iOS에서 web path 입력"
@@ -106,7 +107,7 @@ link.berriz.in 뒤에 붙는 경로로 web path로 이동할 것인지 app path�
           />
           <div style={{ fontSize: '12px', color: '#888', marginTop: 4 }}>유니버셜 링크 입력</div>
         </td>
-        <td style={{ verticalAlign: 'top', textAlign: 'center' }}>
+        <td style={{ border: '1px solid #ddd', padding: '12px', verticalAlign: 'top', textAlign: 'center' }}>
           <img
             src="/images/deeplink/ios-safari-address.png"
             alt="iOS Safari에서 web path"
@@ -118,7 +119,7 @@ link.berriz.in 뒤에 붙는 경로로 web path로 이동할 것인지 app path�
         </td>
       </tr>
       <tr>
-        <td style={{ verticalAlign: 'top', textAlign: 'center' }}>
+        <td style={{ border: '1px solid #ddd', padding: '12px', verticalAlign: 'top', textAlign: 'center' }}>
           <img
             src="/images/deeplink/ios-universal-link.png"
             alt="iOS Universal Link"
@@ -126,7 +127,7 @@ link.berriz.in 뒤에 붙는 경로로 web path로 이동할 것인지 app path�
           />
           <div style={{ fontSize: '12px', color: '#888', marginTop: 4 }}>유니버셜 링크 직접 입력</div>
         </td>
-        <td style={{ verticalAlign: 'top', textAlign: 'center' }}>
+        <td style={{ border: '1px solid #ddd', padding: '12px', verticalAlign: 'top', textAlign: 'center' }}>
           <img
             src="/images/deeplink/ios-app-switch.png"
             alt="iOS Universal Link 앱 이동"
@@ -136,12 +137,12 @@ link.berriz.in 뒤에 붙는 경로로 web path로 이동할 것인지 app path�
         </td>
       </tr>
       <tr>
-        <td rowSpan="1">
+        <td rowSpan="1" style={{ border: '1px solid #ddd', padding: '12px', verticalAlign: 'middle' }}>
           <b>iOS</b>
           <br />
           <span style={{ fontSize: '12px', color: '#888' }}>app path</span>
         </td>
-        <td style={{ verticalAlign: 'top', textAlign: 'center' }}>
+        <td style={{ border: '1px solid #ddd', padding: '12px', verticalAlign: 'top', textAlign: 'center' }}>
           <video
             style={{ maxWidth: 180, border: '1px solid #eee' }}
             autoPlay
@@ -156,7 +157,7 @@ link.berriz.in 뒤에 붙는 경로로 web path로 이동할 것인지 app path�
           </video>
           <div style={{ fontSize: '12px', color: '#888', marginTop: 4 }}>커스텀 스킴을 직접 실행</div>
         </td>
-        <td style={{ verticalAlign: 'top', textAlign: 'center' }}>
+        <td style={{ border: '1px solid #ddd', padding: '12px', verticalAlign: 'top', textAlign: 'center' }}>
           <img
             src="/images/deeplink/ios-app-path-result.png"
             alt="iOS app path 앱 이동"
@@ -170,22 +171,22 @@ link.berriz.in 뒤에 붙는 경로로 web path로 이동할 것인지 app path�
 </div>
 
 <div style={{ overflowX: 'auto', marginBottom: '2rem' }}>
-  <table>
+  <table style={{ borderCollapse: 'collapse', width: '100%' }}>
     <thead>
       <tr>
-        <th>Android</th>
-        <th>앱 설치</th>
-        <th>앱 미설치</th>
+        <th style={{ border: '1px solid #ddd', padding: '12px' }}>Android</th>
+        <th style={{ border: '1px solid #ddd', padding: '12px' }}>앱 설치</th>
+        <th style={{ border: '1px solid #ddd', padding: '12px' }}>앱 미설치</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td rowSpan="2">
+        <td rowSpan="2" style={{ border: '1px solid #ddd', padding: '12px', verticalAlign: 'middle' }}>
           <b>Android</b>
           <br />
           <span style={{ fontSize: '12px', color: '#888' }}>web path</span>
         </td>
-        <td style={{ verticalAlign: 'top', textAlign: 'center' }}>
+        <td style={{ border: '1px solid #ddd', padding: '12px', verticalAlign: 'top', textAlign: 'center' }}>
           <img
             src="/images/deeplink/android-control-center.png"
             alt="Android에서 web path 입력"
@@ -193,7 +194,7 @@ link.berriz.in 뒤에 붙는 경로로 web path로 이동할 것인지 app path�
           />
           <div style={{ fontSize: '12px', color: '#888', marginTop: 4 }}>앱링크 입력</div>
         </td>
-        <td style={{ verticalAlign: 'top', textAlign: 'center' }}>
+        <td style={{ border: '1px solid #ddd', padding: '12px', verticalAlign: 'top', textAlign: 'center' }}>
           <img
             src="/images/deeplink/android-browser-address.png"
             alt="Android Browser에서 web path"
@@ -205,7 +206,7 @@ link.berriz.in 뒤에 붙는 경로로 web path로 이동할 것인지 app path�
         </td>
       </tr>
       <tr>
-        <td style={{ verticalAlign: 'top', textAlign: 'center' }}>
+        <td style={{ border: '1px solid #ddd', padding: '12px', verticalAlign: 'top', textAlign: 'center' }}>
           <img
             src="/images/deeplink/android-app-link.png"
             alt="Android App Link"
@@ -213,7 +214,7 @@ link.berriz.in 뒤에 붙는 경로로 web path로 이동할 것인지 app path�
           />
           <div style={{ fontSize: '12px', color: '#888', marginTop: 4 }}>앱링크 직접 입력</div>
         </td>
-        <td style={{ verticalAlign: 'top', textAlign: 'center' }}>
+        <td style={{ border: '1px solid #ddd', padding: '12px', verticalAlign: 'top', textAlign: 'center' }}>
           <img
             src="/images/deeplink/android-app-switch.png"
             alt="Android App Link 앱 이동"
@@ -223,12 +224,12 @@ link.berriz.in 뒤에 붙는 경로로 web path로 이동할 것인지 app path�
         </td>
       </tr>
       <tr>
-        <td rowSpan="1">
+        <td rowSpan="1" style={{ border: '1px solid #ddd', padding: '12px', verticalAlign: 'middle' }}>
           <b>Android</b>
           <br />
           <span style={{ fontSize: '12px', color: '#888' }}>app path</span>
         </td>
-        <td style={{ verticalAlign: 'top', textAlign: 'center' }}>
+        <td style={{ border: '1px solid #ddd', padding: '12px', verticalAlign: 'top', textAlign: 'center' }}>
           <img
             src="/images/deeplink/android-control-center.png"
             alt="Android에서 app path 입력"
@@ -236,7 +237,7 @@ link.berriz.in 뒤에 붙는 경로로 web path로 이동할 것인지 app path�
           />
           <div style={{ fontSize: '12px', color: '#888', marginTop: 4 }}>커스텀 스킴을 직접 실행</div>
         </td>
-        <td style={{ verticalAlign: 'top', textAlign: 'center' }}>
+        <td style={{ border: '1px solid #ddd', padding: '12px', verticalAlign: 'top', textAlign: 'center' }}>
           <img
             src="/images/deeplink/android-app-path-result.png"
             alt="Android app path 앱 이동"
