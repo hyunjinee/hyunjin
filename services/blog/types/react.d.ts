@@ -14,4 +14,3 @@ declare module 'react' {
 
   export const ViewTransition: React.FC<ViewTransitionProps>
 }
-
