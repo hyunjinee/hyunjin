@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { unstable_ViewTransition as ViewTransition } from 'react'
+import { ViewTransition } from 'react'
 import Image from '@/components/Image'
 import Bleed from 'pliny/ui/Bleed'
 import { CoreContent } from 'pliny/utils/contentlayer'
@@ -37,7 +37,7 @@ export default function PostMinimal({ content, next, prev, children }: LayoutPro
             </div>
             <div className="relative pt-10">
               <PageTitle>
-                <ViewTransition name={`title-${title}`}>
+                <ViewTransition name={`title-${slug}`}>
                   <span>{title}</span>
                 </ViewTransition>
               </PageTitle>

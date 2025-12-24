@@ -1,4 +1,4 @@
-import { unstable_ViewTransition as ViewTransition } from 'react'
+import { ViewTransition } from 'react'
 import Link from '@/components/Link'
 import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
@@ -27,9 +27,9 @@ export default function Home({ posts }) {
                     <div className="space-y-5 xl:col-span-3">
                       <div className="space-y-6">
                         <div>
-                          <h2 className="text-2xl font-bold leading-8 tracking-tight">
+                          <h2 className="text-2xl font-bold tracking-tight leading-8">
                             <Link href={`/blog/${slug}`} className="text-gray-900 dark:text-gray-100">
-                              <ViewTransition name={`title-${title}`}>
+                              <ViewTransition name={`title-${slug}`}>
                                 <span>{title}</span>
                               </ViewTransition>
                             </Link>
@@ -40,7 +40,7 @@ export default function Home({ posts }) {
                             ))}
                           </div>
                         </div>
-                        <div className="prose text-gray-500 max-w-none dark:text-gray-400">{summary}</div>
+                        <div className="max-w-none text-gray-500 prose dark:text-gray-400">{summary}</div>
                       </div>
                       <div className="text-base font-medium leading-6">
                         <Link

@@ -65,18 +65,18 @@ const config: NextConfig = {
   basePath,
   reactStrictMode: true,
   pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
-  eslint: {
-    dirs: ['app', 'components', 'layouts', 'scripts'],
-  },
   images: {
     remotePatterns: [
       {
         protocol: 'https',
         hostname: 'picsum.photos',
       },
+      {
+        protocol: 'https',
+        hostname: 'velog.velcdn.com',
+      },
     ],
     unoptimized,
-    domains: ['velog.velcdn.com'],
   },
   async headers() {
     return [
@@ -94,9 +94,17 @@ const config: NextConfig = {
 
     return config
   },
+  turbopack: {
+    rules: {
+      '*.svg': {
+        loaders: ['@svgr/webpack'],
+        as: '*.js',
+      },
+    },
+  },
+  reactCompiler: true,
   experimental: {
     viewTransition: true,
-    reactCompiler: true,
   },
 }
 
