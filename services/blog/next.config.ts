@@ -1,6 +1,6 @@
 import { withContentlayer } from 'next-contentlayer2'
 import { NextConfig } from 'next'
-import { Configuration } from 'webpack'
+// import { Configuration } from 'webpack'
 
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
