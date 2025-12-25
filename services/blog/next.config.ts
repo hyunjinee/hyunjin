@@ -1,6 +1,12 @@
 import { withContentlayer } from 'next-contentlayer2'
 import { NextConfig } from 'next'
-import { Configuration } from 'webpack'
+import createMDX from '@next/mdx'
+import remarkGfm from 'remark-gfm'
+import remarkMath from 'remark-math'
+import rehypeKatex from 'rehype-katex'
+import rehypeSlug from 'rehype-slug'
+import rehypeAutolinkHeadings from 'rehype-autolink-headings'
+import rehypePrismPlus from 'rehype-prism-plus'
 
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
@@ -108,4 +114,28 @@ const config: NextConfig = {
   },
 }
 
-export default withContentlayer(withBundleAnalyzer(config))
+// MDX 설정 - Turbopack 사용 여부에 따라 플러그인 조건부 적용
+const isTurbopack =
+  process.argv.includes('--turbo') || (!process.argv.includes('--turbo=false') && process.env.TURBOPACK !== 'false')
+
+const withMDX = createMDX({
+  extension: /\.mdx?$/,
+  options: isTurbopack
+    ? {
+        // Turbopack에서는 직렬화 가능한 기본 설정만 사용
+        remarkPlugins: [],
+        rehypePlugins: [],
+      }
+    : {
+        // Webpack에서는 모든 플러그인 사용
+        remarkPlugins: [remarkGfm, remarkMath],
+        rehypePlugins: [
+          rehypeSlug,
+          rehypeAutolinkHeadings,
+          rehypeKatex,
+          [rehypePrismPlus, { defaultLanguage: 'js', ignoreMissing: true }],
+        ],
+      },
+})
+
+export default withContentlayer(withBundleAnalyzer(withMDX(config)))

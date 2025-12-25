@@ -1,0 +1,110 @@
+import { InteractiveButton } from '@/components/InteractiveButton'
+
+export const metadata = {
+  title: 'MDX 테스트 페이지',
+  description: 'Next.js MDX 통합 테스트를 위한 페이지입니다.',
+}
+
+# MDX 테스트 페이지
+
+Next.js의 네이티브 MDX 지원을 테스트하는 페이지입니다.
+
+## 기능 테스트
+
+### 1. 텍스트 서식
+
+일반 텍스트, **굵은 글씨**, _기울임꼴_, ~~취소선~~ 등을 테스트합니다.
+
+### 2. 코드 블록
+
+```javascript
+function greet(name) {
+  console.log(`Hello, ${name}!`)
+  return `Welcome to MDX!`
+}
+
+greet('World')
+```
+
+```typescript
+interface User {
+  id: number
+  name: string
+  email: string
+}
+
+const user: User = {
+  id: 1,
+  name: 'John Doe',
+  email: 'john@example.com',
+}
+```
+
+### 3. 인라인 코드
+
+`const variable = 'value'`와 같이 인라인 코드도 사용할 수 있습니다.
+
+### 4. 목록
+
+#### 순서 없는 목록
+
+- 첫 번째 항목
+- 두 번째 항목
+  - 중첩된 항목 1
+  - 중첩된 항목 2
+- 세 번째 항목
+
+#### 순서 있는 목록
+
+1. 첫 번째 단계
+2. 두 번째 단계
+3. 세 번째 단계
+
+### 5. 링크
+
+[내부 링크](/blog)와 [외부 링크](https://nextjs.org)를 테스트합니다.
+
+### 6. 인용문
+
+> 이것은 인용문입니다.
+> 여러 줄에 걸쳐 작성할 수 있습니다.
+
+### 7. 테이블
+
+| 이름    | 역할       | 상태 |
+| ------- | ---------- | ---- |
+| React   | 라이브러리 | 활성 |
+| Next.js | 프레임워크 | 활성 |
+| MDX     | 마크다운   | 활성 |
+
+### 8. 수학 수식 (KaTeX)
+
+{/* Turbopack에서는 수학 수식이 지원되지 않습니다. --turbo=false로 실행하세요. */}
+{/* 인라인 수식: $E = mc^2$ */}
+
+{/* 블록 수식: */}
+{/* $$ */}
+{/* \int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi} */}
+{/* $$ */}
+
+### 9. JSX 컴포넌트
+
+<div style={{ padding: '1rem', backgroundColor: '#f0f0f0', borderRadius: '0.5rem' }}>
+  <p>이것은 MDX 내에서 직접 사용한 JSX입니다!</p>
+  <p>
+    <strong>참고:</strong> MDX는 기본적으로 서버 컴포넌트입니다. 이벤트 핸들러를 사용하려면 별도의 클라이언트 컴포넌트를
+    만들어야 합니다.
+  </p>
+</div>
+
+### 10. 인터랙티브 컴포넌트
+
+클라이언트 컴포넌트를 import해서 사용할 수 있습니다:
+
+<InteractiveButton />
+
+---
+
+## 결론
+
+MDX를 사용하면 마크다운과 JSX를 자유롭게 혼합하여 사용할 수 있습니다.
