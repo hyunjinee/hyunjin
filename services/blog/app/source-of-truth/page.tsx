@@ -1,14 +1,13 @@
 export default function page() {
   return (
     <>
-      {/* <Title>Akhila Ariyachandra&apos;s Blog Archive</Title> */}
+      {/* <Title>Blog Archive</Title> */}
 
       <h1>Source Of Truth</h1>
 
       <ul className="space-y-2 sm:space-y-3">
         <li>1</li>
         <li>2</li>
-        <li>3pn</li>
         {/* {allPosts
           .sort((a, b) => (dayjs(a.posted).isBefore(b.posted) ? 1 : -1))
           .map((post) => (
