@@ -17,7 +17,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     ol: (props) => <ol {...props} />,
     ul: (props) => <ul {...props} />,
     li: (props) => <li {...props} />,
-    
+
     // 커스텀 컴포넌트
     Image,
     TOCInline,
@@ -25,9 +25,8 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     pre: Pre,
     table: TableWrapper,
     BlogNewsletterForm,
-    
+
     // 전달받은 컴포넌트 병합
     ...components,
   }
 }
-
