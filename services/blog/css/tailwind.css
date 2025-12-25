@@ -1,6 +1,91 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+@plugin "@tailwindcss/typography";
+@plugin "@tailwindcss/forms";
+
+@source "node_modules/pliny/**/*.js";
+@source "app/**/*.{js,ts,jsx,tsx}";
+@source "pages/**/*.{js,ts,tsx}";
+@source "components/**/*.{js,ts,tsx}";
+@source "layouts/**/*.{js,ts,tsx}";
+@source "data/**/*.mdx";
+
+@theme {
+  /* Line Heights */
+  --line-height-11: 2.75rem;
+  --line-height-12: 3rem;
+  --line-height-13: 3.25rem;
+  --line-height-14: 3.5rem;
+
+  /* Font Families */
+  --font-family-sans: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-family-pretendard: var(--font-pretendard);
+
+  /* Primary Colors (Pink) */
+  --color-primary-50: oklch(0.971 0.014 0.946);
+  --color-primary-100: oklch(0.946 0.028 0.952);
+  --color-primary-200: oklch(0.898 0.061 0.956);
+  --color-primary-300: oklch(0.826 0.115 0.954);
+  --color-primary-400: oklch(0.729 0.172 0.943);
+  --color-primary-500: oklch(0.656 0.194 0.926);
+  --color-primary-600: oklch(0.586 0.195 0.91);
+  --color-primary-700: oklch(0.514 0.166 0.907);
+  --color-primary-800: oklch(0.459 0.138 0.905);
+  --color-primary-900: oklch(0.419 0.114 0.903);
+  --color-primary-950: oklch(0.27 0.079 0.914);
+
+  /* Z-Index */
+  --z-60: 60;
+  --z-70: 70;
+  --z-80: 80;
+}
+
+/* Typography customization */
+.prose a {
+  color: var(--color-primary-500);
+}
+
+.prose a:hover {
+  color: var(--color-primary-600);
+}
+
+.prose a code {
+  color: var(--color-primary-400);
+}
+
+.prose h1,
+.prose h2 {
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.prose h3 {
+  font-weight: 600;
+}
+
+.prose code {
+  color: oklch(0.57 0.173 264.542);
+}
+
+.dark .prose a {
+  color: var(--color-primary-500);
+}
+
+.dark .prose a:hover {
+  color: var(--color-primary-400);
+}
+
+.dark .prose a code {
+  color: var(--color-primary-400);
+}
+
+.dark .prose h1,
+.dark .prose h2,
+.dark .prose h3,
+.dark .prose h4,
+.dark .prose h5,
+.dark .prose h6 {
+  color: oklch(0.922 0.006 264.542);
+}
 
 .task-list-item::before {
   @apply hidden;
