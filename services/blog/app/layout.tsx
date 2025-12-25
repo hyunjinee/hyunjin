@@ -7,9 +7,10 @@ import type { Metadata } from 'next'
 
 import { Analytics, AnalyticsConfig } from 'pliny/analytics'
 import { SearchProvider, SearchConfig } from 'pliny/search'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 import { pretendard } from 'fonts/pretendard'
 import { Analytics as NextAnalytics } from '@vercel/analytics/next'
-import { SpeedInsights } from '@vercel/speed-insights/next'
+
 import Header from '@/components/Header'
 import SectionContainer from '@/components/SectionContainer'
 import Footer from '@/components/Footer'
