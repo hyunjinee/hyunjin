@@ -2,6 +2,7 @@
 @plugin "@tailwindcss/typography";
 @plugin "@tailwindcss/forms";
 
+/* Tailwind v4 content sources */
 @source "node_modules/pliny/**/*.js";
 @source "app/**/*.{js,ts,jsx,tsx}";
 @source "pages/**/*.{js,ts,tsx}";
