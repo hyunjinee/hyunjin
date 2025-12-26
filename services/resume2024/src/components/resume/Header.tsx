@@ -10,10 +10,10 @@ export default function Header() {
   return (
     <header className="mb-4 md:mb-6">
       {/* 프로필 영역 */}
-      <div className="flex flex-row gap-4 mb-3 md:mb-4">
+      <div className="flex flex-col gap-4 mb-3 md:flex-row md:mb-4">
         {/* 프로필 이미지 */}
         <div
-          className="relative h-[160px] w-[106px] rounded-[8px] overflow-hidden flex-shrink-0 cursor-pointer hover:opacity-90 transition-opacity"
+          className="relative h-[160px] w-[106px] rounded-[8px] overflow-hidden flex-shrink-0 cursor-pointer hover:opacity-90 transition-opacity mx-auto md:mx-0"
           onClick={() => setIsViewerOpen(true)}
         >
           <Image
@@ -27,41 +27,38 @@ export default function Header() {
         </div>
 
         {/* 이름, 정보, 소개 */}
-        <div className="flex-1 flex flex-col gap-2">
-          {/* 이름, 링크, 이메일 한 줄 */}
-          <div className="flex items-start justify-between gap-2">
-            <div className="flex items-baseline gap-3 flex-wrap">
-              <h1 className="font-bold text-title leading-normal">이현진 Lee Hyun Jin</h1>
-              <div className="flex gap-3 text-body leading-tight">
-                <Link
-                  href="https://github.com/hyunjinee"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="underline"
-                >
-                  Github
-                </Link>
-                <Link href="https://velog.io/@hyunjine" target="_blank" rel="noopener noreferrer" className="underline">
-                  Blog1
-                </Link>
-                <Link href="https://hyunjin.oopy.io" target="_blank" rel="noopener noreferrer" className="underline">
-                  Blog2
-                </Link>
-                <Link
-                  href="https://www.linkedin.com/in/leehj0110/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="underline"
-                >
-                  LinkedIn
-                </Link>
-              </div>
-            </div>
-            <div className="text-body leading-tight text-gray-600 whitespace-nowrap">leehj0110@kakao.com</div>
+        <div className="flex flex-col flex-1 gap-2">
+          {/* 이름 */}
+          <h1 className="font-bold leading-normal text-center text-title md:text-left">이현진 Lee Hyun Jin</h1>
+
+          {/* 링크들 */}
+          <div className="flex flex-wrap gap-3 justify-center leading-tight text-body md:justify-start">
+            <Link href="https://github.com/hyunjinee" target="_blank" rel="noopener noreferrer" className="underline">
+              Github
+            </Link>
+            <Link href="https://velog.io/@hyunjine" target="_blank" rel="noopener noreferrer" className="underline">
+              Blog1
+            </Link>
+            <Link href="https://hyunjin.oopy.io" target="_blank" rel="noopener noreferrer" className="underline">
+              Blog2
+            </Link>
+            <Link
+              href="https://www.linkedin.com/in/leehj0110/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline"
+            >
+              LinkedIn
+            </Link>
+          </div>
+
+          {/* 이메일 */}
+          <div className="leading-tight text-center text-gray-600 break-all text-body md:text-left">
+            leehj0110@kakao.com
           </div>
 
           {/* 소개 */}
-          <div className="space-y-2 text-body leading-tight">
+          <div className="space-y-2 leading-tight text-body">
             <p>웹 페이지 위에 내 생각을 표현할 수 있다는 것에 매력을 느껴서 프론트엔드 개발을 좋아하게 되었습니다.</p>
 
             <p>
