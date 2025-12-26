@@ -7,13 +7,14 @@ import PhotoViewer from '../PhotoViewer'
 
 export default function Header() {
   const [isViewerOpen, setIsViewerOpen] = useState(false)
+
   return (
     <header className="mb-4 md:mb-6">
       {/* 프로필 영역 */}
       <div className="flex flex-col gap-3 mb-3 md:flex-row md:mb-4">
         {/* 프로필 이미지 */}
         <div
-          className="relative h-[180px] w-[120px] rounded-[8px] overflow-hidden flex-shrink-0 cursor-pointer hover:opacity-90 transition-opacity mx-auto md:mx-0"
+          className="relative h-[225px] w-[150px] rounded-[8px] overflow-hidden flex-shrink-0 cursor-pointer hover:opacity-90 transition-opacity mx-auto md:mx-0"
           onClick={() => setIsViewerOpen(true)}
         >
           <Image
@@ -28,48 +29,45 @@ export default function Header() {
 
         {/* 이름, 정보, 소개 */}
         <div className="flex flex-col flex-1 gap-1.5">
-          {/* 이름 */}
-          <h1 className="font-bold leading-tight text-center text-hero md:text-left">
-            이현진 <span className="font-bold">Lee Hyun Jin</span>
-          </h1>
+          <div className="flex flex-col justify-between items-center md:flex-row">
+            {/* 이름 */}
+            <h1 className="text-2xl font-bold leading-tight text-center md:text-left">이현진 LeeHyunJin</h1>
 
-          {/* 링크들 */}
-          <div className="flex flex-wrap gap-2.5 justify-center leading-tight text-body md:justify-start">
-            <Link href="https://github.com/hyunjinee" target="_blank" rel="noopener noreferrer" className="underline">
-              Github
-            </Link>
-            <Link href="https://velog.io/@hyunjine" target="_blank" rel="noopener noreferrer" className="underline">
-              Blog1
-            </Link>
-            <Link href="https://hyunjin.oopy.io" target="_blank" rel="noopener noreferrer" className="underline">
-              Blog2
-            </Link>
-            <Link
-              href="https://www.linkedin.com/in/leehj0110/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline"
-            >
-              LinkedIn
-            </Link>
-            <span className="text-body">leehj0110@kakao.com</span>
+            {/* 링크들 */}
+            <div className="flex  gap-2.5 justify-center leading-tight md:justify-start">
+              <Link href="https://github.com/hyunjinee" target="_blank" rel="noopener noreferrer" className="underline">
+                Github
+              </Link>
+              <Link href="https://velog.io/@hyunjine" target="_blank" rel="noopener noreferrer" className="underline">
+                Blog1
+              </Link>
+              <Link href="https://hyunjin.oopy.io" target="_blank" rel="noopener noreferrer" className="underline">
+                Blog2
+              </Link>
+              <Link
+                href="https://www.linkedin.com/in/leehj0110/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline"
+              >
+                LinkedIn
+              </Link>
+              <div className="text-body">leehj0110@kakao.com</div>
+            </div>
           </div>
 
           {/* 소개 */}
-          <div className="space-y-1.5 leading-tight text-body">
+          <div className="space-y-1.5 leading-tight text-[14px] pt-3">
             <p>웹 페이지 위에 내 생각을 표현할 수 있다는 것에 매력을 느껴서 프론트엔드 개발을 좋아하게 되었습니다.</p>
-
             <p>
               서비스를 만들어가는 과정에서 동료와 토론하고 배운 내용을 공유하는 것을 즐깁니다. 또한 하드스킬과
               소프트스킬을 기르는데 있어서 꾸준함을 가지고 있고 새로운 도전을 통해 성장하고자 노력합니다.
             </p>
-
             <p>
               프론트엔드 분야에서 내 생각을 말할 수 있는 엔지니어가 되자는 목표를 가지고 있고, 저를 아래와 같은
               엔지니어라고 생각합니다.
             </p>
-
-            <ul className="space-y-0">
+            <ul className="flex flex-col gap-1 space-y-0">
               <li className="list-disc ms-[15px]">
                 <span className="leading-tight">
                   빠른 실행력과 커뮤니케이션 스킬을 바탕으로 유저에게 제품을 빠르고 안정적으로 제공할 수 있는 엔지니어
