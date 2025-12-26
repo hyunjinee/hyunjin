@@ -13,7 +13,7 @@ export default function Header() {
       <div className="flex flex-col gap-3 mb-3 md:flex-row md:mb-4">
         {/* 프로필 이미지 */}
         <div
-          className="relative h-[130px] w-[86px] rounded-[8px] overflow-hidden flex-shrink-0 cursor-pointer hover:opacity-90 transition-opacity mx-auto md:mx-0"
+          className="relative h-[180px] w-[120px] rounded-[8px] overflow-hidden flex-shrink-0 cursor-pointer hover:opacity-90 transition-opacity mx-auto md:mx-0"
           onClick={() => setIsViewerOpen(true)}
         >
           <Image
@@ -29,7 +29,7 @@ export default function Header() {
         {/* 이름, 정보, 소개 */}
         <div className="flex flex-col flex-1 gap-1.5">
           {/* 이름 */}
-          <h1 className="font-bold leading-tight text-center text-title md:text-left">
+          <h1 className="font-bold leading-tight text-center text-hero md:text-left">
             이현진 <span className="font-bold">Lee Hyun Jin</span>
           </h1>
 
