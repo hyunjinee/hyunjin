@@ -1,6 +1,7 @@
 interface Achievement {
   text: string
   link?: string
+  isTitle?: boolean
 }
 
 interface ExperienceItemProps {
@@ -38,22 +39,32 @@ export default function ExperienceItem({ title, link, period, role, squad, achie
 
       {/* 성과 목록 */}
       <ul className="text-body space-y-0.5 md:space-y-0">
-        {achievements.map((achievement, index) => (
-          <li key={index} className="list-disc ms-[15px]">
-            {achievement.link ? (
-              <a
-                href={achievement.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline cursor-pointer leading-tight"
-              >
+        {achievements.map((achievement, index) => {
+          if (achievement.isTitle) {
+            return (
+              <li key={index} className="font-bold leading-tight mt-1">
                 {achievement.text}
-              </a>
-            ) : (
-              <span className="leading-tight">{achievement.text}</span>
-            )}
-          </li>
-        ))}
+              </li>
+            )
+          }
+
+          return (
+            <li key={index} className="list-disc ms-[15px]">
+              {achievement.link ? (
+                <a
+                  href={achievement.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline cursor-pointer leading-tight"
+                >
+                  {achievement.text}
+                </a>
+              ) : (
+                <span className="leading-tight">{achievement.text}</span>
+              )}
+            </li>
+          )
+        })}
       </ul>
     </div>
   )
