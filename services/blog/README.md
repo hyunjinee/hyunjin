@@ -75,8 +75,6 @@ Using the template? Feel free to create a PR and add your blog to this list.
 
 ## Examples V1
 
-[v1-blogs-showcase.webm](https://github.com/timlrx/tailwind-nextjs-starter-blog/assets/28362229/2124c81f-b99d-4431-839c-347e01a2616c)
-
 Thanks to the community of users and contributors to the template! We are no longer accepting new blog listings over here. If you have updated from version 1 to version 2, feel free to remove your blog from this list and add it to the one above.
 
 - [Aloisdg's cookbook](https://tambouille.vercel.app/) - with pictures and recipes!
@@ -320,11 +318,3 @@ Consider removing the following features that cannot be used in a static build:
 
 - [How can I add a custom MDX component?](/faq/custom-mdx-component.md)
 - [How can I customize the `kbar` search?](/faq/customize-kbar-search.md)
-
-## Support
-
-Using the template? Support this effort by giving a star on GitHub, sharing your own blog and giving a shoutout on Twitter or becoming a project [sponsor](https://github.com/sponsors/timlrx).
-
-## Licence
-
-[MIT](https://github.com/timlrx/tailwind-nextjs-starter-blog/blob/main/LICENSE) © [Timothy Lin](https://www.timlrx.com)

@@ -10,6 +10,9 @@
 @source "layouts/**/*.{js,ts,tsx}";
 @source "data/**/*.mdx";
 
+/* Dark mode configuration - class-based */
+@custom-variant dark (&:is(.dark *));
+
 @theme {
   /* Line Heights */
   --line-height-11: 2.75rem;
@@ -93,6 +96,14 @@
   --tw-prose-pre-bg: oklch(0.15 0.01 264.542);
   --tw-prose-th-borders: oklch(0.4 0.01 264.542);
   --tw-prose-td-borders: oklch(0.3 0.01 264.542);
+}
+
+/* 다크 모드 본문 텍스트 색상 덮어쓰기 */
+.dark .prose p,
+.dark .prose li,
+.dark .prose td,
+.dark .prose blockquote {
+  color: oklch(0.8 0.01 264.542);
 }
 
 .dark .prose a:hover {
