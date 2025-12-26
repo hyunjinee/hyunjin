@@ -1,5 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "installCommand": "pnpm install",
-  "buildCommand": "pnpm run build"
+  "buildCommand": "pnpm run build",
+  "ignoreCommand": "bash -c 'if git diff HEAD^ HEAD --quiet ./services/blog ./packages ./pnpm-lock.yaml ./pnpm-workspace.yaml; then exit 0; else exit 1; fi'"
 }
