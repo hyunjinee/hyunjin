@@ -46,6 +46,7 @@ const experiences = [
     period: '2023.03 ~ 2023.06',
     role: 'Frondend Developer',
     squad: '산학 협력 인턴',
+    logo: '/sia.webp',
     tags: ['React', 'TypeScript', 'Sass', 'OpenLayers', 'Vite'],
     achievements: [
       {
@@ -121,6 +122,7 @@ const experiences = [
     link: 'https://hyunjin.oopy.io/b08771a5-af10-40bf-990d-30fae0440525',
     period: '2021.07 ~ 2022.08',
     role: '창업 동아리',
+    logo: '/bclguide.png',
     tags: ['React Native', 'Node.js', 'MongoDB', 'AWS', 'Redis'],
     achievements: [
       {
