@@ -5,9 +5,9 @@ import { pretendard } from '@/fonts/pretendard'
 export const metadata: Metadata = {
   title: '이현진 2024',
   description: '이현진의 2024 이력서',
-  icons: {
-    icon: '/soccer.svg',
-  },
+  // icons: {
+  //   icon: '/soccer.svg',
+  // },
 }
 
 export default function RootLayout({

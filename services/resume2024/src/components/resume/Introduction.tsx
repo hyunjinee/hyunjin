@@ -5,11 +5,11 @@ import Link from 'next/link'
 import { useState } from 'react'
 import PhotoViewer from '../PhotoViewer'
 
-export default function Header() {
+export default function Introduction() {
   const [isViewerOpen, setIsViewerOpen] = useState(false)
 
   return (
-    <header className="mb-4 md:mb-6">
+    <header className="mb-4">
       {/* 프로필 영역 */}
       <div className="flex flex-col gap-3 mb-3 md:flex-row md:mb-4">
         {/* 프로필 이미지 */}
