@@ -67,6 +67,7 @@ const experiences = [
     link: 'https://hyunjin.oopy.io/7b78d8a5-636d-436c-86f9-0dd5382f9d43',
     period: '2022.10',
     role: 'SW 트랙 3기 실습 코치',
+    logo: '/elice.webp',
     achievements: [
       {
         text: '엘리스 SW 트랙 3기에서 실습코치로 JavaScript, TypeScript를 강의',
