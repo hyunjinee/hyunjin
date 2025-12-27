@@ -74,10 +74,9 @@ const experiences = [
     ],
   },
   {
-    title: '소프트웨어 마에스트로',
+    title: '소프트웨어 마에스트로 13기',
     link: 'https://hyunjin.oopy.io/fab659af-6b24-4fad-b64e-cbc05d937957',
     period: '2022.04 ~ 2022.12',
-    role: '13기',
     achievements: [
       {
         text: '오프라인에서도 사용할 수 있는 할 일 관리 앱인 MOZI 서비스를 개발(PWA, Next.js, Node.js, MySQL)',

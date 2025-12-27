@@ -108,7 +108,7 @@ export default function SkillsSection() {
 
   return (
     <section>
-      <h2 className="font-bold text-heading mb-3 md:mb-4 leading-tight">기술</h2>
+      <h2 className="font-bold text-[18px] mb-3 leading-tight">기술</h2>
       <ul className="text-body space-y-1 md:space-y-0.5">
         {skills.map((skill, index) => (
           <li key={index} className="list-disc ms-[15px]">

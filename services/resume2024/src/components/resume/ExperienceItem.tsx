@@ -16,33 +16,33 @@ interface ExperienceItemProps {
 export default function ExperienceItem({ title, link, period, role, squad, achievements }: ExperienceItemProps) {
   return (
     <div>
-      {/* 제목 */}
-      {link ? (
-        <a
-          href={link}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="font-bold text-subheading leading-tight underline block mb-1"
-        >
-          {title}
-        </a>
-      ) : (
-        <h3 className="font-bold text-subheading leading-tight mb-1">{title}</h3>
-      )}
-
-      {/* 기간 및 역할 정보 */}
-      <div className="text-meta leading-tight text-gray-600 mb-1.5 space-y-0">
-        <p>{period}</p>
-        {role && <p>{role}</p>}
-        {squad && <p>{squad}</p>}
+      <div className="flex justify-between items-center">
+        {/* 제목 */}
+        {link ? (
+          <a
+            href={link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block mb-1 font-bold leading-tight underline text-subheading"
+          >
+            {title}
+          </a>
+        ) : (
+          <h3 className="mb-1 font-bold leading-tight text-subheading">{title}</h3>
+        )}
+        {/* 기간 및 역할 정보 */}
+        <div className="text-[14px] leading-tight  mb-1.5 space-y-0">
+          {role && <span>{role}</span>}
+          {squad && <span>({squad})</span>}
+          <span>{period}</span>
+        </div>
       </div>
-
       {/* 성과 목록 */}
       <ul className="text-body space-y-0.5 md:space-y-0">
         {achievements.map((achievement, index) => {
           if (achievement.isTitle) {
             return (
-              <li key={index} className="font-bold leading-tight mt-1">
+              <li key={index} className="mt-1 font-bold leading-tight">
                 {achievement.text}
               </li>
             )
@@ -55,7 +55,7 @@ export default function ExperienceItem({ title, link, period, role, squad, achie
                   href={achievement.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="underline cursor-pointer leading-tight"
+                  className="leading-tight underline cursor-pointer"
                 >
                   {achievement.text}
                 </a>
