@@ -7,6 +7,8 @@ const experiences = [
     period: '2023.09 ~ 2024.04',
     role: 'FullStack Developer',
     squad: 'Housing Loan Squad',
+    logo: '/toss.png',
+    tags: ['TypeScript', 'React', 'Next.js', 'Kotlin', 'Spring', 'zod'],
     achievements: [
       {
         text:
@@ -44,6 +46,7 @@ const experiences = [
     period: '2023.03 ~ 2023.06',
     role: 'Frondend Developer',
     squad: '산학 협력 인턴',
+    tags: ['React', 'TypeScript', 'Sass', 'OpenLayers', 'Vite'],
     achievements: [
       {
         text:
@@ -77,6 +80,7 @@ const experiences = [
     title: '소프트웨어 마에스트로 13기',
     link: 'https://hyunjin.oopy.io/fab659af-6b24-4fad-b64e-cbc05d937957',
     period: '2022.04 ~ 2022.12',
+    tags: ['PWA', 'Next.js', 'Node.js', 'MySQL', 'Service Worker', 'IndexedDB'],
     achievements: [
       {
         text: '오프라인에서도 사용할 수 있는 할 일 관리 앱인 MOZI 서비스를 개발(PWA, Next.js, Node.js, MySQL)',
@@ -117,6 +121,7 @@ const experiences = [
     link: 'https://hyunjin.oopy.io/b08771a5-af10-40bf-990d-30fae0440525',
     period: '2021.07 ~ 2022.08',
     role: '창업 동아리',
+    tags: ['React Native', 'Node.js', 'MongoDB', 'AWS', 'Redis'],
     achievements: [
       {
         text:
@@ -147,6 +152,8 @@ export default function ExperienceSection() {
             role={exp.role}
             squad={exp.squad}
             achievements={exp.achievements}
+            logo={exp.logo}
+            tags={exp.tags}
           />
         ))}
       </div>
