@@ -82,6 +82,7 @@ const experiences = [
     title: '소프트웨어 마에스트로 13기',
     link: 'https://hyunjin.oopy.io/fab659af-6b24-4fad-b64e-cbc05d937957',
     period: '2022.04 ~ 2022.12',
+    logo: '/swm.png',
     tags: ['PWA', 'Next.js', 'Node.js', 'MySQL', 'Service Worker', 'IndexedDB'],
     achievements: [
       {
