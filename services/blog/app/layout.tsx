@@ -73,7 +73,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000" />
       <link rel="alternate" type="application/rss+xml" href={`${basePath}/feed.xml`} />
       <body
-        className={`bg-white pl-[calc(100vw-100%)] text-black antialiased dark:bg-gray-950 dark:text-white ${pretendard.className}`}
+        className={`bg-white pl-[calc(100vw-100%)] text-black antialiased dark:bg-gray-950 dark:text-white h-full ${pretendard.className}`}
       >
         <BtoaPolyfill />
         <ThemeProviders>
@@ -81,7 +81,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <SectionContainer>
             <SearchProvider searchConfig={siteMetadata.search as SearchConfig}>
               <Header />
-              <main className="mb-auto">{children}</main>
+              <main className="flex-1">{children}</main>
               <NextAnalytics />
               <SpeedInsights />
             </SearchProvider>
