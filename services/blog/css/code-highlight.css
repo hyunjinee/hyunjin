@@ -1,0 +1,100 @@
+/* Sugar High 코드 하이라이팅 스타일 */
+
+/* 코드 블록 기본 스타일 */
+pre {
+  overflow-x: auto;
+  border-radius: 0.5rem; /* rounded-lg */
+  /* background-color: #f9fafb; bg-gray-50 */
+  padding: 1rem; /* p-4 */
+  font-size: 0.875rem; /* text-sm */
+  border: 1px solid #e5e7eb; /* border-gray-200 */
+}
+
+.dark pre {
+  background-color: #111827; /* dark:bg-gray-900 */
+  border-color: #1f2937; /* dark:border-gray-800 */
+}
+
+pre code {
+  display: block;
+  background-color: transparent;
+  padding: 0;
+  font-size: 0.875rem;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  line-height: 1.6;
+}
+
+/* Sugar High 토큰 색상 - 라이트 모드 */
+.sh__keyword {
+  color: #d73a49; /* 키워드: 빨강 */
+}
+
+.sh__string {
+  color: #032f62; /* 문자열: 파랑 */
+}
+
+.sh__comment {
+  color: #6a737d; /* 주석: 회색 */
+  font-style: italic;
+}
+
+.sh__number {
+  color: #005cc5; /* 숫자: 진한 파랑 */
+}
+
+.sh__property {
+  color: #6f42c1; /* 속성: 보라 */
+}
+
+.sh__function {
+  color: #6f42c1; /* 함수: 보라 */
+}
+
+.sh__jsxliterals {
+  color: #22863a; /* JSX: 녹색 */
+}
+
+.sh__class {
+  color: #6f42c1; /* 클래스: 보라 */
+}
+
+.sh__sign {
+  color: #24292e; /* 기호: 검정 */
+}
+
+/* 다크 모드 토큰 색상 */
+.dark .sh__keyword {
+  color: #ff7b72; /* 키워드: 밝은 빨강 */
+}
+
+.dark .sh__string {
+  color: #a5d6ff; /* 문자열: 밝은 파랑 */
+}
+
+.dark .sh__comment {
+  color: #8b949e; /* 주석: 밝은 회색 */
+}
+
+.dark .sh__number {
+  color: #79c0ff; /* 숫자: 밝은 파랑 */
+}
+
+.dark .sh__property {
+  color: #d2a8ff; /* 속성: 밝은 보라 */
+}
+
+.dark .sh__function {
+  color: #d2a8ff; /* 함수: 밝은 보라 */
+}
+
+.dark .sh__jsxliterals {
+  color: #7ee787; /* JSX: 밝은 녹색 */
+}
+
+.dark .sh__class {
+  color: #d2a8ff; /* 클래스: 밝은 보라 */
+}
+
+.dark .sh__sign {
+  color: #c9d1d9; /* 기호: 밝은 회색 */
+}

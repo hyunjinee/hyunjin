@@ -2,6 +2,7 @@ import 'css/tailwind.css'
 import 'css/view-transition.css'
 import 'pliny/search/algolia.css'
 import 'remark-github-blockquote-alert/alert.css'
+import 'css/code-highlight.css'
 
 import type { Metadata } from 'next'
 

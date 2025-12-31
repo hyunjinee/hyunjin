@@ -54,7 +54,25 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     BlogNewsletterForm,
 
     code: ({ children, ...props }: ComponentPropsWithoutRef<'code'>) => {
-      const codeHTML = highlight(children as string)
+      // 인라인 코드인지 확인 (className이 없으면 인라인 코드)
+      // const isInline = !props.className
+
+      // if (isInline) {
+      //   // 인라인 코드는 하이라이팅 없이 기본 스타일만 적용
+      //   return (
+      //     <code
+      //       className="rounded bg-gray-100 px-1 py-0.5 text-sm font-mono text-gray-800 dark:bg-gray-800 dark:text-gray-200"
+      //       {...props}
+      //     >
+      //       {children}
+      //     </code>
+      //   )
+      // }
+
+      // 코드 블록은 sugar-high로 하이라이팅
+      const codeString = typeof children === 'string' ? children : String(children)
+      const codeHTML = highlight(codeString)
+
       return <code dangerouslySetInnerHTML={{ __html: codeHTML }} {...props} />
     },
 
