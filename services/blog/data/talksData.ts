@@ -18,7 +18,6 @@ const talksData: Talk[] = [
     href: '/talks/llm-growing',
     type: 'talk',
   },
-  // 예시 데이터 - 실제 발표 내용으로 교체하세요
   {
     title: '예시 발표 제목',
     description: '발표에 대한 간단한 설명을 여기에 작성합니다.',
