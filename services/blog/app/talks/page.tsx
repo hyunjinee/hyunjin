@@ -1,0 +1,113 @@
+import talksData from '@/data/talksData'
+import { genPageMetadata } from 'app/seo'
+import Link from '@/components/Link'
+
+export const metadata = genPageMetadata({ title: 'Talks' })
+
+function formatDate(dateString: string) {
+  const date = new Date(dateString)
+  return date.toLocaleDateString('ko-KR', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })
+}
+
+function TalkCard({ talk }) {
+  const { title, description, date, event, href, slides, video, type } = talk
+
+  return (
+    <div className="py-4">
+      <article>
+        <div className="space-y-2">
+          <div>
+            <h3 className="text-2xl font-bold leading-8 tracking-tight">
+              {href ? (
+                <Link href={href} className="text-gray-900 dark:text-gray-100">
+                  {title}
+                </Link>
+              ) : (
+                <span className="text-gray-900 dark:text-gray-100">{title}</span>
+              )}
+            </h3>
+            <div className="flex flex-wrap gap-2 mt-1">
+              <time className="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
+                {formatDate(date)}
+              </time>
+              {event && (
+                <>
+                  <span className="text-gray-500 dark:text-gray-400">·</span>
+                  <span className="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
+                    {event}
+                  </span>
+                </>
+              )}
+              {type && (
+                <>
+                  <span className="text-gray-500 dark:text-gray-400">·</span>
+                  <span className="inline-flex items-center rounded-md bg-gray-50 dark:bg-gray-800 px-2 py-1 text-xs font-medium text-gray-600 dark:text-gray-300 ring-1 ring-inset ring-gray-500/10 dark:ring-gray-500/20">
+                    {type}
+                  </span>
+                </>
+              )}
+            </div>
+          </div>
+          {description && (
+            <div className="prose max-w-none text-gray-500 dark:text-gray-400">{description}</div>
+          )}
+          {(slides || video) && (
+            <div className="flex gap-4 text-base font-medium leading-6">
+              {slides && (
+                <Link
+                  href={slides}
+                  className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+                  aria-label={`${title}의 슬라이드 보기`}
+                >
+                  슬라이드 &rarr;
+                </Link>
+              )}
+              {video && (
+                <Link
+                  href={video}
+                  className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+                  aria-label={`${title}의 영상 보기`}
+                >
+                  영상 &rarr;
+                </Link>
+              )}
+            </div>
+          )}
+        </div>
+      </article>
+    </div>
+  )
+}
+
+export default function Talks() {
+  // 날짜순으로 정렬 (최신순)
+  const sortedTalks = [...talksData].sort((a, b) => {
+    return new Date(b.date).getTime() - new Date(a.date).getTime()
+  })
+
+  return (
+    <div className="divide-y divide-gray-200 dark:divide-gray-700">
+      <div className="pt-6 pb-8 space-y-2 md:space-y-5">
+        <h1 className="text-3xl font-extrabold tracking-tight leading-9 text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14">
+          Talks
+        </h1>
+        <p className="text-lg leading-7 text-gray-500 dark:text-gray-400">
+          발표, 워크샵, 강의 등 다양한 활동들을 기록합니다.
+        </p>
+      </div>
+      <div className="container py-12">
+        <div className="divide-y divide-gray-200 dark:divide-gray-700">
+          {sortedTalks.length === 0 ? (
+            <p className="text-gray-500 dark:text-gray-400">아직 등록된 발표가 없습니다.</p>
+          ) : (
+            sortedTalks.map((talk) => <TalkCard key={talk.title + talk.date} talk={talk} />)
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
