@@ -1,8 +1,9 @@
 const headerNavLinks = [
   { href: '/', title: 'Home' },
   { href: '/blog', title: 'Blog' },
-  { href: '/tags', title: 'Tags' },
-  { href: '/projects', title: 'Projects' },
+  // { href: '/tags', title: 'Tags' },
+  // TODO projects 페이지 완성되면 주석 해제
+  // { href: '/projects', title: 'Projects' },
   { href: '/about', title: 'About' },
 ]
 
