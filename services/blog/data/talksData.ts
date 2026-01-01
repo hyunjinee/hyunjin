@@ -10,6 +10,14 @@ interface Talk {
 }
 
 const talksData: Talk[] = [
+  {
+    title: 'LLM 키우기',
+    description: 'LLM을 효과적으로 활용하고 개발하는 방법에 대한 발표입니다.',
+    date: '2025-02-20', // 실제 발표 날짜로 변경하세요
+    event: 'FE Chapter 라이트닝 톡', // 행사명이 있다면 여기에 추가하세요
+    href: '/talks/llm-growing',
+    type: 'talk',
+  },
   // 예시 데이터 - 실제 발표 내용으로 교체하세요
   {
     title: '예시 발표 제목',

@@ -15,6 +15,7 @@ function formatDate(dateString: string) {
 
 function TalkCard({ talk }) {
   const { title, description, date, event, href, slides, video, type } = talk
+  const isExternalLink = href && !href.startsWith('/')
 
   return (
     <div className="py-4">
@@ -23,8 +24,15 @@ function TalkCard({ talk }) {
           <div>
             <h3 className="text-2xl font-bold leading-8 tracking-tight">
               {href ? (
-                <Link href={href} className="text-gray-900 dark:text-gray-100">
+                <Link
+                  href={href}
+                  className="text-gray-900 dark:text-gray-100 hover:text-primary-500 dark:hover:text-primary-400"
+                  {...(isExternalLink && { target: '_blank', rel: 'noopener noreferrer' })}
+                >
                   {title}
+                  {isExternalLink && (
+                    <span className="ml-1 text-sm align-super">↗</span>
+                  )}
                 </Link>
               ) : (
                 <span className="text-gray-900 dark:text-gray-100">{title}</span>
