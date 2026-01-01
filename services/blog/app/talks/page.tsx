@@ -30,9 +30,7 @@ function TalkCard({ talk }) {
                   {...(isExternalLink && { target: '_blank', rel: 'noopener noreferrer' })}
                 >
                   {title}
-                  {isExternalLink && (
-                    <span className="ml-1 text-sm align-super">↗</span>
-                  )}
+                  {isExternalLink && <span className="ml-1 text-sm align-super">↗</span>}
                 </Link>
               ) : (
                 <span className="text-gray-900 dark:text-gray-100">{title}</span>
@@ -45,9 +43,7 @@ function TalkCard({ talk }) {
               {event && (
                 <>
                   <span className="text-gray-500 dark:text-gray-400">·</span>
-                  <span className="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
-                    {event}
-                  </span>
+                  <span className="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">{event}</span>
                 </>
               )}
               {type && (
@@ -60,9 +56,7 @@ function TalkCard({ talk }) {
               )}
             </div>
           </div>
-          {description && (
-            <div className="prose max-w-none text-gray-500 dark:text-gray-400">{description}</div>
-          )}
+          {description && <div className="prose max-w-none text-gray-500 dark:text-gray-400">{description}</div>}
           {(slides || video) && (
             <div className="flex gap-4 text-base font-medium leading-6">
               {slides && (
