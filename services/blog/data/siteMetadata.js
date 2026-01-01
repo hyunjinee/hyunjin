@@ -15,7 +15,7 @@ const siteMetadata = {
   github: 'https://github.com/hyunjinee',
   // x: 'https://twitter.com/x',
   // facebook: 'https://facebook.com',
-  // youtube: 'https://youtube.com',
+  youtube: 'https://www.youtube.com/@leehj0110',
   linkedin: 'https://www.linkedin.com/in/leehj0110/',
   // threads: 'https://www.threads.net',
   // instagram: 'https://www.instagram.com',
