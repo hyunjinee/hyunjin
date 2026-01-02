@@ -53,6 +53,43 @@ const skills = [
   'Github Action, CodeDeploy등을 사용하여 CI/CD 환경을 구축하여 코드의 안정성 및 신뢰성을 높일 수 있습니다.',
 ]
 
+const news = [
+  {
+    date: '01/2026',
+    content: 'React 19 정식 출시에 맞춰 개인 프로젝트에 React Compiler를 적용했습니다.',
+    links: [
+      { text: '블로그 포스트', url: 'https://example.com/react-19' },
+    ],
+  },
+  {
+    date: '12/2025',
+    content: 'Next.js 15 버전의 새로운 기능들을 탐구하고 실무에 적용하는 방법에 대한 글을 작성했습니다.',
+    links: [
+      { text: '아티클', url: 'https://example.com/nextjs-15' },
+    ],
+  },
+  {
+    date: '11/2025',
+    content: 'TypeScript 5.7의 새로운 타입 시스템 개선사항을 정리한 튜토리얼을 공유했습니다.',
+    links: [
+      { text: '튜토리얼', url: 'https://example.com/ts-5.7' },
+      { text: 'GitHub', url: 'https://github.com/hyunjinee' },
+    ],
+  },
+  {
+    date: '10/2025',
+    content: '프론트엔드 성능 최적화 사례 연구를 진행하고 Core Web Vitals 개선 경험을 공유했습니다.',
+    links: [],
+  },
+  {
+    date: '09/2025',
+    content: 'Vite 6.0 릴리즈와 함께 빌드 도구 마이그레이션 가이드를 작성했습니다.',
+    links: [
+      { text: '가이드', url: 'https://example.com/vite-6' },
+    ],
+  },
+]
+
 export default function Page() {
   const sortedPosts = sortPosts(allBlogs)
   const posts = allCoreContent(sortedPosts)
@@ -170,7 +207,7 @@ export default function Page() {
         </section>
 
         {/* 기술 섹션 */}
-        <section>
+        <section className="mb-16">
           <h2 className="pb-2 mb-8 text-2xl font-bold text-gray-900 border-b-2 border-gray-200 md:text-3xl dark:text-gray-100 dark:border-gray-700">
             Skills
           </h2>
@@ -184,6 +221,45 @@ export default function Page() {
               </li>
             ))}
           </ul>
+        </section>
+
+        {/* 뉴스 섹션 */}
+        <section>
+          <h2 className="pb-2 mb-8 text-2xl font-bold text-gray-900 border-b-2 border-gray-200 md:text-3xl dark:text-gray-100 dark:border-gray-700">
+            News
+          </h2>
+          <div className="space-y-6">
+            {news.map((item, index) => (
+              <div key={index} className="flex flex-col gap-2 sm:flex-row sm:gap-4">
+                <span className="flex-shrink-0 text-sm font-medium text-gray-500 dark:text-gray-500 sm:w-20">
+                  {item.date}
+                </span>
+                <div className="flex-1">
+                  <p className="text-sm text-gray-700 md:text-base dark:text-gray-300">
+                    {item.content}
+                    {item.links && item.links.length > 0 && (
+                      <>
+                        {' '}
+                        {item.links.map((link, linkIndex) => (
+                          <span key={linkIndex}>
+                            {linkIndex > 0 && ', '}
+                            <Link
+                              href={link.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="transition-colors text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+                            >
+                              [{link.text}]
+                            </Link>
+                          </span>
+                        ))}
+                      </>
+                    )}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
         </section>
       </div>
     </div>
