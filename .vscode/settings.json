@@ -10,12 +10,7 @@
     "editor.defaultFormatter": "rust-lang.rust-analyzer"
   },
   // Linting using ESLint.
-  "eslint.validate": [
-    "javascript",
-    "javascriptreact",
-    "typescript",
-    "typescriptreact"
-  ],
+  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
   "eslint.useFlatConfig": false,
   // Set Jest runMode to on-demand as otherwise it will start running all tests the first time.
   // Equivalent to deprecated option "jest.autoRun": "off"
@@ -28,22 +23,9 @@
   // Ensure enough terminal history is preserved when running tests.
   "terminal.integrated.scrollback": 10000,
   // Configure todo-tree to exclude node_modules, dist, and compiled.
-  "todo-tree.filtering.excludeGlobs": [
-    "**/node_modules",
-    "**/dist",
-    "**/compiled"
-  ],
+  "todo-tree.filtering.excludeGlobs": ["**/node_modules", "**/dist", "**/compiled"],
   // Match TODO-APP in addition to other TODOs.
-  "todo-tree.general.tags": [
-    "BUG",
-    "HACK",
-    "FIXME",
-    "TODO",
-    "XXX",
-    "[ ]",
-    "[x]",
-    "TODO-APP"
-  ],
+  "todo-tree.general.tags": ["BUG", "HACK", "FIXME", "TODO", "XXX", "[ ]", "[x]", "TODO-APP"],
   "typescript.preferences.autoImportFileExcludePatterns": [
     // templates reexport many things (see e.g. entry-base.ts), so they clutter import suggestions
     "packages/next/src/build/templates/app-page.ts",
@@ -113,10 +95,8 @@
     }
   ],
   "typescript.tsdk": "node_modules/typescript/lib",
-  "gitlens.advanced.blame.customArguments": [
-    "--ignore-revs-file",
-    "${workspaceRoot}/.git-blame-ignore-revs"
-  ],
+  "gitlens.advanced.blame.customArguments": ["--ignore-revs-file", "${workspaceRoot}/.git-blame-ignore-revs"],
   "astGrep.serverPath": "node_modules/@ast-grep/cli/ast-grep",
-  "rust-analyzer.imports.prefix": "crate"
+  "rust-analyzer.imports.prefix": "crate",
+  "liveServer.settings.port": 5501
 }

@@ -16,7 +16,7 @@ const experiences = [
     title: '토스뱅크',
     period: '2023.09 ~ 2024.04',
     role: 'FullStack Developer',
-    description: 'Housing Loan Squad에서 전월세 대출 심사 및 운영 서비스 개발',
+    description: 'Housing Loan Squad 전월세 대출 심사 및 운영 서비스 개발',
     link: 'https://hyunjinee.notion.site/0d01b8a2b1ac4249a09a946885140870',
   },
   // {

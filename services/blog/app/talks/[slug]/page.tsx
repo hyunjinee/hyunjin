@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
 import { genPageMetadata } from 'app/seo'
 import talksData from '@/data/talksData'
-import TalkPresentationClient from './TalkPresentationClient'
+import TalkPresentation from './TalkPresentation'
 
 export async function generateStaticParams() {
   // talksData에서 내부 링크만 추출
@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return genPageMetadata({ title: talk.title, description: talk.description })
 }
 
-export default async function TalkPresentation({ params }: { params: Promise<{ slug: string }> }) {
+export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   const talk = talksData.find((t) => t.href === `/talks/${slug}`)
 
@@ -29,5 +29,5 @@ export default async function TalkPresentation({ params }: { params: Promise<{ s
     notFound()
   }
 
-  return <TalkPresentationClient talk={talk} slug={slug} />
+  return <TalkPresentation talk={talk} slug={slug} />
 }
