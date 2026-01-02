@@ -19,30 +19,30 @@ const experiences = [
     description: 'Housing Loan Squad에서 전월세 대출 심사 및 운영 서비스 개발',
     link: 'https://hyunjinee.notion.site/0d01b8a2b1ac4249a09a946885140870',
   },
-  {
-    title: 'SI Analytics',
-    period: '2023.03 ~ 2023.06',
-    role: 'Frontend Developer',
-    description: '인공지능 기반 위성/항공 영상 분석 서비스 Ovision 개발',
-  },
-  {
-    title: '엘리스',
-    period: '2022.10',
-    role: 'SW 트랙 3기 실습 코치',
-    description: 'JavaScript, TypeScript 강의 (수강생 72명 대상 4.49/5 평점)',
-  },
-  {
-    title: '소프트웨어 마에스트로 13기',
-    period: '2022.04 ~ 2022.12',
-    role: '연수생',
-    description: 'PWA 기반 오프라인 할 일 관리 앱 MOZI 개발',
-  },
-  {
-    title: '방슐랭 가이드',
-    period: '2021.07 ~ 2022.08',
-    role: '창업 동아리',
-    description: '1인 가구 중심 부동산 플랫폼 (1500+ 유저, 98건 직거래 달성)',
-  },
+  // {
+  //   title: 'SI Analytics',
+  //   period: '2023.03 ~ 2023.06',
+  //   role: 'Frontend Developer',
+  //   description: '인공지능 기반 위성/항공 영상 분석 서비스 Ovision 개발',
+  // },
+  // {
+  //   title: '엘리스',
+  //   period: '2022.10',
+  //   role: 'SW 트랙 3기 실습 코치',
+  //   description: 'JavaScript, TypeScript 강의 (수강생 72명 대상 4.49/5 평점)',
+  // },
+  // {
+  //   title: '소프트웨어 마에스트로 13기',
+  //   period: '2022.04 ~ 2022.12',
+  //   role: '연수생',
+  //   description: 'PWA 기반 오프라인 할 일 관리 앱 MOZI 개발',
+  // },
+  // {
+  //   title: '방슐랭 가이드',
+  //   period: '2021.07 ~ 2022.08',
+  //   role: '창업 동아리',
+  //   description: '1인 가구 중심 부동산 플랫폼 (1500+ 유저, 98건 직거래 달성)',
+  // },
 ]
 
 const skills = [
@@ -221,12 +221,27 @@ export default function Page() {
           </h2>
           <div className="space-y-6">
             <div className="flex flex-col gap-2 sm:flex-row sm:gap-4">
-              <span className="flex-shrink-0 text-sm font-medium text-gray-500 md:text-base dark:text-gray-500 sm:w-20">
-                {/* {item.date} */}
+              <span className="flex-shrink-0 text-[14px] font-medium text-gray-500 md:text-base dark:text-gray-500 sm:w-20">
+                08/2025
+              </span>
+              <div className="flex-1">
+                <p className="text-[14px] text-gray-700 md:text-[16px] dark:text-gray-300">
+                  <CustomLink
+                    href="https://www.kakaotechcampus.com/"
+                    className='"transition-colors text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"'
+                  >
+                    카카오 테크 캠퍼스
+                  </CustomLink>
+                  &nbsp;3기 FE 멘토
+                </p>
+              </div>
+            </div>
+            <div className="flex flex-col gap-2 sm:flex-row sm:gap-4">
+              <span className="flex-shrink-0 text-[14px] font-medium text-gray-500 md:text-[16px] dark:text-gray-500 sm:w-20">
                 02/2023
               </span>
               <div className="flex-1">
-                <p className="text-sm text-gray-700 md:text-base dark:text-gray-300">
+                <p className="text-[14px] text-gray-700 md:text-[16px] dark:text-gray-300">
                   <CustomLink
                     href="https://www.dbpia.co.kr/Journal/articleDetail?nodeId=NODE11229679"
                     className='"transition-colors text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"'
@@ -234,6 +249,34 @@ export default function Page() {
                     인공지능 스피커를 활용한 복약 지원 시스템의 설계 및 구현
                   </CustomLink>
                   (한국 HCI 학회, 졸업 논문)
+                </p>
+              </div>
+            </div>
+            <div className="flex flex-col gap-2 sm:flex-row sm:gap-4">
+              <span className="flex-shrink-0 text-[14px] font-medium text-gray-500 md:text-[16px] dark:text-gray-500 sm:w-20">
+                10/2022
+              </span>
+              <div className="flex-1">
+                <p className="text-[14px] text-gray-700 md:text-[16px] dark:text-gray-300">
+                  <CustomLink
+                    href="https://www.dbpia.co.kr/Journal/articleDetail?nodeId=NODE11229679"
+                    className='"transition-colors text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"'
+                  ></CustomLink>
+                  엘리스 SW 트랙 3기 실습 코치
+                  <CustomLink
+                    href="https://www.dbpia.co.kr/Journal/articleDetail?nodeId=NODE11229679"
+                    className='"transition-colors text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"'
+                  >
+                    JavaScript
+                  </CustomLink>
+                  ,&nbsp;
+                  <CustomLink
+                    href="https://www.dbpia.co.kr/Journal/articleDetail?nodeId=NODE11229679"
+                    className='"transition-colors text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"'
+                  >
+                    TypeScript
+                  </CustomLink>
+                  강의(수강생 72명 대상 4.49/5 평점)
                 </p>
               </div>
             </div>

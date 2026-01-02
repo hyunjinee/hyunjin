@@ -14,7 +14,7 @@ const talksData: Talk[] = [
     title: 'LLM 키우기',
     description: 'LLM 활용 방안 제안',
     date: '2025-02-20',
-    event: 'FE Chapter 라이트닝 톡', // 행사명이 있다면 여기에 추가하세요
+    event: 'Kakao Entertainment FE Chapter 라이트닝 톡', // 행사명이 있다면 여기에 추가하세요
     href: '/talks/llm-growing',
     type: 'talk',
   },
