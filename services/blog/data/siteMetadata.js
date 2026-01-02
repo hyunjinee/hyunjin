@@ -1,4 +1,4 @@
-/** @type {import("pliny/config").PlinyConfig } */
+// /** @type {import("pliny/config").PlinyConfig } */
 const siteMetadata = {
   title: 'hyunjin',
   author: 'hyunjin',
