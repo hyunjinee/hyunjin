@@ -37,12 +37,6 @@ const experiences = [
   //   role: '연수생',
   //   description: 'PWA 기반 오프라인 할 일 관리 앱 MOZI 개발',
   // },
-  // {
-  //   title: '방슐랭 가이드',
-  //   period: '2021.07 ~ 2022.08',
-  //   role: '창업 동아리',
-  //   description: '1인 가구 중심 부동산 플랫폼 (1500+ 유저, 98건 직거래 달성)',
-  // },
 ]
 
 const skills = [
@@ -105,7 +99,7 @@ export default function Page() {
       </div> */}
       <div className="container md:mt-5">
         {/* 프로필 헤더 */}
-        <header className="mb-16">
+        <header className="mb-10">
           <div className="flex flex-col gap-8 items-start md:flex-row">
             {/* 프로필 이미지 */}
             <div className="overflow-hidden relative flex-shrink-0 mx-auto rounded-full w-50 h-50 md:w-50 md:h-50 md:mx-0">
@@ -117,7 +111,7 @@ export default function Page() {
               <h1 className="mb-2 text-3xl font-bold text-gray-900 md:text-4xl dark:text-gray-100">
                 이현진 (Hyunjin Lee)
               </h1>
-              <p className="mb-6 text-lg text-gray-600 md:text-xl dark:text-gray-400">Frontend Developer</p>
+              <p className="mb-6 text-lg text-gray-600 md:text-xl dark:text-gray-400">Software Engineer</p>
 
               {/* 소개 */}
               <div className="mb-6 space-y-3 text-sm text-gray-700 md:text-base dark:text-gray-300">
@@ -166,9 +160,9 @@ export default function Page() {
         </header>
 
         {/* 경험 섹션 */}
-        <section className="mb-16">
+        <section className="mb-14">
           <h2 className="pb-2 mb-8 text-2xl font-bold text-gray-900 border-b-2 border-gray-200 md:text-3xl dark:text-gray-100 dark:border-gray-700">
-            Experience
+            Work Experience
           </h2>
           <div className="space-y-8">
             {experiences.map((exp, index) => (
@@ -198,7 +192,7 @@ export default function Page() {
         </section>
 
         {/* 기술 섹션 */}
-        <section className="mb-16">
+        <section className="mb-10">
           <h2 className="pb-2 mb-8 text-2xl font-bold text-gray-900 border-b-2 border-gray-200 md:text-3xl dark:text-gray-100 dark:border-gray-700">
             Skills
           </h2>
@@ -238,6 +232,16 @@ export default function Page() {
             </div>
             <div className="flex flex-col gap-2 sm:flex-row sm:gap-4">
               <span className="flex-shrink-0 text-[14px] font-medium text-gray-500 md:text-[16px] dark:text-gray-500 sm:w-20">
+                03/2023
+              </span>
+              <div className="flex-1">
+                <p className="text-[14px] text-gray-700 md:text-[16px] dark:text-gray-300">
+                  SI Analytics FE Developer(대학교 산학 협력 인턴) Ovision 서비스 개발
+                </p>
+              </div>
+            </div>
+            <div className="flex flex-col gap-2 sm:flex-row sm:gap-4">
+              <span className="flex-shrink-0 text-[14px] font-medium text-gray-500 md:text-[16px] dark:text-gray-500 sm:w-20">
                 02/2023
               </span>
               <div className="flex-1">
@@ -271,10 +275,21 @@ export default function Page() {
             </div>
             <div className="flex flex-col gap-2 sm:flex-row sm:gap-4">
               <span className="flex-shrink-0 text-[14px] font-medium text-gray-500 md:text-[16px] dark:text-gray-500 sm:w-20">
+                04/2022
+              </span>
+              <div className="flex-1">
+                <p className="text-[14px] text-gray-700 md:text-[16px] dark:text-gray-300">
+                  소프트웨어 마에스트로 13기 연수생
+                </p>
+              </div>
+            </div>
+            <div className="flex flex-col gap-2 sm:flex-row sm:gap-4">
+              <span className="flex-shrink-0 text-[14px] font-medium text-gray-500 md:text-[16px] dark:text-gray-500 sm:w-20">
                 07/2021
               </span>
               <div className="flex-1">
                 <p className="text-[14px] text-gray-700 md:text-[16px] dark:text-gray-300">
+                  1인 가구 중심 부동산 플랫폼{' '}
                   <CustomLink
                     href="/talks/asynchronous-javascript"
                     className='"transition-colors text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"'
