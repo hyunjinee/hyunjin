@@ -1,4 +1,4 @@
-import { talksData } from '@/data/talksData'
+import { talks } from '@/data/talksData'
 import { genPageMetadata } from 'app/seo'
 import Link from '@/components/Link'
 
@@ -91,7 +91,7 @@ function TalkCard({ talk }) {
 
 export default function Talks() {
   // 날짜순으로 정렬 (최신순)
-  const sortedTalks = [...talksData].sort((a, b) => {
+  const sortedTalks = [...talks].sort((a, b) => {
     return new Date(b.date).getTime() - new Date(a.date).getTime()
   })
 

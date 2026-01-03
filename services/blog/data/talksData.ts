@@ -10,12 +10,21 @@ interface Talk {
   pdfUrl?: string // PDF URL 필드
 }
 
-export const talksData: Talk[] = [
+export const talks: Talk[] = [
+  {
+    title: 'LUMOS',
+    description: '전세대출 운영플랫폼을 개발하며 프로젝트의 개선점과 나아가야 할 방향 제시',
+    date: '2023-10-15',
+    event: 'Tossbank FullStack Engineer Weekly',
+    pdfUrl: '/talks/LUMOS.pdf',
+    type: 'talk',
+    href: '/talks/lumos',
+  },
   {
     title: 'FE 행성에 오신 것을 환영합니다',
     description: '입사 1개월차 발표',
     date: '2023-03',
-    // event: '',
+    event: 'SI Analytics',
     href: '/talks/welcome-to-the-fe-planet',
     pdfUrl: '/talks/FE 행성에 오신 것을 환영합니다.pdf',
     type: 'talk',
@@ -46,5 +55,4 @@ export const talksData: Talk[] = [
   //   video: 'https://youtube.com/watch?v=example',
   //   type: 'talk',
   // },
-  // 여기에 더 많은 발표를 추가하세요
 ]
