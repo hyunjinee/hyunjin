@@ -3,9 +3,6 @@
 import { useEffect, useState, useCallback } from 'react'
 import { Document, Page, pdfjs } from 'react-pdf'
 
-// PDF.js worker 설정
-pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`
-
 interface PDFPresentationProps {
   pdfUrl: string
   title: string
@@ -19,6 +16,11 @@ export default function PDFPresentation({ pdfUrl, title }: PDFPresentationProps)
   const [isTransitioning, setIsTransitioning] = useState(false)
 
   useEffect(() => {
+    // PDF.js worker 설정 (클라이언트 사이드에서만 실행)
+    if (typeof window !== 'undefined') {
+      pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`
+    }
+
     // 초기 윈도우 크기 설정
     setWindowSize({
       width: window.innerWidth,
