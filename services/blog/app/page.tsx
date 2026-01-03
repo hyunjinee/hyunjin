@@ -258,25 +258,30 @@ export default function Page() {
               </span>
               <div className="flex-1">
                 <p className="text-[14px] text-gray-700 md:text-[16px] dark:text-gray-300">
-                  <CustomLink
-                    href="https://www.dbpia.co.kr/Journal/articleDetail?nodeId=NODE11229679"
-                    className='"transition-colors text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"'
-                  ></CustomLink>
                   엘리스 SW 트랙 3기 실습 코치
                   <CustomLink
                     href="https://www.dbpia.co.kr/Journal/articleDetail?nodeId=NODE11229679"
                     className='"transition-colors text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"'
                   >
-                    JavaScript
+                    JavaScript, TypeScript 강의
                   </CustomLink>
-                  ,&nbsp;
+                  (수강생 72명 대상 4.49/5 평점)
+                </p>
+              </div>
+            </div>
+            <div className="flex flex-col gap-2 sm:flex-row sm:gap-4">
+              <span className="flex-shrink-0 text-[14px] font-medium text-gray-500 md:text-[16px] dark:text-gray-500 sm:w-20">
+                07/2021
+              </span>
+              <div className="flex-1">
+                <p className="text-[14px] text-gray-700 md:text-[16px] dark:text-gray-300">
                   <CustomLink
                     href="https://www.dbpia.co.kr/Journal/articleDetail?nodeId=NODE11229679"
                     className='"transition-colors text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"'
                   >
-                    TypeScript
+                    방슐랭 가이드
                   </CustomLink>
-                  강의(수강생 72명 대상 4.49/5 평점)
+                  (창업 동아리, 1500+ 유저, 98건 직거래 달성)
                 </p>
               </div>
             </div>

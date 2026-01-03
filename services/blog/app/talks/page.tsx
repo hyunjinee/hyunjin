@@ -5,12 +5,16 @@ import Link from '@/components/Link'
 export const metadata = genPageMetadata({ title: 'Talks' })
 
 function formatDate(dateString: string) {
-  const date = new Date(dateString)
-  return date.toLocaleDateString('ko-KR', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  })
+  const parts = dateString.split('-')
+  const year = parts[0]
+  const month = parts[1]
+  const day = parts[2]
+
+  if (day) {
+    return `${year}년 ${parseInt(month)}월 ${parseInt(day)}일`
+  } else {
+    return `${year}년 ${parseInt(month)}월`
+  }
 }
 
 function TalkCard({ talk }) {
@@ -22,7 +26,7 @@ function TalkCard({ talk }) {
       <article>
         <div className="space-y-2">
           <div>
-            <h3 className="text-2xl font-bold leading-8 tracking-tight">
+            <h3 className="text-2xl font-bold tracking-tight leading-8">
               {href ? (
                 <Link
                   href={href}
@@ -49,14 +53,14 @@ function TalkCard({ talk }) {
               {type && (
                 <>
                   <span className="text-gray-500 dark:text-gray-400">·</span>
-                  <span className="inline-flex items-center rounded-md bg-gray-50 dark:bg-gray-800 px-2 py-1 text-xs font-medium text-gray-600 dark:text-gray-300 ring-1 ring-inset ring-gray-500/10 dark:ring-gray-500/20">
+                  <span className="inline-flex items-center px-2 py-1 text-xs font-medium text-gray-600 bg-gray-50 rounded-md ring-1 ring-inset dark:bg-gray-800 dark:text-gray-300 ring-gray-500/10 dark:ring-gray-500/20">
                     {type}
                   </span>
                 </>
               )}
             </div>
           </div>
-          {description && <div className="prose max-w-none text-gray-500 dark:text-gray-400">{description}</div>}
+          {description && <div className="max-w-none text-gray-500 prose dark:text-gray-400">{description}</div>}
           {(slides || video) && (
             <div className="flex gap-4 text-base font-medium leading-6">
               {slides && (
