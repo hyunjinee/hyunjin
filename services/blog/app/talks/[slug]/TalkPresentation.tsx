@@ -1,7 +1,20 @@
 'use client'
 
 import { useEffect } from 'react'
-import PDFPresentation from './PDFPresentation'
+import dynamic from 'next/dynamic'
+
+// PDFPresentation을 dynamic import로 로드 (SSR 비활성화)
+const PDFPresentation = dynamic(() => import('./PDFPresentation'), {
+  ssr: false,
+  loading: () => (
+    <div className="flex fixed inset-0 justify-center items-center bg-gray-50 dark:bg-gray-950">
+      <div className="text-center">
+        <div className="inline-block w-12 h-12 rounded-full border-4 border-gray-200 animate-spin border-t-primary-500"></div>
+        <p className="mt-4 text-gray-600 dark:text-gray-400">프레젠테이션 로딩 중...</p>
+      </div>
+    </div>
+  ),
+})
 
 interface Talk {
   title: string
