@@ -91,7 +91,14 @@ export default function Page() {
           <div className="flex flex-col gap-8 items-start md:flex-row">
             {/* 프로필 이미지 */}
             <div className="overflow-hidden relative flex-shrink-0 mx-auto rounded-full w-50 h-50 md:w-50 md:h-50 md:mx-0">
-              <Image src="/images/hyunjin/hyunjin.jpg" alt="이현진" fill className="object-cover" priority />
+              <Image
+                src="/images/hyunjin/hyunjin.jpg"
+                alt="이현진"
+                fill
+                className="object-cover"
+                priority
+                quality={100}
+              />
             </div>
             {/* 기본 정보 */}
             <div className="flex-1 text-center md:text-left">
