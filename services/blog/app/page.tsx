@@ -87,18 +87,15 @@ export default function Page() {
       </div> */}
       <div className="container md:mt-5">
         {/* 프로필 헤더 */}
-        <header className="mb-10">
+        <header className="mb-8">
           <div className="flex flex-col gap-8 items-start md:flex-row">
             {/* 프로필 이미지 */}
             <div className="overflow-hidden relative flex-shrink-0 mx-auto rounded-full w-50 h-50 md:w-50 md:h-50 md:mx-0">
               <Image src="/images/hyunjin/hyunjin.jpg" alt="이현진" fill className="object-cover" priority />
             </div>
-
             {/* 기본 정보 */}
             <div className="flex-1 text-center md:text-left">
-              <h1 className="mb-2 text-3xl font-bold text-gray-900 md:text-4xl dark:text-gray-100">
-                이현진 (Hyunjin Lee)
-              </h1>
+              <h1 className="mb-2 text-3xl font-bold text-gray-900 dark:text-gray-100">이현진 (Hyunjin Lee)</h1>
               <p className="mb-6 text-lg text-gray-600 md:text-xl dark:text-gray-400">Software Engineer</p>
 
               {/* 소개 */}
@@ -148,7 +145,7 @@ export default function Page() {
         </header>
 
         {/* 경험 섹션 */}
-        <section className="mb-14">
+        <section className="mb-10">
           <h2 className="pb-2 mb-8 text-2xl font-bold text-gray-900 border-b-2 border-gray-200 md:text-3xl dark:text-gray-100 dark:border-gray-700">
             Work Experience
           </h2>
