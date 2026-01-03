@@ -69,24 +69,16 @@ export default function PDFPresentation({ pdfUrl, title }: PDFPresentationProps)
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [handleKeyDown])
 
-  // 페이지 변경 핸들러 (애니메이션 포함)
+  // 페이지 변경 핸들러
   const goToNextPage = () => {
     if (currentPage < numPages) {
-      setIsTransitioning(true)
-      setTimeout(() => {
-        setCurrentPage((prev) => Math.min(prev + 1, numPages))
-        setIsTransitioning(false)
-      }, 150)
+      setCurrentPage((prev) => Math.min(prev + 1, numPages))
     }
   }
 
   const goToPrevPage = () => {
     if (currentPage > 1) {
-      setIsTransitioning(true)
-      setTimeout(() => {
-        setCurrentPage((prev) => Math.max(prev - 1, 1))
-        setIsTransitioning(false)
-      }, 150)
+      setCurrentPage((prev) => Math.max(prev - 1, 1))
     }
   }
 
@@ -111,21 +103,14 @@ export default function PDFPresentation({ pdfUrl, title }: PDFPresentationProps)
     return () => document.removeEventListener('fullscreenchange', handleFullscreenChange)
   }, [])
 
-  // PDF 크기 계산 (16:9 비율 유지하면서 화면에 맞춤)
+  // PDF 크기 계산 (16:9 비율 유지하면서 가로 너비에 맞춤)
   const calculatePdfDimensions = useCallback(() => {
     if (typeof window === 'undefined' || !windowSize.width || !windowSize.height) {
       return { width: 800, height: 450 }
     }
 
-    const headerHeight = 60 // 헤더 높이
-    const controlsHeight = 80 // 하단 컨트롤 높이
-    const availableHeight = windowSize.height - headerHeight - controlsHeight - 40 // 여백
-
     const aspectRatio = 16 / 9
-    const widthFromHeight = availableHeight * aspectRatio
-    const maxWidth = windowSize.width - 80 // 양쪽 여백
-
-    const width = Math.min(widthFromHeight, maxWidth)
+    const width = windowSize.width
     const height = width / aspectRatio
 
     return { width, height }
@@ -145,7 +130,7 @@ export default function PDFPresentation({ pdfUrl, title }: PDFPresentationProps)
 
       {/* 헤더 */}
       <div
-        className={`flex-shrink-0 px-4 py-3 bg-gray-100 border-b border-gray-200 dark:bg-gray-900 dark:border-gray-700 transition-transform duration-300 ${
+        className={`z-40 flex-shrink-0 px-4 py-3 bg-gray-100 border-b border-gray-200 dark:bg-gray-900 dark:border-gray-700 transition-transform duration-300 ${
           isFullscreen ? '-translate-y-full' : 'translate-y-0'
         }`}
       >
@@ -172,11 +157,9 @@ export default function PDFPresentation({ pdfUrl, title }: PDFPresentationProps)
       </div>
 
       {/* PDF 뷰어 */}
-      <div className="flex overflow-hidden flex-col flex-1 justify-center items-center p-4">
+      <div className="flex overflow-auto flex-col flex-1 justify-start items-center bg-black">
         <div
-          className={`bg-white rounded-lg shadow-2xl dark:bg-gray-800 transition-opacity duration-150 ${
-            isTransitioning ? 'opacity-50' : 'opacity-100'
-          }`}
+          className="bg-white shadow-2xl dark:bg-gray-800"
           style={{ width: pdfWidth, height: pdfHeight }}
         >
           <Document
@@ -216,14 +199,7 @@ export default function PDFPresentation({ pdfUrl, title }: PDFPresentationProps)
               // renderMode="svg"
               renderTextLayer={false}
               renderAnnotationLayer={false}
-              loading={
-                <div
-                  className="flex justify-center items-center w-full"
-                  style={{ height: pdfHeight }}
-                >
-                  <div className="w-8 h-8 rounded-full border-4 border-gray-200 animate-spin border-t-primary-500"></div>
-                </div>
-              }
+              loading={null}
             />
           </Document>
         </div>
@@ -232,7 +208,7 @@ export default function PDFPresentation({ pdfUrl, title }: PDFPresentationProps)
         {currentPage > 1 && (
           <button
             onClick={goToPrevPage}
-            className="hidden fixed left-4 top-1/2 p-3 text-white bg-black bg-opacity-30 rounded-full backdrop-blur-sm transition-all -translate-y-1/2 md:block hover:bg-opacity-50"
+            className="hidden fixed left-4 top-1/2 z-30 p-3 text-white bg-black bg-opacity-30 rounded-full backdrop-blur-sm transition-all -translate-y-1/2 md:block hover:bg-opacity-50"
             aria-label="이전 슬라이드"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -244,7 +220,7 @@ export default function PDFPresentation({ pdfUrl, title }: PDFPresentationProps)
         {currentPage < numPages && (
           <button
             onClick={goToNextPage}
-            className="hidden fixed right-4 top-1/2 p-3 text-white bg-black bg-opacity-30 rounded-full backdrop-blur-sm transition-all -translate-y-1/2 md:block hover:bg-opacity-50"
+            className="hidden fixed right-4 top-1/2 z-30 p-3 text-white bg-black bg-opacity-30 rounded-full backdrop-blur-sm transition-all -translate-y-1/2 md:block hover:bg-opacity-50"
             aria-label="다음 슬라이드"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -297,13 +273,7 @@ export default function PDFPresentation({ pdfUrl, title }: PDFPresentationProps)
                     {pages.map((page) => (
                       <button
                         key={page}
-                        onClick={() => {
-                          setIsTransitioning(true)
-                          setTimeout(() => {
-                            setCurrentPage(page)
-                            setIsTransitioning(false)
-                          }, 150)
-                        }}
+                        onClick={() => setCurrentPage(page)}
                         className={`w-2 h-2 rounded-full transition-all ${
                           currentPage === page
                             ? 'bg-primary-500 w-4'
