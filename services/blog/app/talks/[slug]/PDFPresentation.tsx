@@ -158,10 +158,7 @@ export default function PDFPresentation({ pdfUrl, title }: PDFPresentationProps)
 
       {/* PDF 뷰어 */}
       <div className="flex overflow-auto flex-col flex-1 justify-start items-center bg-black">
-        <div
-          className="bg-white shadow-2xl dark:bg-gray-800"
-          style={{ width: pdfWidth, height: pdfHeight }}
-        >
+        <div className="bg-white shadow-2xl dark:bg-gray-800" style={{ width: pdfWidth, height: pdfHeight }}>
           <Document
             file={pdfUrl}
             onLoadSuccess={onDocumentLoadSuccess}
@@ -171,10 +168,7 @@ export default function PDFPresentation({ pdfUrl, title }: PDFPresentationProps)
               standardFontDataUrl: `https://unpkg.com/pdfjs-dist@${pdfjs.version}/standard_fonts/`,
             }}
             loading={
-              <div
-                className="flex justify-center items-center w-full"
-                style={{ height: pdfHeight }}
-              >
+              <div className="flex justify-center items-center w-full" style={{ height: pdfHeight }}>
                 <div className="text-center">
                   <div className="inline-block w-12 h-12 rounded-full border-4 border-gray-200 animate-spin border-t-primary-500"></div>
                   <p className="mt-4 text-gray-600 dark:text-gray-400">PDF 로딩 중...</p>
@@ -182,10 +176,7 @@ export default function PDFPresentation({ pdfUrl, title }: PDFPresentationProps)
               </div>
             }
             error={
-              <div
-                className="flex justify-center items-center w-full"
-                style={{ height: pdfHeight }}
-              >
+              <div className="flex justify-center items-center w-full" style={{ height: pdfHeight }}>
                 <div className="text-center">
                   <p className="text-red-500">PDF를 불러올 수 없습니다.</p>
                   <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">파일 경로를 확인해주세요.</p>
