@@ -4,4 +4,3 @@
   "buildCommand": "pnpm build --no-turbopack",
   "ignoreCommand": "bash -c 'if git diff HEAD^ HEAD --quiet ./services/react-compiler-playground ./packages ./pnpm-lock.yaml ./pnpm-workspace.yaml; then exit 0; else exit 1; fi'"
 }
-
