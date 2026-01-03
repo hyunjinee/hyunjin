@@ -166,7 +166,6 @@ yarn format
 
 - **PWA 지원**: 오프라인에서도 사용 가능
 - **Google Analytics**: G-7NECSDQ2KN
-- **Husky + Lint-staged**: 커밋 시 자동 포맷팅
 - **자동 사이드바 생성**: 폴더 구조 기반
 
 ## 📝 문서 작성 규칙
