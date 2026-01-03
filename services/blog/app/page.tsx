@@ -25,18 +25,6 @@ const experiences = [
   //   role: 'Frontend Developer',
   //   description: '인공지능 기반 위성/항공 영상 분석 서비스 Ovision 개발',
   // },
-  // {
-  //   title: '엘리스',
-  //   period: '2022.10',
-  //   role: 'SW 트랙 3기 실습 코치',
-  //   description: 'JavaScript, TypeScript 강의 (수강생 72명 대상 4.49/5 평점)',
-  // },
-  // {
-  //   title: '소프트웨어 마에스트로 13기',
-  //   period: '2022.04 ~ 2022.12',
-  //   role: '연수생',
-  //   description: 'PWA 기반 오프라인 할 일 관리 앱 MOZI 개발',
-  // },
 ]
 
 const skills = [
@@ -264,7 +252,7 @@ export default function Page() {
                 <p className="text-[14px] text-gray-700 md:text-[16px] dark:text-gray-300">
                   엘리스 SW 트랙 3기 실습 코치
                   <CustomLink
-                    href="https://www.dbpia.co.kr/Journal/articleDetail?nodeId=NODE11229679"
+                    href="/talks/asynchronous-javascript"
                     className='"transition-colors text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"'
                   >
                     JavaScript, TypeScript 강의
@@ -291,7 +279,7 @@ export default function Page() {
                 <p className="text-[14px] text-gray-700 md:text-[16px] dark:text-gray-300">
                   1인 가구 중심 부동산 플랫폼{' '}
                   <CustomLink
-                    href="/talks/asynchronous-javascript"
+                    href=""
                     className='"transition-colors text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"'
                   >
                     방슐랭 가이드
