@@ -9,13 +9,13 @@ const experiences = [
   {
     title: '카카오 엔터테인먼트',
     period: 'Now',
-    role: 'Frontend Developer',
+    role: 'Frontend Engineer',
     description: 'Berriz FE 개발팀',
   },
   {
     title: '토스뱅크',
     period: '2023.09 ~ 2024.04',
-    role: 'FullStack Developer',
+    role: 'FullStack Engineer',
     description: 'Housing Loan Squad 전월세 대출 심사 및 운영 서비스 개발',
     link: 'https://hyunjinee.notion.site/0d01b8a2b1ac4249a09a946885140870',
   },
@@ -224,7 +224,7 @@ export default function Page() {
               </span>
               <div className="flex-1">
                 <p className="text-[14px] text-gray-700 md:text-[16px] dark:text-gray-300">
-                  SI Analytics FE Developer(대학교 산학 협력 인턴) Ovision 서비스 개발
+                  SI Analytics Frontend Engineer(대학교 산학 협력 인턴) Ovision 서비스 개발
                 </p>
               </div>
             </div>
