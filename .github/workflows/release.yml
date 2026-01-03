@@ -20,8 +20,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: 'npm'
+          node-version: 24
+          cache: "npm"
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -36,8 +36,8 @@ jobs:
         uses: changesets/action@v1
         with:
           publish: pnpm release
-          title: 'chore: release packages'
-          commit: 'chore: release packages'
+          title: "chore: release packages"
+          commit: "chore: release packages"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
