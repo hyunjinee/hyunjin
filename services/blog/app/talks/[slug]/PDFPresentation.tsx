@@ -18,7 +18,7 @@ export default function PDFPresentation({ pdfUrl, title }: PDFPresentationProps)
   useEffect(() => {
     // PDF.js worker 설정 (클라이언트 사이드에서만 실행)
     if (typeof window !== 'undefined') {
-      pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`
+      pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`
     }
 
     // 초기 윈도우 크기 설정
@@ -138,7 +138,7 @@ export default function PDFPresentation({ pdfUrl, title }: PDFPresentationProps)
 
       {/* 헤더 */}
       <div
-        className={`flex-shrink-0 px-4 py-3 bg-white border-b border-gray-200 shadow-sm dark:bg-gray-900 dark:border-gray-700 transition-transform duration-300 ${
+        className={`flex-shrink-0 px-4 py-3 bg-gray-100 border-b border-gray-200 dark:bg-gray-900 dark:border-gray-700 transition-transform duration-300 ${
           isFullscreen ? '-translate-y-full' : 'translate-y-0'
         }`}
       >
@@ -156,7 +156,7 @@ export default function PDFPresentation({ pdfUrl, title }: PDFPresentationProps)
             </button>
             <a
               href="/talks"
-              className="text-sm font-medium whitespace-nowrap text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+              className="ml-4 text-sm whitespace-nowrap text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
             >
               ← Talks
             </a>
@@ -165,7 +165,7 @@ export default function PDFPresentation({ pdfUrl, title }: PDFPresentationProps)
       </div>
 
       {/* PDF 뷰어 */}
-      <div className="flex overflow-auto flex-col flex-1 justify-center items-center p-4">
+      <div className="flex overflow-hidden flex-col flex-1 justify-center items-center p-4">
         <div
           className={`bg-white rounded-lg shadow-2xl dark:bg-gray-800 transition-opacity duration-150 ${
             isTransitioning ? 'opacity-50' : 'opacity-100'
@@ -174,6 +174,11 @@ export default function PDFPresentation({ pdfUrl, title }: PDFPresentationProps)
           <Document
             file={pdfUrl}
             onLoadSuccess={onDocumentLoadSuccess}
+            options={{
+              cMapUrl: `https://unpkg.com/pdfjs-dist@${pdfjs.version}/cmaps/`,
+              cMapPacked: true,
+              standardFontDataUrl: `https://unpkg.com/pdfjs-dist@${pdfjs.version}/standard_fonts/`,
+            }}
             loading={
               <div className="flex justify-center items-center w-full h-[600px]">
                 <div className="text-center">
@@ -194,6 +199,7 @@ export default function PDFPresentation({ pdfUrl, title }: PDFPresentationProps)
             <Page
               pageNumber={currentPage}
               width={calculatePdfWidth()}
+              // renderMode="svg"
               renderTextLayer={false}
               renderAnnotationLayer={false}
               loading={
