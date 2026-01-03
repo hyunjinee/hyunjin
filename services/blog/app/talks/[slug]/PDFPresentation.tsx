@@ -251,25 +251,49 @@ export default function PDFPresentation({ pdfUrl, title }: PDFPresentationProps)
               {currentPage} / {numPages || '...'}
             </span>
             <div className="hidden md:flex gap-2">
-              {Array.from({ length: Math.min(numPages, 10) }, (_, i) => i + 1).map((page) => (
-                <button
-                  key={page}
-                  onClick={() => {
-                    setIsTransitioning(true)
-                    setTimeout(() => {
-                      setCurrentPage(page)
-                      setIsTransitioning(false)
-                    }, 150)
-                  }}
-                  className={`w-2 h-2 rounded-full transition-all ${
-                    currentPage === page
-                      ? 'bg-primary-500 w-4'
-                      : 'bg-gray-300 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-500'
-                  }`}
-                  aria-label={`${page}페이지로 이동`}
-                />
-              ))}
-              {numPages > 10 && <span className="text-gray-400 dark:text-gray-600">...</span>}
+              {(() => {
+                // 현재 페이지를 중심으로 표시할 페이지 범위 계산
+                const maxDots = 10
+                const halfWindow = Math.floor(maxDots / 2)
+                
+                let startPage = Math.max(1, currentPage - halfWindow)
+                let endPage = Math.min(numPages, startPage + maxDots - 1)
+                
+                // endPage가 numPages에 가까우면 startPage 조정
+                if (endPage - startPage < maxDots - 1) {
+                  startPage = Math.max(1, endPage - maxDots + 1)
+                }
+                
+                const pages = Array.from(
+                  { length: endPage - startPage + 1 },
+                  (_, i) => startPage + i
+                )
+                
+                return (
+                  <>
+                    {startPage > 1 && <span className="text-gray-400 dark:text-gray-600">...</span>}
+                    {pages.map((page) => (
+                      <button
+                        key={page}
+                        onClick={() => {
+                          setIsTransitioning(true)
+                          setTimeout(() => {
+                            setCurrentPage(page)
+                            setIsTransitioning(false)
+                          }, 150)
+                        }}
+                        className={`w-2 h-2 rounded-full transition-all ${
+                          currentPage === page
+                            ? 'bg-primary-500 w-4'
+                            : 'bg-gray-300 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-500'
+                        }`}
+                        aria-label={`${page}페이지로 이동`}
+                      />
+                    ))}
+                    {endPage < numPages && <span className="text-gray-400 dark:text-gray-600">...</span>}
+                  </>
+                )
+              })()}
             </div>
           </div>
 

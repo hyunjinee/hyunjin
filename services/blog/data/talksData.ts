@@ -16,7 +16,7 @@ export const talksData: Talk[] = [
     description: '입사 1개월차 발표',
     date: '2023-03',
     // event: '',
-    href: '/talks/fe-planet-welcome',
+    href: '/talks/welcome-to-the-fe-planet',
     pdfUrl: '/talks/FE 행성에 오신 것을 환영합니다.pdf',
     type: 'talk',
   },
