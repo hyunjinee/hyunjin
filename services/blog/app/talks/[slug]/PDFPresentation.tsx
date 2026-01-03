@@ -59,7 +59,7 @@ export default function PDFPresentation({ pdfUrl, title }: PDFPresentationProps)
         setCurrentPage(numPages)
       }
     },
-    [numPages]
+    [numPages],
   )
 
   useEffect(() => {
@@ -163,7 +163,7 @@ export default function PDFPresentation({ pdfUrl, title }: PDFPresentationProps)
       </div>
 
       {/* PDF 뷰어 */}
-      <div className="overflow-auto flex flex-col flex-1 items-center justify-center p-4">
+      <div className="flex overflow-auto flex-col flex-1 justify-center items-center p-4">
         <div
           className={`bg-white rounded-lg shadow-2xl dark:bg-gray-800 transition-opacity duration-150 ${
             isTransitioning ? 'opacity-50' : 'opacity-100'
@@ -207,7 +207,7 @@ export default function PDFPresentation({ pdfUrl, title }: PDFPresentationProps)
         {currentPage > 1 && (
           <button
             onClick={goToPrevPage}
-            className="hidden md:block fixed left-4 top-1/2 -translate-y-1/2 p-3 text-white bg-black bg-opacity-30 rounded-full backdrop-blur-sm transition-all hover:bg-opacity-50"
+            className="hidden fixed left-4 top-1/2 p-3 text-white bg-black bg-opacity-30 rounded-full backdrop-blur-sm transition-all -translate-y-1/2 md:block hover:bg-opacity-50"
             aria-label="이전 슬라이드"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -219,7 +219,7 @@ export default function PDFPresentation({ pdfUrl, title }: PDFPresentationProps)
         {currentPage < numPages && (
           <button
             onClick={goToNextPage}
-            className="hidden md:block fixed right-4 top-1/2 -translate-y-1/2 p-3 text-white bg-black bg-opacity-30 rounded-full backdrop-blur-sm transition-all hover:bg-opacity-50"
+            className="hidden fixed right-4 top-1/2 p-3 text-white bg-black bg-opacity-30 rounded-full backdrop-blur-sm transition-all -translate-y-1/2 md:block hover:bg-opacity-50"
             aria-label="다음 슬라이드"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -250,25 +250,22 @@ export default function PDFPresentation({ pdfUrl, title }: PDFPresentationProps)
             <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
               {currentPage} / {numPages || '...'}
             </span>
-            <div className="hidden md:flex gap-2">
+            <div className="hidden gap-2 md:flex">
               {(() => {
                 // 현재 페이지를 중심으로 표시할 페이지 범위 계산
                 const maxDots = 10
                 const halfWindow = Math.floor(maxDots / 2)
-                
+
                 let startPage = Math.max(1, currentPage - halfWindow)
                 let endPage = Math.min(numPages, startPage + maxDots - 1)
-                
+
                 // endPage가 numPages에 가까우면 startPage 조정
                 if (endPage - startPage < maxDots - 1) {
                   startPage = Math.max(1, endPage - maxDots + 1)
                 }
-                
-                const pages = Array.from(
-                  { length: endPage - startPage + 1 },
-                  (_, i) => startPage + i
-                )
-                
+
+                const pages = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i)
+
                 return (
                   <>
                     {startPage > 1 && <span className="text-gray-400 dark:text-gray-600">...</span>}
@@ -308,16 +305,16 @@ export default function PDFPresentation({ pdfUrl, title }: PDFPresentationProps)
         </div>
 
         {/* 키보드 힌트 */}
-        <div className="hidden md:block mt-3 text-xs text-center text-gray-500 dark:text-gray-500">
+        <div className="hidden mt-3 text-xs text-center text-gray-500 md:block dark:text-gray-500">
           키보드: ← → (이전/다음) | Space (다음) | Home (처음) | End (마지막)
         </div>
       </div>
 
       {/* 풀스크린 모드에서 컨트롤 표시 (마우스 이동 시) */}
       {isFullscreen && (
-        <div className="group fixed inset-x-0 bottom-0 z-40 transition-opacity duration-300 opacity-0 hover:opacity-100">
+        <div className="fixed inset-x-0 bottom-0 z-40 opacity-0 transition-opacity duration-300 group hover:opacity-100">
           <div className="px-4 py-3 mx-auto bg-black bg-opacity-70 backdrop-blur-sm">
-            <div className="flex justify-between items-center max-w-4xl mx-auto">
+            <div className="flex justify-between items-center mx-auto max-w-4xl">
               <button
                 onClick={goToPrevPage}
                 disabled={currentPage <= 1}
