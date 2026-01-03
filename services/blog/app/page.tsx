@@ -276,7 +276,7 @@ export default function Page() {
               <div className="flex-1">
                 <p className="text-[14px] text-gray-700 md:text-[16px] dark:text-gray-300">
                   <CustomLink
-                    href="https://www.dbpia.co.kr/Journal/articleDetail?nodeId=NODE11229679"
+                    href="/talks/asynchronous-javascript"
                     className='"transition-colors text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"'
                   >
                     방슐랭 가이드
