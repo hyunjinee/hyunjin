@@ -1,0 +1,320 @@
+'use client'
+
+import { useEffect, useState, useCallback } from 'react'
+import { Document, Page, pdfjs } from 'react-pdf'
+
+// PDF.js worker 설정
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`
+
+interface PDFPresentationProps {
+  pdfUrl: string
+  title: string
+}
+
+export default function PDFPresentation({ pdfUrl, title }: PDFPresentationProps) {
+  const [numPages, setNumPages] = useState<number>(0)
+  const [currentPage, setCurrentPage] = useState<number>(1)
+  const [windowSize, setWindowSize] = useState({ width: 0, height: 0 })
+  const [isFullscreen, setIsFullscreen] = useState(false)
+  const [isTransitioning, setIsTransitioning] = useState(false)
+
+  useEffect(() => {
+    // 초기 윈도우 크기 설정
+    setWindowSize({
+      width: window.innerWidth,
+      height: window.innerHeight,
+    })
+
+    // 윈도우 리사이즈 핸들러
+    const handleResize = () => {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      })
+    }
+
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  // PDF 로드 완료 핸들러
+  function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
+    setNumPages(numPages)
+  }
+
+  // 키보드 네비게이션
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        e.preventDefault()
+        setCurrentPage((prev) => Math.min(prev + 1, numPages))
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        e.preventDefault()
+        setCurrentPage((prev) => Math.max(prev - 1, 1))
+      } else if (e.key === 'Home') {
+        e.preventDefault()
+        setCurrentPage(1)
+      } else if (e.key === 'End') {
+        e.preventDefault()
+        setCurrentPage(numPages)
+      }
+    },
+    [numPages]
+  )
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [handleKeyDown])
+
+  // 페이지 변경 핸들러 (애니메이션 포함)
+  const goToNextPage = () => {
+    if (currentPage < numPages) {
+      setIsTransitioning(true)
+      setTimeout(() => {
+        setCurrentPage((prev) => Math.min(prev + 1, numPages))
+        setIsTransitioning(false)
+      }, 150)
+    }
+  }
+
+  const goToPrevPage = () => {
+    if (currentPage > 1) {
+      setIsTransitioning(true)
+      setTimeout(() => {
+        setCurrentPage((prev) => Math.max(prev - 1, 1))
+        setIsTransitioning(false)
+      }, 150)
+    }
+  }
+
+  // 풀스크린 토글
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen()
+      setIsFullscreen(true)
+    } else {
+      document.exitFullscreen()
+      setIsFullscreen(false)
+    }
+  }
+
+  // 풀스크린 변경 감지
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement)
+    }
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange)
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange)
+  }, [])
+
+  // PDF 크기 계산 (16:9 비율 유지하면서 화면에 맞춤)
+  const calculatePdfWidth = () => {
+    if (!windowSize.width || !windowSize.height) return 800
+
+    const headerHeight = 60 // 헤더 높이
+    const controlsHeight = 80 // 하단 컨트롤 높이
+    const availableHeight = windowSize.height - headerHeight - controlsHeight - 40 // 여백
+
+    const aspectRatio = 16 / 9
+    const widthFromHeight = availableHeight * aspectRatio
+    const maxWidth = windowSize.width - 80 // 양쪽 여백
+
+    return Math.min(widthFromHeight, maxWidth)
+  }
+
+  return (
+    <div className="flex fixed inset-0 flex-col bg-gray-50 dark:bg-gray-950">
+      {/* 프로그레스 바 */}
+      <div className="absolute top-0 left-0 z-50 w-full h-1 bg-gray-200 dark:bg-gray-800">
+        <div
+          className="h-full transition-all duration-300 ease-out bg-primary-500"
+          style={{ width: `${(currentPage / numPages) * 100}%` }}
+        />
+      </div>
+
+      {/* 헤더 */}
+      <div
+        className={`flex-shrink-0 px-4 py-3 bg-white border-b border-gray-200 shadow-sm dark:bg-gray-900 dark:border-gray-700 transition-transform duration-300 ${
+          isFullscreen ? '-translate-y-full' : 'translate-y-0'
+        }`}
+      >
+        <div className="flex justify-between items-center mx-auto max-w-7xl">
+          <div className="flex-1 min-w-0">
+            <h1 className="text-xl font-bold text-gray-900 truncate dark:text-gray-100">{title}</h1>
+          </div>
+          <div className="flex gap-3 items-center">
+            <button
+              onClick={toggleFullscreen}
+              className="px-3 py-1.5 text-sm font-medium text-gray-700 bg-white rounded-lg border border-gray-300 transition-colors dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700"
+              title={isFullscreen ? '풀스크린 종료' : '풀스크린'}
+            >
+              {isFullscreen ? '□' : '⛶'}
+            </button>
+            <a
+              href="/talks"
+              className="text-sm font-medium whitespace-nowrap text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+            >
+              ← Talks
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {/* PDF 뷰어 */}
+      <div className="overflow-auto flex flex-col flex-1 items-center justify-center p-4">
+        <div
+          className={`bg-white rounded-lg shadow-2xl dark:bg-gray-800 transition-opacity duration-150 ${
+            isTransitioning ? 'opacity-50' : 'opacity-100'
+          }`}
+        >
+          <Document
+            file={pdfUrl}
+            onLoadSuccess={onDocumentLoadSuccess}
+            loading={
+              <div className="flex justify-center items-center w-full h-[600px]">
+                <div className="text-center">
+                  <div className="inline-block w-12 h-12 rounded-full border-4 border-gray-200 animate-spin border-t-primary-500"></div>
+                  <p className="mt-4 text-gray-600 dark:text-gray-400">PDF 로딩 중...</p>
+                </div>
+              </div>
+            }
+            error={
+              <div className="flex justify-center items-center w-full h-[600px]">
+                <div className="text-center">
+                  <p className="text-red-500">PDF를 불러올 수 없습니다.</p>
+                  <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">파일 경로를 확인해주세요.</p>
+                </div>
+              </div>
+            }
+          >
+            <Page
+              pageNumber={currentPage}
+              width={calculatePdfWidth()}
+              renderTextLayer={false}
+              renderAnnotationLayer={false}
+              loading={
+                <div className="flex justify-center items-center w-full h-[600px]">
+                  <div className="w-8 h-8 rounded-full border-4 border-gray-200 animate-spin border-t-primary-500"></div>
+                </div>
+              }
+            />
+          </Document>
+        </div>
+
+        {/* 네비게이션 화살표 (큰 화면용) */}
+        {currentPage > 1 && (
+          <button
+            onClick={goToPrevPage}
+            className="hidden md:block fixed left-4 top-1/2 -translate-y-1/2 p-3 text-white bg-black bg-opacity-30 rounded-full backdrop-blur-sm transition-all hover:bg-opacity-50"
+            aria-label="이전 슬라이드"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+        )}
+
+        {currentPage < numPages && (
+          <button
+            onClick={goToNextPage}
+            className="hidden md:block fixed right-4 top-1/2 -translate-y-1/2 p-3 text-white bg-black bg-opacity-30 rounded-full backdrop-blur-sm transition-all hover:bg-opacity-50"
+            aria-label="다음 슬라이드"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        )}
+      </div>
+
+      {/* 하단 컨트롤 */}
+      <div
+        className={`flex-shrink-0 px-4 py-4 bg-white border-t border-gray-200 shadow-sm dark:bg-gray-900 dark:border-gray-700 transition-transform duration-300 ${
+          isFullscreen ? 'translate-y-full' : 'translate-y-0'
+        }`}
+      >
+        <div className="flex justify-between items-center mx-auto max-w-4xl">
+          {/* 이전 버튼 */}
+          <button
+            onClick={goToPrevPage}
+            disabled={currentPage <= 1}
+            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded-lg border border-gray-300 transition-colors dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-700"
+          >
+            ← 이전
+          </button>
+
+          {/* 페이지 정보 */}
+          <div className="flex gap-3 items-center">
+            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              {currentPage} / {numPages || '...'}
+            </span>
+            <div className="hidden md:flex gap-2">
+              {Array.from({ length: Math.min(numPages, 10) }, (_, i) => i + 1).map((page) => (
+                <button
+                  key={page}
+                  onClick={() => {
+                    setIsTransitioning(true)
+                    setTimeout(() => {
+                      setCurrentPage(page)
+                      setIsTransitioning(false)
+                    }, 150)
+                  }}
+                  className={`w-2 h-2 rounded-full transition-all ${
+                    currentPage === page
+                      ? 'bg-primary-500 w-4'
+                      : 'bg-gray-300 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-500'
+                  }`}
+                  aria-label={`${page}페이지로 이동`}
+                />
+              ))}
+              {numPages > 10 && <span className="text-gray-400 dark:text-gray-600">...</span>}
+            </div>
+          </div>
+
+          {/* 다음 버튼 */}
+          <button
+            onClick={goToNextPage}
+            disabled={currentPage >= numPages}
+            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded-lg border border-gray-300 transition-colors dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-700"
+          >
+            다음 →
+          </button>
+        </div>
+
+        {/* 키보드 힌트 */}
+        <div className="hidden md:block mt-3 text-xs text-center text-gray-500 dark:text-gray-500">
+          키보드: ← → (이전/다음) | Space (다음) | Home (처음) | End (마지막)
+        </div>
+      </div>
+
+      {/* 풀스크린 모드에서 컨트롤 표시 (마우스 이동 시) */}
+      {isFullscreen && (
+        <div className="group fixed inset-x-0 bottom-0 z-40 transition-opacity duration-300 opacity-0 hover:opacity-100">
+          <div className="px-4 py-3 mx-auto bg-black bg-opacity-70 backdrop-blur-sm">
+            <div className="flex justify-between items-center max-w-4xl mx-auto">
+              <button
+                onClick={goToPrevPage}
+                disabled={currentPage <= 1}
+                className="px-3 py-2 text-sm font-medium text-white rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed hover:bg-white hover:bg-opacity-20"
+              >
+                ← 이전
+              </button>
+              <span className="text-sm font-medium text-white">
+                {currentPage} / {numPages}
+              </span>
+              <button
+                onClick={goToNextPage}
+                disabled={currentPage >= numPages}
+                className="px-3 py-2 text-sm font-medium text-white rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed hover:bg-white hover:bg-opacity-20"
+              >
+                다음 →
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}

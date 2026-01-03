@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
+import PDFPresentation from './PDFPresentation'
 
 interface Talk {
   title: string
@@ -11,6 +12,7 @@ interface Talk {
   slides?: string
   video?: string
   type?: 'talk' | 'workshop' | 'lecture' | 'podcast'
+  pdfUrl?: string // PDF URL 필드 추가
 }
 
 interface TalkPresentationClientProps {
@@ -19,6 +21,11 @@ interface TalkPresentationClientProps {
 }
 
 export default function TalkPresentation({ talk, slug }: TalkPresentationClientProps) {
+  // PDF URL이 있으면 PDF 뷰어 렌더링
+  if (talk.pdfUrl) {
+    return <PDFPresentation pdfUrl={talk.pdfUrl} title={talk.title} />
+  }
+
   // Keynote export HTML 경로 매핑
   const htmlPath = `/talks/${slug}/index.html`
 

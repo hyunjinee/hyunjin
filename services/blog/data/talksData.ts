@@ -7,9 +7,19 @@ interface Talk {
   slides?: string
   video?: string
   type?: 'talk' | 'workshop' | 'lecture' | 'podcast'
+  pdfUrl?: string // PDF URL 필드
 }
 
 export const talksData: Talk[] = [
+  {
+    title: 'FE 행성에 오신 것을 환영합니다',
+    description: '입사 1개월차 발표',
+    date: '2023-03',
+    // event: '',
+    href: '/talks/fe-planet-welcome',
+    pdfUrl: '/talks/FE 행성에 오신 것을 환영합니다.pdf',
+    type: 'talk',
+  },
   {
     title: 'LLM 키우기',
     description: 'LLM 활용 방안 제안',
