@@ -9,7 +9,7 @@ interface Talk {
   type?: 'talk' | 'workshop' | 'lecture' | 'podcast'
 }
 
-const talksData: Talk[] = [
+export const talksData: Talk[] = [
   {
     title: 'LLM 키우기',
     description: 'LLM 활용 방안 제안',
@@ -38,5 +38,3 @@ const talksData: Talk[] = [
   // },
   // 여기에 더 많은 발표를 추가하세요
 ]
-
-export default talksData

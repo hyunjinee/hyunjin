@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import { genPageMetadata } from 'app/seo'
-import talksData from '@/data/talksData'
+import { talksData } from '@/data/talksData'
 import TalkPresentation from './TalkPresentation'
 
 export async function generateStaticParams() {

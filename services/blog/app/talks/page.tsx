@@ -1,4 +1,4 @@
-import talksData from '@/data/talksData'
+import { talksData } from '@/data/talksData'
 import { genPageMetadata } from 'app/seo'
 import Link from '@/components/Link'
 
