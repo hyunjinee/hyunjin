@@ -7,7 +7,7 @@ interface Talk {
   slides?: string
   video?: string
   type?: 'talk' | 'workshop' | 'lecture' | 'podcast'
-  pdfUrl?: string // PDF URL 필드
+  pdfUrl?: string
 }
 
 export const talks: Talk[] = [

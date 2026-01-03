@@ -112,8 +112,10 @@ export default function PDFPresentation({ pdfUrl, title }: PDFPresentationProps)
   }, [])
 
   // PDF 크기 계산 (16:9 비율 유지하면서 화면에 맞춤)
-  const calculatePdfWidth = () => {
-    if (!windowSize.width || !windowSize.height) return 800
+  const calculatePdfDimensions = useCallback(() => {
+    if (typeof window === 'undefined' || !windowSize.width || !windowSize.height) {
+      return { width: 800, height: 450 }
+    }
 
     const headerHeight = 60 // 헤더 높이
     const controlsHeight = 80 // 하단 컨트롤 높이
@@ -123,8 +125,13 @@ export default function PDFPresentation({ pdfUrl, title }: PDFPresentationProps)
     const widthFromHeight = availableHeight * aspectRatio
     const maxWidth = windowSize.width - 80 // 양쪽 여백
 
-    return Math.min(widthFromHeight, maxWidth)
-  }
+    const width = Math.min(widthFromHeight, maxWidth)
+    const height = width / aspectRatio
+
+    return { width, height }
+  }, [windowSize])
+
+  const { width: pdfWidth, height: pdfHeight } = calculatePdfDimensions()
 
   return (
     <div className="flex fixed inset-0 flex-col bg-gray-50 dark:bg-gray-950">
@@ -132,7 +139,7 @@ export default function PDFPresentation({ pdfUrl, title }: PDFPresentationProps)
       <div className="absolute top-0 left-0 z-50 w-full h-1 bg-gray-200 dark:bg-gray-800">
         <div
           className="h-full transition-all duration-300 ease-out bg-primary-500"
-          style={{ width: `${(currentPage / numPages) * 100}%` }}
+          style={{ width: numPages ? `${(currentPage / numPages) * 100}%` : '0%' }}
         />
       </div>
 
@@ -170,6 +177,7 @@ export default function PDFPresentation({ pdfUrl, title }: PDFPresentationProps)
           className={`bg-white rounded-lg shadow-2xl dark:bg-gray-800 transition-opacity duration-150 ${
             isTransitioning ? 'opacity-50' : 'opacity-100'
           }`}
+          style={{ width: pdfWidth, height: pdfHeight }}
         >
           <Document
             file={pdfUrl}
@@ -180,7 +188,10 @@ export default function PDFPresentation({ pdfUrl, title }: PDFPresentationProps)
               standardFontDataUrl: `https://unpkg.com/pdfjs-dist@${pdfjs.version}/standard_fonts/`,
             }}
             loading={
-              <div className="flex justify-center items-center w-full h-[600px]">
+              <div
+                className="flex justify-center items-center w-full"
+                style={{ height: pdfHeight }}
+              >
                 <div className="text-center">
                   <div className="inline-block w-12 h-12 rounded-full border-4 border-gray-200 animate-spin border-t-primary-500"></div>
                   <p className="mt-4 text-gray-600 dark:text-gray-400">PDF 로딩 중...</p>
@@ -188,7 +199,10 @@ export default function PDFPresentation({ pdfUrl, title }: PDFPresentationProps)
               </div>
             }
             error={
-              <div className="flex justify-center items-center w-full h-[600px]">
+              <div
+                className="flex justify-center items-center w-full"
+                style={{ height: pdfHeight }}
+              >
                 <div className="text-center">
                   <p className="text-red-500">PDF를 불러올 수 없습니다.</p>
                   <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">파일 경로를 확인해주세요.</p>
@@ -198,12 +212,15 @@ export default function PDFPresentation({ pdfUrl, title }: PDFPresentationProps)
           >
             <Page
               pageNumber={currentPage}
-              width={calculatePdfWidth()}
+              width={pdfWidth}
               // renderMode="svg"
               renderTextLayer={false}
               renderAnnotationLayer={false}
               loading={
-                <div className="flex justify-center items-center w-full h-[600px]">
+                <div
+                  className="flex justify-center items-center w-full"
+                  style={{ height: pdfHeight }}
+                >
                   <div className="w-8 h-8 rounded-full border-4 border-gray-200 animate-spin border-t-primary-500"></div>
                 </div>
               }
