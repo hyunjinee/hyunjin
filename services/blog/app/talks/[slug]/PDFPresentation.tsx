@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useMemo } from 'react'
 import { Document, Page, pdfjs } from 'react-pdf'
 
 interface PDFPresentationProps {
@@ -13,7 +13,7 @@ export default function PDFPresentation({ pdfUrl, title }: PDFPresentationProps)
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [windowSize, setWindowSize] = useState({ width: 0, height: 0 })
   const [isFullscreen, setIsFullscreen] = useState(false)
-  const [isTransitioning, setIsTransitioning] = useState(false)
+  const [loadedPages, setLoadedPages] = useState<Set<number>>(new Set())
 
   useEffect(() => {
     // PDF.js worker 설정 (클라이언트 사이드에서만 실행)
@@ -43,6 +43,21 @@ export default function PDFPresentation({ pdfUrl, title }: PDFPresentationProps)
   function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
     setNumPages(numPages)
   }
+
+  // 페이지 로드 완료 핸들러
+  const handlePageLoadSuccess = useCallback((pageNum: number) => {
+    setLoadedPages((prev) => new Set(prev).add(pageNum))
+  }, [])
+
+  // 프리로드할 페이지 범위 계산 (현재 페이지 ± 2)
+  const pagesToRender = useMemo(() => {
+    if (numPages === 0) return [1]
+    const pages: number[] = []
+    for (let i = Math.max(1, currentPage - 2); i <= Math.min(numPages, currentPage + 2); i++) {
+      pages.push(i)
+    }
+    return pages
+  }, [currentPage, numPages])
 
   // 키보드 네비게이션
   const handleKeyDown = useCallback(
@@ -103,18 +118,34 @@ export default function PDFPresentation({ pdfUrl, title }: PDFPresentationProps)
     return () => document.removeEventListener('fullscreenchange', handleFullscreenChange)
   }, [])
 
-  // PDF 크기 계산 (16:9 비율 유지하면서 가로 너비에 맞춤)
+  // PDF 크기 계산 (16:9 비율 유지하면서 화면에 fit)
   const calculatePdfDimensions = useCallback(() => {
     if (typeof window === 'undefined' || !windowSize.width || !windowSize.height) {
       return { width: 800, height: 450 }
     }
 
     const aspectRatio = 16 / 9
-    const width = windowSize.width
-    const height = width / aspectRatio
 
-    return { width, height }
-  }, [windowSize])
+    // 헤더와 하단 컨트롤 높이 (풀스크린 모드가 아닐 때)
+    const headerHeight = isFullscreen ? 0 : 56 // 헤더 높이
+    const footerHeight = isFullscreen ? 0 : 100 // 하단 컨트롤 높이
+    const progressBarHeight = 4 // 프로그레스 바 높이
+    const padding = 16 // 상하 여백
+
+    const availableWidth = windowSize.width
+    const availableHeight = windowSize.height - headerHeight - footerHeight - progressBarHeight - padding
+
+    // 가로 기준 높이와 세로 기준 너비 계산
+    const widthFromHeight = availableHeight * aspectRatio
+    const heightFromWidth = availableWidth / aspectRatio
+
+    // 더 작은 쪽에 맞춤 (contain 방식)
+    if (heightFromWidth <= availableHeight) {
+      return { width: availableWidth, height: heightFromWidth }
+    } else {
+      return { width: widthFromHeight, height: availableHeight }
+    }
+  }, [windowSize, isFullscreen])
 
   const { width: pdfWidth, height: pdfHeight } = calculatePdfDimensions()
 
@@ -157,8 +188,8 @@ export default function PDFPresentation({ pdfUrl, title }: PDFPresentationProps)
       </div>
 
       {/* PDF 뷰어 */}
-      <div className="flex overflow-auto flex-col flex-1 justify-start items-center bg-black">
-        <div className="bg-white shadow-2xl dark:bg-gray-800" style={{ width: pdfWidth, height: pdfHeight }}>
+      <div className="flex overflow-hidden flex-col flex-1 justify-center items-center bg-black">
+        <div className="relative bg-white shadow-2xl dark:bg-gray-800" style={{ width: pdfWidth, height: pdfHeight }}>
           <Document
             file={pdfUrl}
             onLoadSuccess={onDocumentLoadSuccess}
@@ -184,14 +215,26 @@ export default function PDFPresentation({ pdfUrl, title }: PDFPresentationProps)
               </div>
             }
           >
-            <Page
-              pageNumber={currentPage}
-              width={pdfWidth}
-              // renderMode="svg"
-              renderTextLayer={false}
-              renderAnnotationLayer={false}
-              loading={null}
-            />
+            {/* 인접 페이지들을 미리 렌더링하고 현재 페이지만 표시 */}
+            {pagesToRender.map((pageNum) => (
+              <div
+                key={pageNum}
+                className="absolute inset-0"
+                style={{
+                  visibility: pageNum === currentPage ? 'visible' : 'hidden',
+                  zIndex: pageNum === currentPage ? 1 : 0,
+                }}
+              >
+                <Page
+                  pageNumber={pageNum}
+                  width={pdfWidth}
+                  renderTextLayer={false}
+                  renderAnnotationLayer={false}
+                  loading={null}
+                  onLoadSuccess={() => handlePageLoadSuccess(pageNum)}
+                />
+              </div>
+            ))}
           </Document>
         </div>
 
