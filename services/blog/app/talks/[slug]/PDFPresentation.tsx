@@ -13,7 +13,6 @@ export default function PDFPresentation({ pdfUrl, title }: PDFPresentationProps)
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [windowSize, setWindowSize] = useState({ width: 0, height: 0 })
   const [isFullscreen, setIsFullscreen] = useState(false)
-  const [loadedPages, setLoadedPages] = useState<Set<number>>(new Set())
 
   useEffect(() => {
     // PDF.js worker 설정 (클라이언트 사이드에서만 실행)
@@ -43,11 +42,6 @@ export default function PDFPresentation({ pdfUrl, title }: PDFPresentationProps)
   function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
     setNumPages(numPages)
   }
-
-  // 페이지 로드 완료 핸들러
-  const handlePageLoadSuccess = useCallback((pageNum: number) => {
-    setLoadedPages((prev) => new Set(prev).add(pageNum))
-  }, [])
 
   // 프리로드할 페이지 범위 계산 (현재 페이지 ± 2)
   const pagesToRender = useMemo(() => {
@@ -231,7 +225,6 @@ export default function PDFPresentation({ pdfUrl, title }: PDFPresentationProps)
                   renderTextLayer={false}
                   renderAnnotationLayer={false}
                   loading={null}
-                  onLoadSuccess={() => handlePageLoadSuccess(pageNum)}
                 />
               </div>
             ))}
