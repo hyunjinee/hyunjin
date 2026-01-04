@@ -205,7 +205,7 @@ export default function Page() {
           <h2 className="pb-2 mb-8 text-2xl font-bold text-gray-900 border-b-2 border-gray-200 md:text-3xl dark:text-gray-100 dark:border-gray-700">
             News
           </h2>
-          <div className="space-y-6">
+          <div className="space-y-4">
             <div className="flex flex-col gap-2 sm:flex-row sm:gap-4">
               <span className="flex-shrink-0 text-[14px] font-medium text-gray-500 md:text-base dark:text-gray-500 sm:w-20">
                 08/2025
