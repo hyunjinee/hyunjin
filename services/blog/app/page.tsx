@@ -271,7 +271,7 @@ export default function Page() {
               </span>
               <div className="flex-1">
                 <p className="text-[14px] text-gray-700 md:text-[16px] dark:text-gray-300">
-                  소프트웨어 마에스트로 13기 연수생
+                  소프트웨어 마에스트로 13기 연수생(MOZI 서비스 개발)
                 </p>
               </div>
             </div>
