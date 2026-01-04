@@ -52,6 +52,14 @@ export const talks: Talk[] = [
     href: '/talks/asynchronous-javascript',
     type: 'lecture',
   },
+  {
+    title: 'GraphQL',
+    description: 'GraphQL을 공부하며 배운 것을 공유합니다',
+    date: '2022-08-31',
+    event: '소프트웨어 마에스트로 컨퍼런스',
+    href: '/talks/graphql',
+    type: 'talk',
+  },
   // {
   //   title: '예시 발표 제목',
   //   description: '발표에 대한 간단한 설명을 여기에 작성합니다.',
