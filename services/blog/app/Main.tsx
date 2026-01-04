@@ -2,6 +2,7 @@ import { ViewTransition } from 'react'
 import Link from '@/components/Link'
 import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
+
 import { formatDate } from 'pliny/utils/formatDate'
 
 const MAX_DISPLAY = 50

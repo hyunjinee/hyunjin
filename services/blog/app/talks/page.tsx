@@ -97,11 +97,11 @@ export default function Talks() {
 
   return (
     <div className="divide-y divide-gray-200 dark:divide-gray-700">
-      <div className="pt-4 pb-6 space-y-2">
+      <div className="pt-4 pb-4 space-y-2">
         <h1 className="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-gray-100 md:text-4xl">Talks</h1>
         <p className="text-lg text-gray-500 dark:text-gray-400">발표, 워크샵, 강의 등 다양한 활동들을 기록합니다.</p>
       </div>
-      <div className="container py-12">
+      <div className="container pt-2 pb-8">
         <div className="divide-y divide-gray-200 dark:divide-gray-700">
           {sortedTalks.length === 0 ? (
             <p className="text-gray-500 dark:text-gray-400">아직 등록된 발표가 없습니다.</p>
