@@ -38,6 +38,13 @@ export const talks: Talk[] = [
     type: 'talk',
   },
   {
+    title: 'MOZI',
+    description: '소프트웨어 마에스트로 프로젝트 발표',
+    date: '2022-11-23',
+    href: '/talks/MOZI',
+    type: 'talk',
+  },
+  {
     title: 'Asynchronous JavaScript',
     description: '비동기 JavaScript에 대한 이해',
     date: '2022-10',
