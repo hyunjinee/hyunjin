@@ -1,0 +1,20 @@
+# Source files
+src/
+tsconfig.json
+tsup.config.ts
+
+# Dev files
+.gitignore
+.env*
+
+# IDE
+.idea/
+.vscode/
+
+# Test
+test/
+coverage/
+
+# Other
+*.log
+.DS_Store

@@ -1,9 +1,70 @@
 {
-  "name": "hyunjin",
-  "version": "0.0.1",
-  "description": "",
-  "main": "index.js",
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "hyunjin-ai",
+  "version": "0.1.0",
+  "description": "AI-powered coding agent for terminal",
+  "type": "module",
+  "license": "MIT",
+  "author": "hyunjin",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hyunjin/hyunjin"
+  },
+  "keywords": [
+    "ai",
+    "coding",
+    "agent",
+    "cli",
+    "terminal",
+    "llm",
+    "openai",
+    "anthropic"
+  ],
+  "bin": {
+    "hyunjin": "./dist/index.js"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "tsx src/index.ts",
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src",
+    "prepublishOnly": "pnpm build"
+  },
+  "dependencies": {
+    "@ai-sdk/anthropic": "^3.0.9",
+    "@ai-sdk/openai": "^3.0.7",
+    "@clack/prompts": "^0.9.1",
+    "ai": "^6.0.0",
+    "chalk": "^5.3.0",
+    "commander": "^12.1.0",
+    "glob": "^11.0.0",
+    "ignore": "^6.0.2",
+    "marked": "^15.0.0",
+    "marked-terminal": "^7.2.1",
+    "ora": "^8.1.1",
+    "strip-ansi": "^7.1.0",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsup": "^8.3.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
   }
 }
