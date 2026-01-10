@@ -1,4 +1,4 @@
-import { streamText, stepCountIs, type CoreMessage } from "ai"
+import { streamText, stepCountIs, type ModelMessage } from "ai"
 import { parseModelString, getLanguageModel } from "../provider"
 import { createTools, type ToolContext } from "../tool"
 import { getSystemPrompt } from "./system-prompt"
@@ -14,7 +14,7 @@ export class Agent {
   private model: ReturnType<typeof getLanguageModel>
   private tools: ReturnType<typeof createTools>
   private systemPrompt: string
-  private messages: CoreMessage[] = []
+  private messages: ModelMessage[] = []
   private cwd: string
   private providerId: string
   private modelId: string
@@ -132,7 +132,7 @@ export class Agent {
     }
   }
 
-  getMessages(): CoreMessage[] {
+  getMessages(): ModelMessage[] {
     return [...this.messages]
   }
 

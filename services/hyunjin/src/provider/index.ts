@@ -1,6 +1,6 @@
 import { createOpenAI } from '@ai-sdk/openai'
 import { createAnthropic } from '@ai-sdk/anthropic'
-import type { LanguageModelV1 } from 'ai'
+import type { LanguageModel } from 'ai'
 import { loadConfig } from '../cli/config'
 
 export interface ProviderInfo {
@@ -14,7 +14,7 @@ export const PROVIDERS: Record<string, ProviderInfo> = {
   openai: {
     id: 'openai',
     name: 'OpenAI',
-    models: ['gpt-5', 'gpt-4o', 'gpt-4o-mini', 'gpt-4-turbo', 'gpt-4', 'gpt-3.5-turbo', 'o1', 'o1-mini', 'o1-preview'],
+    models: ['gpt-5', 'gpt-4o', 'gpt-4-turbo', 'gpt-4', 'o1', 'o1-mini', 'o1-preview'],
     defaultModel: 'gpt-5',
   },
   anthropic: {
@@ -70,7 +70,7 @@ export function parseModelString(modelString?: string): { providerId: string; mo
   throw new Error(`알 수 없는 모델: ${modelString}`)
 }
 
-export function getLanguageModel(providerId: string, modelId: string): LanguageModelV1 {
+export function getLanguageModel(providerId: string, modelId: string): LanguageModel {
   const config = loadConfig()
 
   switch (providerId) {
