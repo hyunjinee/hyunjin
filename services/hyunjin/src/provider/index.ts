@@ -15,6 +15,7 @@ export const PROVIDERS: Record<string, ProviderInfo> = {
     id: "openai",
     name: "OpenAI",
     models: [
+      "gpt-5",
       "gpt-4o",
       "gpt-4o-mini",
       "gpt-4-turbo",
@@ -24,7 +25,7 @@ export const PROVIDERS: Record<string, ProviderInfo> = {
       "o1-mini",
       "o1-preview",
     ],
-    defaultModel: "gpt-4o",
+    defaultModel: "gpt-5",
   },
   anthropic: {
     id: "anthropic",
