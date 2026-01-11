@@ -3,7 +3,7 @@ title: 리액트에서 외부 시스템과 동기화하기
 date: '2023-07-26'
 tags: ['react']
 layout: PostBanner
-images: ['/images/thumbnails/react.png']
+images: ['/images/thumbnails/synchronizing-with-external-store.png']
 summary: 동시성 기능 적용 여부에 따라 렌더링 결과에 차이가 있을 수 있다.(Tearing)
 ---
 
@@ -48,11 +48,11 @@ export const useStore = () => {
 ```
 
 <iframe
-  style="border: 1px solid rgba(0, 0, 0, 0.1);border-radius:2px;"
+  style={{ border: '1px solid rgba(0, 0, 0, 0.1)', borderRadius: '2px' }}
   width="800"
   height="450"
   src="https://codesandbox.io/p/sandbox/redux-like-store-xqvsg9?file=%2Fsrc%2Fmain.tsx%3A9%2C9&embed=1"
-  allowfullscreen
+  allowFullScreen
 ></iframe>
 
 ![](https://velog.velcdn.com/images/hyunjine/post/b1ce3aba-644c-4a9b-83fb-08f54b1b12a6/image.png)
@@ -127,11 +127,11 @@ function App() {
 ```
 
 <iframe
-  style="border: 1px solid rgba(0, 0, 0, 0.1);border-radius:2px;"
+  style={{ border: '1px solid rgba(0, 0, 0, 0.1)', borderRadius: '2px' }}
   width="800"
   height="450"
   src="https://codesandbox.io/p/sandbox/tearing-example-tmj7l9?file=%2Fsrc%2FApp.tsx%3A21%2C7&embed=1"
-  allowfullscreen
+  allowFullScreen
 ></iframe>
 
 동시성 기능을 사용하기 위해 startTransition API를 사용하였고, "Tearing 확인하기" 버튼을 클릭했을 때 Counter 컴포넌트는 무거운 계산을 포함하여 렌더링이 될 수 있게 했고 이와 동시에 1초마다 increment 액션이 dispatch 됩니다.(Counter 컴포넌트에 무거운 계산을 포함시킨 이유는 Counter 컴포넌트가 느리게 렌더링되도록 해서 렌더링되는동안 스토어의 값을 변화시키기 위함입니다.)
