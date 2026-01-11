@@ -9,9 +9,9 @@ const marked = new Marked(markedTerminal() as any)
 export namespace UI {
   export function logo() {
     console.log()
-    console.log(chalk.bold.cyan("  ╦ ╦┬ ┬┌┐┌ ┬┬┌┐┌"))
-    console.log(chalk.bold.cyan("  ╠═╣└┬┘│││ ││││││"))
-    console.log(chalk.bold.cyan("  ╩ ╩ ┴ ┘└┘└┘┴┘└┘"))
+    console.log(chalk.bold.cyan("  ╦ ╦ ┬ ┬ ┬ ┬ ┌┐┌ ┌┐┌ ┌┐┌"))
+    console.log(chalk.bold.cyan("  ╠═╣ └┬┘ │ │ │ │ │││ │││ │││"))
+    console.log(chalk.bold.cyan("  ╩ ╩ ┴ └─┘ └─┘ ┘└┘ ┘└┘ ┘└┘"))
     console.log(chalk.dim(`  AI Coding Agent v${VERSION}`))
     console.log()
   }
