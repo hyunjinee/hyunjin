@@ -1,0 +1,5 @@
+{
+  "name": "@hyunjin/configs",
+  "private": true,
+  "workspaces": ["rollup-config"]
+}
