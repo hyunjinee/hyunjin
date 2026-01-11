@@ -20,15 +20,8 @@ export const PROVIDERS: Record<string, ProviderInfo> = {
   anthropic: {
     id: 'anthropic',
     name: 'Anthropic',
-    models: [
-      'claude-3-5-sonnet-latest',
-      'claude-3-5-sonnet-20241022',
-      'claude-3-5-haiku-latest',
-      'claude-3-opus-latest',
-      'claude-3-sonnet-20240229',
-      'claude-3-haiku-20240307',
-    ],
-    defaultModel: 'claude-3-5-sonnet-latest',
+    models: ['claude-4-5-sonnet', 'claude-4-5-haiku', 'claude-4-opus', 'claude-3-5-sonnet-latest'],
+    defaultModel: 'claude-4-5-sonnet',
   },
 }
 
