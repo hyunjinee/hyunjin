@@ -11,6 +11,10 @@ const experiences = [
     period: 'Now',
     role: 'Frontend Engineer',
     description: 'Berriz FE 개발팀',
+    logos: [
+      { src: '/images/kakaoentertainment/kakaoent.svg', darkInvert: true, href: 'https://kakaoent.com/' },
+      { src: '/images/kakaoentertainment/berriz_logo.svg', href: 'https://berriz.in/ko' },
+    ],
   },
   {
     title: '토스뱅크',
@@ -18,6 +22,7 @@ const experiences = [
     role: 'FullStack Engineer',
     description: 'Housing Loan Squad 전월세 대출 심사 및 운영 서비스 개발',
     link: 'https://hyunjinee.notion.site/0d01b8a2b1ac4249a09a946885140870',
+    logos: [{ src: '/images/tossbank/Toss_Symbol_Primary.png', href: 'https://www.tossbank.com/' }],
   },
   // {
   //   title: 'SI Analytics',
@@ -36,41 +41,7 @@ const skills = [
   'Github Action, CodeDeploy등을 사용하여 CI/CD 환경을 구축하여 코드의 안정성 및 신뢰성을 높일 수 있습니다.',
 ]
 
-const news = [
-  {
-    date: '02/2023',
-    content: '인공지능 스피커를 활용한 복약 지원 시스템의 설계 및 구현(한국 HCI 학회, 졸업 논문)',
-  },
 
-  // {
-  //   date: '01/2026',
-  //   content: 'React 19 정식 출시에 맞춰 개인 프로젝트에 React Compiler를 적용했습니다.',
-  //   links: [{ text: '블로그 포스트', url: 'https://example.com/react-19' }],
-  // },
-  // {
-  //   date: '12/2025',
-  //   content: 'Next.js 15 버전의 새로운 기능들을 탐구하고 실무에 적용하는 방법에 대한 글을 작성했습니다.',
-  //   links: [{ text: '아티클', url: 'https://example.com/nextjs-15' }],
-  // },
-  // {
-  //   date: '11/2025',
-  //   content: 'TypeScript 5.7의 새로운 타입 시스템 개선사항을 정리한 튜토리얼을 공유했습니다.',
-  //   links: [
-  //     { text: '튜토리얼', url: 'https://example.com/ts-5.7' },
-  //     { text: 'GitHub', url: 'https://github.com/hyunjinee' },
-  //   ],
-  // },
-  // {
-  //   date: '10/2025',
-  //   content: '프론트엔드 성능 최적화 사례 연구를 진행하고 Core Web Vitals 개선 경험을 공유했습니다.',
-  //   links: [],
-  // },
-  // {
-  //   date: '09/2025',
-  //   content: 'Vite 6.0 릴리즈와 함께 빌드 도구 마이그레이션 가이드를 작성했습니다.',
-  //   links: [{ text: '가이드', url: 'https://example.com/vite-6' }],
-  // },
-]
 
 export default function Page() {
   const sortedPosts = sortPosts(allBlogs)
@@ -161,18 +132,34 @@ export default function Page() {
               <div key={index} className="group">
                 <div className="flex flex-col gap-2 mb-2 sm:flex-row sm:justify-between sm:items-start">
                   <div className="flex-1">
-                    {exp.link ? (
-                      <Link
-                        href={exp.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-lg font-semibold text-gray-900 transition-colors md:text-xl dark:text-gray-100 hover:text-primary-500 dark:hover:text-primary-400"
-                      >
-                        {exp.title}
-                      </Link>
-                    ) : (
-                      <h3 className="text-lg font-semibold text-gray-900 md:text-xl dark:text-gray-100">{exp.title}</h3>
-                    )}
+                    <div className="flex gap-2 items-center">
+                      {exp.link ? (
+                        <Link
+                          href={exp.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-lg font-semibold text-gray-900 transition-colors md:text-xl dark:text-gray-100 hover:text-primary-500 dark:hover:text-primary-400"
+                        >
+                          {exp.title}
+                        </Link>
+                      ) : (
+                        <h3 className="text-lg font-semibold text-gray-900 md:text-xl dark:text-gray-100">
+                          {exp.title}
+                        </h3>
+                      )}
+                      {exp.logos &&
+                        exp.logos.map((logo, logoIndex) => (
+                          <Link key={logoIndex} href={logo.href} target="_blank" rel="noopener noreferrer">
+                            <Image
+                              src={logo.src}
+                              alt=""
+                              width={24}
+                              height={24}
+                              className={`h-5 w-auto object-contain ${logo.darkInvert ? 'dark:invert' : ''}`}
+                            />
+                          </Link>
+                        ))}
+                    </div>
                     <p className="mt-1 text-sm text-gray-600 md:text-base dark:text-gray-400">{exp.role}</p>
                   </div>
                   <span className="text-sm text-gray-500 whitespace-nowrap dark:text-gray-500">{exp.period}</span>
@@ -271,7 +258,7 @@ export default function Page() {
               </span>
               <div className="flex-1">
                 <p className="text-[14px] text-gray-700 md:text-[16px] dark:text-gray-300">
-                  소프트웨어 마에스트로 13기 연수생(MOZI 서비스 개발)
+                  소프트웨어 마에스트로 13기 연수생(MOZI 서비스 개발, 13기를 빛낸 13인의 연수생)
                 </p>
               </div>
             </div>
