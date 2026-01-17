@@ -24,12 +24,7 @@ const experiences = [
     link: 'https://hyunjinee.notion.site/0d01b8a2b1ac4249a09a946885140870',
     logos: [{ src: '/images/tossbank/Toss_Symbol_Primary.png', href: 'https://www.tossbank.com/', height: 24 }],
   },
-  // {
-  //   title: 'SI Analytics',
-  //   period: '2023.03 ~ 2023.06',
-  //   role: 'Frontend Developer',
-  //   description: '인공지능 기반 위성/항공 영상 분석 서비스 Ovision 개발',
-  // },
+
 ]
 
 const skills = [
@@ -49,11 +44,7 @@ export default function Page() {
 
   return (
     <div className="divide-y divide-gray-200 dark:divide-gray-700">
-      {/* <div className="pt-6 pb-8 space-y-2 md:space-y-5">
-        <h1 className="text-3xl font-extrabold tracking-tight leading-9 text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14">
-          About
-        </h1>
-      </div> */}
+
       <div className="container md:mt-5">
         {/* 프로필 헤더 */}
         <header className="mb-8">
