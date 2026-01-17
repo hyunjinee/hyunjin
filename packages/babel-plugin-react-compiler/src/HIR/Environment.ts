@@ -15,4 +15,6 @@ export function isHookName(name: string): boolean {
 
 export const DEFAULT_EXPORT = 'default'
 
-export class Environment {}
+export class Environment {
+  // #globals:
+}

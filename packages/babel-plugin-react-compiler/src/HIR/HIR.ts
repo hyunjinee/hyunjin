@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import * as t from '@babel/types'
+import { Environment } from './Environment'
 
 /*
  * *******************************************************************************************
@@ -39,12 +40,47 @@ export type SourceLocation = t.SourceLocation | typeof GeneratedSource
 export type ReactiveFunction = {
   loc: SourceLocation
   id: string | null
+  nameHint: string | null
   params: Array<Place | SpreadPattern>
   generator: boolean
   async: boolean
   body: ReactiveBlock
   env: Environment
   directives: Array<string>
+}
+
+export type ReactiveScopeBlock = {
+  kind: 'scope'
+  scope: ReactiveScope
+  instructions: ReactiveBlock
+}
+
+export type PrunedReactiveScopeBlock = {
+  kind: 'scope'
+  scope: ReactiveScope
+  instructions: ReactiveBlock
+}
+
+export type ReactiveBlock = Array<ReactiveStatement>
+
+export type ReactiveStatement = ReactiveInstructionStatement
+
+export type ReactiveInstructionStatement = {
+  kind: 'instruction'
+  instruction: ReactiveInstruction
+}
+
+export type ReactiveTerminalStatement<Tterminal extends ReactiveTerminal = ReactiveTerminal> = {
+  kind: 'terminal'
+  terminal: Tterminal
+  label: {
+    id: BlockId
+    implicit: boolean
+  } | null
+}
+
+export type ReactiveInstruction = {
+  id: InstructionId
 }
 
 // The effect with which a value is modified.
@@ -85,3 +121,44 @@ export const EffectSchema = z.enum([
   Effect.Store,
   Effect.Freeze,
 ])
+
+/*
+ * A place where data may be read from / written to:
+ * - a variable (identifier)
+ * - a path into an identifier
+ */
+export type Place = {
+  kind: 'Identifier'
+
+  effect: Effect
+}
+
+/*
+ * Simulated opaque type for ScopeIds to prevent using normal numbers as scope ids
+ * accidentally.
+ */
+const opaqueScopeId = Symbol()
+export type ScopeId = number & { [opaqueScopeId]: 'ScopeId' }
+
+export type ReactiveScope = {
+  id: ScopeId
+}
+
+export type SpreadPattern = {
+  kind: 'Spread'
+  place: Place
+}
+
+/*
+ * Simulated opaque type for BlockIds to prevent using normal numbers as block ids
+ * accidentally.
+ */
+const opaqueBlockId = Symbol()
+export type BlockId = number & { [opaqueBlockId]: 'BlockId' }
+
+/*
+ * Simulated opaque type for InstructionId to prevent using normal numbers as ids
+ * accidentally.
+ */
+const opaqueInstructionId = Symbol()
+export type InstructionId = number & { [opaqueInstructionId]: 'IdentifierId' }
