@@ -12,8 +12,8 @@ const experiences = [
     role: 'Frontend Engineer',
     description: 'Berriz FE 개발팀',
     logos: [
-      { src: '/images/kakaoentertainment/kakaoent.svg', darkInvert: true, href: 'https://kakaoent.com/' },
-      { src: '/images/kakaoentertainment/berriz_logo.svg', href: 'https://berriz.in/ko' },
+      { src: '/images/kakaoentertainment/kakaoent.svg', darkInvert: true, href: 'https://kakaoent.com/', height: 25},
+      { src: '/images/kakaoentertainment/berriz_logo.svg', href: 'https://berriz.in/ko', height: 24 },
     ],
   },
   {
@@ -22,7 +22,7 @@ const experiences = [
     role: 'FullStack Engineer',
     description: 'Housing Loan Squad 전월세 대출 심사 및 운영 서비스 개발',
     link: 'https://hyunjinee.notion.site/0d01b8a2b1ac4249a09a946885140870',
-    logos: [{ src: '/images/tossbank/Toss_Symbol_Primary.png', href: 'https://www.tossbank.com/' }],
+    logos: [{ src: '/images/tossbank/Toss_Symbol_Primary.png', href: 'https://www.tossbank.com/', height: 24 }],
   },
   // {
   //   title: 'SI Analytics',
@@ -40,8 +40,6 @@ const skills = [
   'Node.js, Nest.js를 사용하여 서버를 구축하고, AWS 서비스들을 사용하여 애플리케이션을 배포 및 운영해본 경험이 있습니다.',
   'Github Action, CodeDeploy등을 사용하여 CI/CD 환경을 구축하여 코드의 안정성 및 신뢰성을 높일 수 있습니다.',
 ]
-
-
 
 export default function Page() {
   const sortedPosts = sortPosts(allBlogs)
@@ -153,9 +151,10 @@ export default function Page() {
                             <Image
                               src={logo.src}
                               alt=""
-                              width={24}
-                              height={24}
-                              className={`h-5 w-auto object-contain ${logo.darkInvert ? 'dark:invert' : ''}`}
+                              width={logo.height || 20}
+                              height={logo.height || 20}
+                              style={{ height: logo.height || 20, width: 'auto' }}
+                              className={`object-contain ${logo.darkInvert ? 'dark:invert' : ''}`}
                             />
                           </Link>
                         ))}
