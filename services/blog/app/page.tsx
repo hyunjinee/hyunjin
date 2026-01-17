@@ -97,15 +97,7 @@ export default function Page() {
                 >
                   LinkedIn
                 </Link>
-                <span className="text-gray-400 dark:text-gray-600">·</span>
-                {/* <Link
-                  href="https://hyunjin.oopy.io"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="transition-colors text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
-                >
-                  Blog
-                </Link> */}
+          
               </div>
             </div>
           </div>
