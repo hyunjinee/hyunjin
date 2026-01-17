@@ -33,7 +33,7 @@ export const talks: Talk[] = [
     title: 'LLM 키우기',
     description: 'LLM 활용 방안 제안',
     date: '2025-02-20',
-    event: 'Kakao Entertainment FE Chapter 라이트닝 톡',
+    event: 'Kakao Entertainment FE Chapter Lightning Talk',
     href: '/talks/llm-growing',
     type: 'talk',
   },
