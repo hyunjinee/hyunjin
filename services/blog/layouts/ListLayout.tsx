@@ -1,10 +1,10 @@
 'use client'
 
-import { useState } from 'react'
-import { usePathname } from 'next/navigation'
-import { formatDate } from 'pliny/utils/formatDate'
-import { CoreContent } from 'pliny/utils/contentlayer'
 import type { Blog } from 'contentlayer/generated'
+import { usePathname } from 'next/navigation'
+import { CoreContent } from 'pliny/utils/contentlayer'
+import { formatDate } from 'pliny/utils/formatDate'
+import { useState } from 'react'
 import Link from '@/components/Link'
 import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
@@ -30,7 +30,7 @@ function Pagination({ totalPages, currentPage }: PaginationProps) {
     <div className="pt-6 pb-8 space-y-2 md:space-y-5">
       <nav className="flex justify-between">
         {!prevPage && (
-          <button className="cursor-auto disabled:opacity-50" disabled={!prevPage}>
+          <button className="cursor-auto disabled:opacity-50" disabled={!prevPage} type="button">
             Previous
           </button>
         )}
@@ -43,7 +43,7 @@ function Pagination({ totalPages, currentPage }: PaginationProps) {
           {currentPage} of {totalPages}
         </span>
         {!nextPage && (
-          <button className="cursor-auto disabled:opacity-50" disabled={!nextPage}>
+          <button className="cursor-auto disabled:opacity-50" disabled={!nextPage} type="button">
             Next
           </button>
         )}
@@ -71,7 +71,7 @@ export default function ListLayout({ posts, title, initialDisplayPosts = [], pag
     <>
       <div className="divide-y divide-gray-200 dark:divide-gray-700">
         <div className="pt-6 pb-8 space-y-2 md:space-y-5">
-          <h1 className="text-3xl font-extrabold leading-9 tracking-tight text-gray-900 md:leading-14 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-6xl">
+          <h1 className="text-3xl font-extrabold tracking-tight leading-9 text-gray-900 md:leading-14 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-6xl">
             {title}
           </h1>
           <div className="relative max-w-lg">
@@ -82,16 +82,18 @@ export default function ListLayout({ posts, title, initialDisplayPosts = [], pag
                 type="text"
                 onChange={(e) => setSearchValue(e.target.value)}
                 placeholder="Search articles"
-                className="block w-full px-4 py-2 text-gray-900 bg-white border border-gray-300 rounded-md focus:border-primary-500 focus:ring-primary-500 dark:border-gray-900 dark:bg-gray-800 dark:text-gray-100"
+                className="block px-4 py-2 w-full text-gray-900 bg-white rounded-md border border-gray-300 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-900 dark:bg-gray-800 dark:text-gray-100"
               />
             </label>
             <svg
-              className="absolute w-5 h-5 text-gray-400 right-3 top-3 dark:text-gray-300"
+              className="absolute top-3 right-3 w-5 h-5 text-gray-400 dark:text-gray-300"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
+              aria-hidden="true"
             >
+              <title>Search icon</title>
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -116,14 +118,18 @@ export default function ListLayout({ posts, title, initialDisplayPosts = [], pag
                   </dl>
                   <div className="space-y-3 xl:col-span-3">
                     <div>
-                      <h3 className="text-2xl font-bold leading-8 tracking-tight">
+                      <h3 className="text-2xl font-bold tracking-tight leading-8">
                         <Link href={`/${path}`} className="text-gray-900 dark:text-gray-100">
                           {title}
                         </Link>
                       </h3>
-                      <div className="flex flex-wrap">{tags?.map((tag) => <Tag key={tag} text={tag} />)}</div>
+                      <div className="flex flex-wrap">
+                        {tags?.map((tag) => (
+                          <Tag key={tag} text={tag} />
+                        ))}
+                      </div>
                     </div>
-                    <div className="prose text-gray-500 max-w-none dark:text-gray-400">{summary}</div>
+                    <div className="max-w-none text-gray-500 prose dark:text-gray-400">{summary}</div>
                   </div>
                 </article>
               </li>

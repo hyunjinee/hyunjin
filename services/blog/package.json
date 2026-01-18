@@ -82,20 +82,13 @@
     "cross-env": "7.0.3",
     "eslint": "8.45.0",
     "eslint-config-next": "16.1.1",
-    "eslint-config-prettier": "8.8.0",
-    "eslint-plugin-prettier": "5.0.0",
     "eslint-plugin-storybook": "0.11.2",
-    "prettier": "^3.0.0",
-    "prettier-plugin-tailwindcss": "0.7.2",
     "storybook": "8.5.3",
     "typescript": "5.9.3"
   },
   "lint-staged": {
-    "*.+(js|jsx|ts|tsx)": [
-      "eslint --fix"
-    ],
     "*.+(js|jsx|ts|tsx|json|css|md|mdx)": [
-      "prettier --write"
+      "biome check --write"
     ]
   }
 }

@@ -1,4 +1,4 @@
-interface Talk {
+type Talk = {
   title: string
   description?: string
   date: string // ISO 8601 format (YYYY-MM-DD)

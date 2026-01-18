@@ -10,12 +10,14 @@
     "release": "pnpm build && changeset publish",
     "build": "pnpm -r build",
     "test": "pnpm -r test:run",
-    "lint": "pnpm -r lint"
+    "lint": "pnpm -r lint",
+    "format": "biome format --write .",
+    "check": "biome check --write ."
   },
   "devDependencies": {
+    "@biomejs/biome": "2.2.0",
     "@changesets/cli": "^2.29.5",
-    "eslint": "8.14.0",
-    "prettier": "2.2.1"
+    "eslint": "8.14.0"
   },
   "engines": {
     "node": ">=20.11.0",
