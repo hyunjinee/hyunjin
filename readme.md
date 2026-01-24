@@ -1,4 +1,5 @@
 - hyunjinlee.com
+- learn.hyunjinlee.com
+- understanindg react compiler
 - [resume_extract](./packages/resume_extract)
 - [learn](./services/learn)
-- understanindg react compiler
