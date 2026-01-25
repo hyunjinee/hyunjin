@@ -106,8 +106,8 @@ export default function Page() {
             Work Experience
           </h2>
           <div className="space-y-8">
-            {experiences.map((exp, index) => (
-              <div key={index} className="group">
+            {experiences.map((exp) => (
+              <div key={exp.title} className="group">
                 <div className="flex flex-col gap-2 mb-2 sm:flex-row sm:justify-between sm:items-start">
                   <div className="flex-1">
                     <div className="flex gap-2 items-center">
@@ -125,8 +125,8 @@ export default function Page() {
                           {exp.title}
                         </h3>
                       )}
-                      {exp.logos?.map((logo, i) => (
-                        <Link key={i} href={logo.href} target="_blank" rel="noopener noreferrer">
+                      {exp.logos?.map((logo) => (
+                        <Link key={logo.src} href={logo.href} target="_blank" rel="noopener noreferrer">
                           <Image
                             src={logo.src}
                             alt=""
@@ -154,9 +154,9 @@ export default function Page() {
             Skills
           </h2>
           <ul className="space-y-4">
-            {skills.map((skill, index) => (
+            {skills.map((skill) => (
               <li
-                key={index}
+                key={skill}
                 className="text-sm md:text-base text-gray-700 dark:text-gray-300 pl-6 relative before:content-['•'] before:absolute before:left-0 before:text-primary-500"
               >
                 {skill}
