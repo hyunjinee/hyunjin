@@ -1,9 +1,9 @@
+import { allBlogs } from 'contentlayer/generated'
 import Image from 'next/image'
 import Link from 'next/link'
-import siteMetadata from '@/data/siteMetadata'
-import { sortPosts, allCoreContent } from 'pliny/utils/contentlayer'
-import { allBlogs } from 'contentlayer/generated'
+import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
 import CustomLink from '@/components/Link'
+import siteMetadata from '@/data/siteMetadata'
 
 const experiences = [
   {
@@ -12,7 +12,7 @@ const experiences = [
     role: 'Frontend Engineer',
     description: 'Berriz FE 개발팀',
     logos: [
-      { src: '/images/kakaoentertainment/kakaoent.svg', darkInvert: true, href: 'https://kakaoent.com/', height: 25},
+      { src: '/images/kakaoentertainment/kakaoent.svg', darkInvert: true, href: 'https://kakaoent.com/', height: 25 },
       { src: '/images/kakaoentertainment/berriz_logo.svg', href: 'https://berriz.in/ko', height: 24 },
     ],
   },
@@ -24,7 +24,6 @@ const experiences = [
     link: 'https://hyunjinee.notion.site/0d01b8a2b1ac4249a09a946885140870',
     logos: [{ src: '/images/tossbank/Toss_Symbol_Primary.png', href: 'https://www.tossbank.com/', height: 24 }],
   },
-
 ]
 
 const skills = [
@@ -44,7 +43,6 @@ export default function Page() {
 
   return (
     <div className="divide-y divide-gray-200 dark:divide-gray-700">
-
       <div className="container md:mt-5">
         {/* 프로필 헤더 */}
         <header className="mb-8">
@@ -97,7 +95,6 @@ export default function Page() {
                 >
                   LinkedIn
                 </Link>
-          
               </div>
             </div>
           </div>
@@ -128,19 +125,18 @@ export default function Page() {
                           {exp.title}
                         </h3>
                       )}
-                      {exp.logos &&
-                        exp.logos.map((logo, logoIndex) => (
-                          <Link key={logoIndex} href={logo.href} target="_blank" rel="noopener noreferrer">
-                            <Image
-                              src={logo.src}
-                              alt=""
-                              width={logo.height || 20}
-                              height={logo.height || 20}
-                              style={{ height: logo.height || 20, width: 'auto' }}
-                              className={`object-contain ${logo.darkInvert ? 'dark:invert' : ''}`}
-                            />
-                          </Link>
-                        ))}
+                      {exp.logos?.map((logo, i) => (
+                        <Link key={i} href={logo.href} target="_blank" rel="noopener noreferrer">
+                          <Image
+                            src={logo.src}
+                            alt=""
+                            width={logo.height || 20}
+                            height={logo.height || 20}
+                            style={{ height: logo.height || 20, width: 'auto' }}
+                            className={`object-contain ${logo.darkInvert ? 'dark:invert' : ''}`}
+                          />
+                        </Link>
+                      ))}
                     </div>
                     <p className="mt-1 text-sm text-gray-600 md:text-base dark:text-gray-400">{exp.role}</p>
                   </div>
@@ -252,7 +248,7 @@ export default function Page() {
                 <p className="text-[14px] text-gray-700 md:text-[16px] dark:text-gray-300">
                   1인 가구 중심 부동산 플랫폼{' '}
                   <CustomLink
-                    href=""
+                    href="/bclguide"
                     className='"transition-colors text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"'
                   >
                     방슐랭 가이드
