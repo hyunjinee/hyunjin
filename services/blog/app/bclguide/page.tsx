@@ -1,32 +1,36 @@
 import Image from 'next/image'
+import appPromoImg from './images/app-promo.png'
+import appScreenshot1 from './images/app-screenshot-1.png'
+import appScreenshot2 from './images/app-screenshot-2.png'
+import appScreenshot3 from './images/app-screenshot-3.png'
+import appScreenshot4 from './images/app-screenshot-4.png'
+import bottomScreenshotImg from './images/bottom-screenshot.png'
+import logoImg from './images/logo.png'
+import techDiagramImg from './images/tech-diagram.png'
+
+const appScreenshots = [appScreenshot1, appScreenshot2, appScreenshot3, appScreenshot4]
 
 export default function BclguidePage() {
   return (
-    <div className="py-8">
-      <div className="mx-auto max-w-[600px] bg-white p-6 dark:bg-gray-900 md:p-8">
+    <div className="">
+      <div className="mx-auto max-w-[700px] bg-white dark:bg-gray-900">
         {/* Header Section */}
         <div className="relative mb-6">
           {/* Logo */}
           <div className="mb-4">
-            <Image
-              src="/images/bclguide/logo.png"
-              alt="방슐랭 가이드 로고"
-              width={193}
-              height={42}
-              className="h-[42px] w-auto"
-            />
+            <Image src={logoImg} alt="방슐랭 가이드 로고" width={193} height={42} className="h-[42px] w-auto" />
           </div>
 
           {/* Position and Period */}
-          <div className="absolute right-0 top-0 text-right">
-            <p className="mb-1 text-[10px] text-black dark:text-gray-200">창업 동아리</p>
-            <p className="text-[9px] text-black dark:text-gray-200">2021.07 ~ 2022.08</p>
+          <div className="absolute top-0 right-0 text-right">
+            <p className="mb-1 text-[13px] text-black dark:text-gray-200">창업 동아리</p>
+            <p className="text-[13px] text-black dark:text-gray-200">2021.07 ~ 2022.08</p>
           </div>
         </div>
 
         {/* Project Overview */}
         <div className="mb-6">
-          <h2 className="mb-3 text-[12px] font-bold text-black underline decoration-[#f2003c] decoration-2 underline-offset-4 dark:text-white">
+          <h2 className="mb-3 text-[12px] font-bold text-bclguide decoration-2 underline-offset-4 dark:text-white">
             프로젝트 개요
           </h2>
           <div className="space-y-2">
@@ -46,10 +50,10 @@ export default function BclguidePage() {
         </div>
 
         {/* Two Column Section */}
-        <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-6 mb-6 md:grid-cols-2">
           {/* Skills Stack */}
           <div>
-            <h2 className="mb-2 text-[15px] font-bold text-[#f2003c]">기술 스택</h2>
+            <h2 className="mb-2 text-[15px] font-bold text-bclguide">기술 스택</h2>
             <div className="mb-4 space-y-1">
               <p className="text-[10px] leading-[14px] text-black dark:text-gray-200">
                 JavaScript, React Native, WebView, Redux, Pannellum
@@ -63,18 +67,18 @@ export default function BclguidePage() {
             {/* Tech Stack Diagram */}
             <div className="overflow-hidden rounded-lg">
               <Image
-                src="/images/bclguide/tech-diagram.png"
+                src={techDiagramImg}
                 alt="기술 스택 다이어그램"
                 width={245}
                 height={148}
-                className="h-auto w-full"
+                className="w-full h-auto"
               />
             </div>
           </div>
 
           {/* Project Contributions */}
           <div>
-            <h2 className="mb-2 text-[15px] font-bold text-[#f2003c]">프로젝트 기여</h2>
+            <h2 className="mb-2 text-[15px] font-bold text-bclguide">프로젝트 기여</h2>
             <ul className="space-y-1">
               <li className="text-[10px] leading-[14px] text-black dark:text-gray-200">
                 - 안드로이드와 iOS 모두 서비스하고 빠르게 배포하기 위해 React Native를 선택해 모바일 애플리케이션을 개발
@@ -89,7 +93,7 @@ export default function BclguidePage() {
                 -{' '}
                 <a
                   href="https://hyunjinee.tistory.com/57"
-                  className="cursor-pointer underline"
+                  className="underline cursor-pointer"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -118,15 +122,15 @@ export default function BclguidePage() {
 
         {/* Mobile App Screenshots */}
         <div className="mb-6">
-          <div className="flex justify-center gap-4">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="h-[216px] w-[100px] flex-none overflow-hidden">
+          <div className="flex gap-4 justify-center">
+            {appScreenshots.map((screenshot, index) => (
+              <div key={screenshot.src} className="h-[216px] w-[100px] flex-none overflow-hidden">
                 <Image
-                  src={`/images/bclguide/app-screenshot-${i}.png`}
-                  alt={`앱 스크린샷 ${i}`}
+                  src={screenshot}
+                  alt={`앱 스크린샷 ${index + 1}`}
                   width={100}
                   height={216}
-                  className="h-full w-full object-cover"
+                  className="object-cover w-full h-full"
                 />
               </div>
             ))}
@@ -137,28 +141,18 @@ export default function BclguidePage() {
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {/* App Promo with Store Buttons */}
           <div className="overflow-hidden rounded-lg">
-            <Image
-              src="/images/bclguide/app-promo.png"
-              alt="앱 프로모션"
-              width={215}
-              height={187}
-              className="h-auto w-full"
-            />
+            <Image src={appPromoImg} alt="앱 프로모션" width={215} height={187} className="w-full h-auto" />
           </div>
 
           {/* Guide Better Room Card with Screenshot */}
-          <div className="flex flex-col items-center justify-center gap-4 rounded-lg bg-[#f2003c] p-4">
-            <div className="text-center">
-              <p className="text-lg font-bold italic text-white">Guide Better Room,</p>
-              <p className="text-lg font-bold italic text-white">Guide Better Life</p>
-            </div>
+          <div className="flex flex-col items-center justify-center rounded-lg bg-bclguide">
             <div className="overflow-hidden rounded-lg">
               <Image
-                src="/images/bclguide/bottom-screenshot.png"
+                src={bottomScreenshotImg}
                 alt="앱 스크린샷"
                 width={260}
                 height={145}
-                className="h-auto w-full rounded-lg"
+                className="w-full h-auto rounded-lg"
               />
             </div>
           </div>

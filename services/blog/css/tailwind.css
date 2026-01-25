@@ -24,8 +24,8 @@
   --font-family-sans: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
   --font-family-pretendard: var(--font-pretendard);
 
-  /* Custom Colors - 방슐랭 가이드 빨간색 */
-  --color-bclguide: oklch(60.07% 0.242 18.42);
+  /* Custom Colors */
+  --color-bclguide: #f2003c;
 
   /* Primary Colors (Pink) */
   --color-primary-50: oklch(0.971 0.014 0.946);
