@@ -1,115 +1,95 @@
 # CLAUDE.md
 
-이 파일은 Claude가 이 프로젝트를 작업할 때 참고하는 컨텍스트 문서입니다.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## 언어 규칙
+
+**모든 응답은 한국어로 작성합니다.**
 
 ## 프로젝트 개요
 
-**hyunjin** - pnpm workspace 기반의 모노레포 프로젝트입니다. 개인 학습, 블로그, 실험적인 패키지 개발 등 다양한 목적으로 사용됩니다.
+pnpm workspace 기반 모노레포. 개인 블로그, 학습, 실험적 패키지 개발 용도. TypeScript/JavaScript와 Python을 모두 포함합니다.
 
-## 프로젝트 구조
-
-```
-hyunjin/
-├── packages/          # 공유 라이브러리 및 재사용 가능한 패키지
-├── services/          # 독립적인 서비스 애플리케이션
-├── internal/          # 내부 설정 (eslint-config, typescript-config)
-├── examples/          # 예제 코드
-├── opencode/          # opencode 관련 코드
-└── temp/              # 임시 파일
-```
-
-## 기술 스택
-
-| 분류 | 기술 |
-|------|------|
-| 패키지 매니저 | **pnpm** (npm, yarn 사용 금지) |
-| 프론트엔드 | React, Next.js, TypeScript |
-| 백엔드 | NestJS, Node.js |
-| 스타일링 | TailwindCSS, SCSS |
-| 빌드 도구 | Babel, tsup, Rollup |
-| 테스트 | Jest, Testing Library |
-| 린터/포맷터 | Biome, ESLint |
-| 버전 관리 | Changesets |
-
-## 필수 환경
-
-- Node.js >= 20.11.0
-- pnpm >= 8.14.1 (현재 packageManager: pnpm@10.27.0)
-
-## 주요 명령어
+## 필수 명령어
 
 ```bash
-# 개발 서버 실행 (모든 워크스페이스)
-pnpm dev
+# 패키지 매니저: pnpm만 사용 (npm, yarn 절대 금지)
+pnpm install
 
-# 특정 워크스페이스 명령 실행
-pnpm -F <package-name> <command>
-pnpm -F @hyunjin/blog dev
+# 개발
+pnpm dev                          # 모든 워크스페이스 dev 실행
+pnpm -F <package-name> dev        # 특정 워크스페이스 (예: pnpm -F @hyunjin/blog dev)
+pnpm blog dev                     # 블로그 서비스 단축 명령
 
-# 빌드
-pnpm build
+# 빌드 & 테스트
+pnpm build                        # 전체 빌드
+pnpm -F <package-name> build      # 특정 워크스페이스 빌드
+sudo pnpm test                    # 전체 테스트 (sudo 필요)
+pnpm -F <package-name> test:run   # 특정 워크스페이스 테스트
 
-# 테스트 실행
-sudo pnpm test
+# 코드 품질 (Biome가 주 도구)
+pnpm check                        # biome check --write .
+pnpm format                       # biome format --write .
+pnpm lint                         # 모든 워크스페이스 lint
 
-# 린트
-pnpm lint
+# 버전 관리
+pnpm changeset                    # 변경사항 기록
+pnpm version                      # 버전 업데이트 + CHANGELOG 생성
+pnpm release                      # 빌드 후 배포 (pnpm build && changeset publish)
 
-# 코드 포맷팅
-pnpm format
-
-# Biome 체크 및 수정
-pnpm check
-
-# Changeset 생성
-pnpm changeset
-
-# 릴리즈
-pnpm release
+# Python (uv 사용)
+uv sync                           # Python 의존성 설치
+uv run pytest                     # Python 테스트
+make test-all                     # Python + pnpm 전체 테스트
+make lint-all                     # Python + pnpm 전체 린트
 ```
 
-## 주요 워크스페이스
+## 아키텍처
 
-### packages/
-- **babel-plugin-react-compiler**: React Compiler 관련 Babel 플러그인 (tsup 빌드)
-- **query-core**: 쿼리 관련 핵심 로직
+### 워크스페이스 구조
 
-### services/
-- **blog**: Next.js 기반 블로그 (MDX, Contentlayer 사용)
-- **api**: NestJS 기반 API 서버
-- **learn**: 학습 자료 및 문서
-- **react-compiler-playground**: React Compiler 실험용
-- **deepseek**: DeepSeek 관련 서비스
+pnpm workspace는 `packages/*`와 `services/*`를 포함합니다 (`pnpm-workspace.yaml`).
 
-### opencode/
-- opencode 프로젝트 (bun 사용)
-- 테스트: `bun dev` (packages/opencode 디렉토리에서)
+- **packages/** - 재사용 가능한 라이브러리 (tsup으로 빌드)
+  - `babel-plugin-react-compiler` - React Compiler Babel 플러그인 (Meta 기반, HIR 변환)
+  - `http-client` - Axios 기반 HTTP 클라이언트 (재시도, 인터셉터)
+  - `query-core` - TanStack Query 스타일 쿼리 코어 (modern + legacy 빌드)
+  - `resume_extract` - Python 이력서 추출 라이브러리 (uv, pytest)
+- **services/** - 독립 애플리케이션
+  - `blog` - Next.js 16 블로그 (Contentlayer2 MDX, React 19, React Compiler, TailwindCSS 4)
+  - `api` - Express API 서버 (LangChain, Supabase)
+  - `react-compiler-playground` - React Compiler 테스트용 (Monaco Editor, Playwright E2E)
+  - `learn` - Docusaurus 기반 학습 문서
+- **internal/** - 공유 설정 (`eslint-config`, `typescript-config`)
+- **opencode/** - 별도 프로젝트 (Bun 런타임, SST 배포, 메인 pnpm workspace에 포함되지 않음)
+
+### 빌드 도구
+
+- **tsup** - 대부분의 패키지 빌드 도구 (CJS/ESM 출력)
+- **Biome** (v2.3.12) - 주 린터/포매터. 설정: 2 spaces, 120 line width, single quotes, 세미콜론 최소화, trailing commas
+- **ESLint** - 일부 서비스에서 보조적 사용 (Next.js, Docusaurus)
+
+### 테스트 프레임워크
+
+패키지마다 다른 테스트 프레임워크를 사용:
+- **Jest** (ts-jest) - babel-plugin 계열 패키지
+- **Vitest** - http-client, query-core
+- **Playwright** - react-compiler-playground (E2E)
+- **pytest** - Python 패키지 (resume_extract)
+
+### Changesets
+
+baseBranch: `main`, access: `public`. 릴리즈 워크플로우: changeset 생성 → version → release.
 
 ## 코딩 컨벤션
 
-### 파일 네이밍
-- 컴포넌트: `PascalCase.tsx` (예: `Button.tsx`)
-- 유틸리티/헬퍼: `camelCase.ts` (예: `formatDate.ts`)
-- 상수: `UPPER_SNAKE_CASE`
-- 테스트: `*.test.ts`, `*.test.tsx`
+- 컴포넌트 파일: `PascalCase.tsx`, 유틸리티: `camelCase.ts`, 상수: `UPPER_SNAKE_CASE`
+- TypeScript 우선, 함수형 컴포넌트 + Hooks, async/await
+- 프로덕션 코드에 `console.log` 금지
+- 환경변수는 `.env.local` 사용
 
-### 코드 스타일
-- TypeScript 우선 사용
-- 함수형 컴포넌트 + React Hooks
-- async/await 패턴 사용
-- 프로덕션 코드에 console.log 금지
+## 필수 환경
 
-### 환경변수
-- `.env.local` 파일 사용 (`.env`는 git에 포함하지 않음)
-
-## 중요 사항
-
-1. **절대 npm이나 yarn을 사용하지 마세요** - pnpm만 사용
-2. **git에 커밋하지 않을 것**: node_modules, .env, build 결과물
-3. **테스트 실행 시**: `sudo pnpm test` 사용
-4. **한국어로 응답**: 모든 응답은 한국어로 작성
-
-## 관련 문서
-
-- [Changesets 가이드](./CHANGESETS.md)
-- [프로젝트 규칙](./.cursor/rules/project-rule.mdc)
+- Node.js >= 20.11.0 (.nvmrc: 24.7.0)
+- pnpm@10.27.0
+- Python >= 3.10 (uv로 관리, Python 패키지 작업 시)
