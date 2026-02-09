@@ -123,14 +123,31 @@ export const EffectSchema = z.enum([
 ])
 
 /*
+ * Simulated opaque type for IdentifierId to prevent using normal numbers as identifier ids
+ * accidentally.
+ */
+const opaqueIdentifierId = Symbol()
+export type IdentifierId = number & { [opaqueIdentifierId]: 'IdentifierId' }
+
+/*
+ * Identifier — 변수를 고유하게 식별하는 타입.
+ * SSA 형태로 각 정의마다 고유한 id를 부여합니다.
+ */
+export type Identifier = {
+  id: IdentifierId
+  name: string | null
+}
+
+/*
  * A place where data may be read from / written to:
  * - a variable (identifier)
  * - a path into an identifier
  */
 export type Place = {
   kind: 'Identifier'
-
+  identifier: Identifier
   effect: Effect
+  loc: SourceLocation
 }
 
 /*
@@ -162,3 +179,78 @@ export type BlockId = number & { [opaqueBlockId]: 'BlockId' }
  */
 const opaqueInstructionId = Symbol()
 export type InstructionId = number & { [opaqueInstructionId]: 'IdentifierId' }
+
+// placeholder for ReactiveTerminal (used by ReactiveTerminalStatement)
+export type ReactiveTerminal = {
+  kind: string
+}
+
+/*
+ * *******************************************************************************************
+ * *******************************************************************************************
+ * ********************************* CFG (Control Flow Graph) ********************************
+ * *******************************************************************************************
+ * *******************************************************************************************
+ */
+
+/*
+ * InstructionValue — 명령어가 계산하는 값의 종류.
+ * 최소한의 자바스크립트 구문(로컬 변수, 리터럴, 이항/단항 연산)만 지원합니다.
+ */
+export type InstructionValue =
+  | { kind: 'LoadLocal'; place: Place }
+  | { kind: 'StoreLocal'; lvalue: Place; value: Place }
+  | { kind: 'Primitive'; value: string | number | boolean | null | undefined }
+  | { kind: 'BinaryExpression'; operator: string; left: Place; right: Place }
+  | { kind: 'UnaryExpression'; operator: string; value: Place }
+
+/*
+ * Instruction — HIR의 기본 실행 단위.
+ * 하나의 InstructionValue를 계산하여 lvalue에 저장합니다.
+ */
+export type Instruction = {
+  id: InstructionId
+  lvalue: Place
+  value: InstructionValue
+  loc: SourceLocation
+}
+
+/*
+ * Terminal — 기본 블록의 마지막에 위치하여 제어 흐름을 결정합니다.
+ * - return: 함수에서 값을 반환
+ * - goto: 무조건 분기
+ * - if: 조건 분기 (consequent/alternate 블록 + fallthrough 합류점)
+ * - unsupported: 아직 지원하지 않는 구문
+ */
+export type Terminal =
+  | { kind: 'return'; loc: SourceLocation; value: Place }
+  | { kind: 'goto'; block: BlockId }
+  | { kind: 'if'; test: Place; consequent: BlockId; alternate: BlockId; fallthrough: BlockId; loc: SourceLocation }
+  | { kind: 'unsupported'; loc: SourceLocation }
+
+/*
+ * BasicBlock — 제어 흐름 그래프의 노드.
+ * 연속된 명령어(instructions)와 하나의 터미널(terminal)로 구성됩니다.
+ */
+export type BasicBlock = {
+  id: BlockId
+  kind: 'block' | 'value' | 'loop'
+  instructions: Array<Instruction>
+  terminal: Terminal
+  preds: Set<BlockId>
+}
+
+/*
+ * HIRFunction — lower 함수의 반환값.
+ * 함수 하나를 CFG로 표현합니다.
+ */
+export type HIRFunction = {
+  id: string | null
+  params: Array<Place>
+  body: {
+    entry: BlockId
+    blocks: Map<BlockId, BasicBlock>
+  }
+  async: boolean
+  generator: boolean
+}
