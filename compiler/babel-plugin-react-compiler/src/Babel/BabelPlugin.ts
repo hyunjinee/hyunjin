@@ -1,6 +1,7 @@
 import type * as BabelCore from '@babel/core'
-import { compileProgram } from '../EntryPoint/Program'
 import { parsePluginOptions } from '../EntryPoint'
+import { compileProgram } from '../EntryPoint/Program'
+
 // import { compileProgram, Logger, parsePluginOptions } from '../Entrypoint'
 // import { injectReanimatedFlag, pipelineUsesReanimatedPlugin } from '../Entrypoint/Reanimated'
 // import validateNoUntransformedReferences from '../Entrypoint/ValidateNoUntransformedReferences'
@@ -34,8 +35,6 @@ export default function BabelPluginReactCompiler(_babel: typeof BabelCore): Babe
             comments: pass.file.ast.comments ?? [],
             code: pass.file.code,
           })
-
-          // const { opts } = state.file.opts
         },
         exit(path, state) {
           // const { opts } = state.file.opts

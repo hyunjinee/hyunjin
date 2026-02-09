@@ -1,4 +1,4 @@
-import './style.scss';
+import './style.scss'
 
 function PageFooter({ author, githubUrl }) {
   return (
@@ -11,7 +11,7 @@ function PageFooter({ author, githubUrl }) {
         <a href="https://github.com/zoomKoding/zoomkoding-gatsby-blog">&nbsp;zoomkoding-gatsby-blog</a>
       </p>
     </footer>
-  );
+  )
 }
 
-export default PageFooter;
+export default PageFooter

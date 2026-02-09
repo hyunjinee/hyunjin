@@ -32,7 +32,7 @@ const nextConfig = {
 
     config.resolve.alias = {
       ...config.resolve.alias,
-      'react-compiler-runtime': path.resolve(__dirname, '../../packages/react-compiler-runtime'),
+      'react-compiler-runtime': path.resolve(__dirname, '../react-compiler-runtime'),
     }
     config.resolve.fallback = {
       fs: false,

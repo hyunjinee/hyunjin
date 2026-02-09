@@ -11,6 +11,7 @@ const experiences = [
     period: 'Now',
     role: 'Frontend Engineer',
     description: 'Berriz FE 개발팀',
+    link: '/kakaoent',
     logos: [
       { src: '/images/kakaoentertainment/kakaoent.svg', darkInvert: true, href: 'https://kakaoent.com/', height: 25 },
       { src: '/images/kakaoentertainment/berriz_logo.svg', href: 'https://berriz.in/ko', height: 24 },
@@ -114,8 +115,7 @@ export default function Page() {
                       {exp.link ? (
                         <Link
                           href={exp.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                          {...(exp.link.startsWith('/') ? {} : { target: '_blank', rel: 'noopener noreferrer' })}
                           className="text-lg font-semibold text-gray-900 transition-colors md:text-xl dark:text-gray-100 hover:text-primary-500 dark:hover:text-primary-400"
                         >
                           {exp.title}

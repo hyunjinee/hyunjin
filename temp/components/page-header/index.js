@@ -1,8 +1,7 @@
-import { Link, StaticQuery, graphql } from 'gatsby';
-import React from 'react';
-import Post from '../../temp/models/post';
-import PostSearch from '../post-search';
-import './style.scss';
+import { graphql, Link, StaticQuery } from 'gatsby'
+import Post from '../../temp/models/post'
+import PostSearch from '../post-search'
+import './style.scss'
 
 function PageHeader({ siteTitle }) {
   return (
@@ -46,7 +45,7 @@ function PageHeader({ siteTitle }) {
         </header>
       )}
     />
-  );
+  )
 }
 
-export default PageHeader;
+export default PageHeader
