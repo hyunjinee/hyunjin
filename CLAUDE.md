@@ -48,17 +48,19 @@ make lint-all                     # Python + pnpm 전체 린트
 
 ### 워크스페이스 구조
 
-pnpm workspace는 `packages/*`와 `services/*`를 포함합니다 (`pnpm-workspace.yaml`).
+pnpm workspace는 `packages/*`, `services/*`, `compiler/*`를 포함합니다 (`pnpm-workspace.yaml`).
 
-- **packages/** - 재사용 가능한 라이브러리 (tsup으로 빌드)
+- **compiler/** - React Compiler 관련 패키지
   - `babel-plugin-react-compiler` - React Compiler Babel 플러그인 (Meta 기반, HIR 변환)
+  - `react-compiler-runtime` - React Compiler 런타임
+  - `react-compiler-playground` - React Compiler 테스트용 (Monaco Editor, Playwright E2E)
+- **packages/** - 재사용 가능한 라이브러리 (tsup으로 빌드)
   - `http-client` - Axios 기반 HTTP 클라이언트 (재시도, 인터셉터)
   - `query-core` - TanStack Query 스타일 쿼리 코어 (modern + legacy 빌드)
   - `resume_extract` - Python 이력서 추출 라이브러리 (uv, pytest)
 - **services/** - 독립 애플리케이션
   - `blog` - Next.js 16 블로그 (Contentlayer2 MDX, React 19, React Compiler, TailwindCSS 4)
   - `api` - Express API 서버 (LangChain, Supabase)
-  - `react-compiler-playground` - React Compiler 테스트용 (Monaco Editor, Playwright E2E)
   - `learn` - Docusaurus 기반 학습 문서
 - **internal/** - 공유 설정 (`eslint-config`, `typescript-config`)
 - **opencode/** - 별도 프로젝트 (Bun 런타임, SST 배포, 메인 pnpm workspace에 포함되지 않음)
