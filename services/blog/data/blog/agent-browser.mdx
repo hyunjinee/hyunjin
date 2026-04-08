@@ -177,6 +177,7 @@ agent-browser는 CDP의 `Target.setAutoAttach`로 iframe이 생성될 때마다 
   - tab "뉴스스탠드" [ref=e66]
 ```
 
+{/*
 ### 텍스트 너머: Annotated Screenshots
 
 텍스트 스냅샷은 대부분의 경우 충분하지만, 한계가 있다. 아이콘만 있는 버튼, canvas 콘텐츠, 시각적 레이아웃 검증 같은 상황에서는 텍스트만으로 페이지를 이해하기 어렵다.
@@ -194,6 +195,7 @@ agent-browser screenshot --annotate ./page.png
 내부적으로 각 ref의 `backend_node_id`를 배치로 해석해 `getBoundingClientRect()`으로 좌표를 구한 뒤, `Runtime.evaluate`로 DOM에 임시 오버레이를 주입하고 스크린샷을 찍는다. 오버레이는 촬영 직후 제거된다.
 
 핵심은 **annotated screenshot이 ref를 캐싱한다**는 점이다. 스크린샷을 찍은 직후 `@e1`으로 바로 클릭할 수 있다. 비전 모델이 이미지에서 "[1]" 라벨을 인식하고, 같은 ref로 상호작용하는 — 텍스트 스냅샷과 비전이 하나의 ref 체계로 통합되는 구조다.
+*/}
 
 ---
 
@@ -451,6 +453,7 @@ agent-browser는 세션 동안 방문한 모든 오리진을 추적한다.
 
 ---
 
+{/*
 ## 기존 도구와의 비교
 
 지금까지 살펴본 설계가 기존 도구와 어떤 차이를 만드는지 정리해보자. 가장 자주 비교되는 Playwright MCP를 중심으로, Selenium과 Puppeteer도 함께 비교한다.
@@ -502,20 +505,7 @@ agent-browser는 세션 동안 방문한 모든 오리진을 추적한다.
 | 프로필 영속성 | O | O (기본 persistent) | O (`user-data-dir`) | O (`userDataDir`) |
 | 클라우드 브라우저 | O (5개 프로바이더) | O (`--cdp-endpoint`) | **O (Grid + 다수 프로바이더)** | O (`connect()`) |
 | iOS 지원 | O (시뮬레이터/실기기) | 에뮬레이션만 | Appium 별도 | 에뮬레이션만 |
-
-### Playwright MCP와의 핵심 차이
-
-Playwright MCP는 agent-browser와 가장 직접적으로 비교되는 도구다. 둘 다 접근성 트리와 Ref 시스템을 사용하지만, 세부 접근이 다르다.
-
-**1. 스냅샷 필터링** — Playwright MCP는 접근성 트리를 비교적 그대로 반환한다. `generic` 래퍼 노드에도 ref를 할당하고, 텍스트를 중복 포함한다. agent-browser는 인터랙티브 요소만 남기는 공격적 필터링으로 같은 페이지를 82% 적은 토큰으로 표현한다.
-
-**2. 클릭 응답** — Playwright MCP는 클릭 후 전체 스냅샷을 자동으로 다시 반환한다. 에이전트 루프가 단순해지지만, 10단계 워크플로우에서 수십만 토큰의 차이로 이어진다. agent-browser는 `✓ Done` 2 토큰만 반환하고, 에이전트가 필요할 때만 `snapshot`을 호출한다.
-
-**3. 실행 모델** — Playwright MCP는 MCP 서버로 작동하며 21~45+개의 도구를 노출한다. agent-browser는 하나의 셸 커맨드로, MCP를 지원하지 않는 환경에서도 바로 작동한다.
-
-**4. 보안** — Playwright MCP에도 `--allowed-hosts`와 `--secrets`가 있지만, 공식 문서에서 "보안 경계가 아니다"라고 명시한다. agent-browser는 도메인 필터(서브리소스/WebSocket 포함), 액션 정책, AES-256-GCM 인증 볼트, CSPRNG 콘텐츠 경계를 내장한다.
-
-**5. Ref의 차이** — 둘 다 ref를 사용하지만, agent-browser의 ref는 stale 시 시맨틱 속성(role + name)으로 재탐색하는 fallback 경로가 있다. Playwright MCP의 ref는 스냅샷 시점에만 유효하며, 별도의 fallback은 없다.
+*/}
 
 ---
 
