@@ -123,7 +123,6 @@ naver.com 전체 페이지로 측정하면 이 차이가 더 극명해진다 (Pl
 | 지표 | Playwright MCP | agent-browser (`snapshot -i`) | 감소율 |
 |------|:-:|:-:|:-:|
 | 스냅샷 | 37,787 토큰 | 6,621 토큰 | **82%** |
-| 클릭 응답 | 37,787 토큰 (스냅샷 재반환) | 2 토큰 (`✓ Done`) | **99.99%** |
 | 할당된 ref 수 | 534개 | 329개 | **38%** |
 
 같은 페이지를 보더라도 스냅샷 경량화의 차이가 크다.
@@ -469,7 +468,6 @@ agent-browser는 세션 동안 방문한 모든 오리진을 추적한다.
 | Ref 외 셀렉터 | CSS, XPath | CSS, role, ref | CSS, XPath, ID 등 8종 | CSS, XPath, ARIA, text |
 | 스냅샷 필터링 (`-i` 등) | O (인터랙티브만) | selector/depth 제한만 | N/A | `interestingOnly` 옵션 |
 | naver.com 스냅샷 토큰 | **6,621** | 41,337 | N/A | N/A |
-| 클릭 후 응답 | `✓ Done` (2 토큰) | 전체 스냅샷 재반환 | 없음 | 없음 |
 | Annotated Screenshots | O | X | X | X |
 | Diff (스냅샷/스크린샷) | O | X | X | X |
 
