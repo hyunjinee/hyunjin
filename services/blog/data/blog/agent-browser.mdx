@@ -160,7 +160,7 @@ agent-browser -i:       6,621 토큰  █████
 
 현대 웹 앱에는 `<div onclick="...">` 같은 비표준 클릭 가능 요소도 많다.
 접근성 트리에서 이런 요소는 role이 `generic`이라 기본적으로 인터랙티브로 인식되지 않는다.
-`-C` 플래그를 추가하면 `cursor: pointer` CSS 속성이나 `onclick`, `tabindex` 속성을 가진 요소도 인터랙티브로 분류한다.
+agent-browser는 `cursor: pointer` CSS 속성이나 `onclick`, `tabindex` 속성을 가진 요소를 자동으로 감지해서 인터랙티브로 승격시킨다.
 내부적으로 `Runtime.evaluate`를 통해 DOM에서 이런 요소를 탐색하고, AX 트리의 `backend_node_id`와 매칭해서 ref를 부여한다.
 
 ### 크로스 오리진 iframe
@@ -182,6 +182,24 @@ agent-browser는 CDP의 `Target.setAutoAttach`로 iframe이 생성될 때마다 
 - region "뉴스스탠드"
   - tab "뉴스스탠드" [ref=e66]
 ```
+
+### 텍스트 너머: Annotated Screenshots
+
+텍스트 스냅샷은 대부분의 경우 충분하지만, 한계가 있다. 아이콘만 있는 버튼, canvas 콘텐츠, 시각적 레이아웃 검증 같은 상황에서는 텍스트만으로 페이지를 이해하기 어렵다.
+
+`screenshot --annotate` 커맨드는 이 간극을 메운다. 스크린샷 위에 각 인터랙티브 요소의 위치를 빨간 테두리와 번호 라벨로 표시하고, 그 번호가 ref에 대응한다:
+
+```bash
+agent-browser screenshot --annotate ./page.png
+# Output:
+#    [1] @e1 button "Submit"
+#    [2] @e2 link "Home"
+#    [3] @e3 textbox "Email"
+```
+
+내부적으로 각 ref의 `backend_node_id`를 배치로 해석해 `getBoundingClientRect()`으로 좌표를 구한 뒤, `Runtime.evaluate`로 DOM에 임시 오버레이를 주입하고 스크린샷을 찍는다. 오버레이는 촬영 직후 제거된다.
+
+핵심은 **annotated screenshot이 ref를 캐싱한다**는 점이다. 스크린샷을 찍은 직후 `@e1`으로 바로 클릭할 수 있다. 비전 모델이 이미지에서 "[1]" 라벨을 인식하고, 같은 ref로 상호작용하는 — 텍스트 스냅샷과 비전이 하나의 ref 체계로 통합되는 구조다.
 
 ---
 
@@ -267,6 +285,35 @@ agent-browser get text @e10
 ```
 
 중요한 제약: **DOM이 변경되면 ref가 무효화된다.** 버튼을 클릭해서 페이지가 바뀌었다면, 반드시 다시 `snapshot`을 찍어서 새 ref를 확인해야 한다.
+
+### Diff: 행동의 결과를 검증하다
+
+에이전트가 폼을 채우고 버튼을 클릭했다. 의도한 대로 동작했을까? 다시 스냅샷을 찍어서 눈으로 비교하는 대신, `diff snapshot` 커맨드로 **접근성 트리 수준의 변경 사항**을 구조적으로 확인할 수 있다:
+
+```bash
+agent-browser snapshot -i                    # 기준 스냅샷
+agent-browser fill @e3 "test@example.com"
+agent-browser diff snapshot                  # 기준과 현재 비교
+```
+
+```diff
+  heading "Sign Up" [ref=e1]
+  text "Create your account" [ref=e2]
+- textbox "Email" [ref=e3]
++ textbox "Email" [ref=e3]: "test@example.com"
+- button "Submit" [ref=e4]
++ button "Submit" [ref=e4] [disabled]
++ status "Sending..." [ref=e7]
+  link "Already have an account?" [ref=e5]
+
+3 additions, 2 removals, 3 unchanged
+```
+
+텍스트 필드에 값이 들어갔고, 버튼이 비활성화되었으며, 상태 메시지가 나타났다 — 에이전트는 이 diff를 보고 자신의 행동이 성공했는지 판단할 수 있다.
+
+시각적 변화도 비교할 수 있다. `diff screenshot`은 두 스크린샷을 픽셀 단위로 비교해서 차이가 나는 영역을 빨간색으로 표시한 이미지를 생성한다. 컬러 거리 임계값(`--threshold`)을 조절해서 민감도를 제어할 수 있다. `diff url`은 두 URL의 페이지를 직접 비교해서, 스테이징과 프로덕션 환경 간의 차이를 한눈에 파악하게 해준다.
+
+이 검증 단계가 추가되면 에이전트의 루프는 **snapshot → 상호작용 → diff → 판단**으로 확장되어, 단순한 실행자에서 자기 행동을 검증하는 자율적 에이전트로 진화한다.
 
 ---
 
