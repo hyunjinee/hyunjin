@@ -314,8 +314,6 @@ agent-browser diff snapshot                  # 기준과 현재 비교
 
 ## Architecture
 
-스냅샷과 Ref가 "무엇을" 하는지 살펴봤다면, 이제 이것들이 실행되는 시스템의 구조를 살펴보자.
-
 ### Client → Daemon → Browser
 
 agent-browser는 3-tier 구조다. Rust 네이티브 바이너리가 CDP로 Chromium과 직접 통신하되, 그 사이에 **데몬**이 위치한다.
