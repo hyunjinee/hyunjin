@@ -157,10 +157,10 @@ agent-browser -i:       6,621 토큰  █████
 agent-browser는 `cursor: pointer` CSS 속성이나 `onclick`, `tabindex` 속성을 가진 요소를 자동으로 감지해서 인터랙티브로 승격시킨다.
 내부적으로 `Runtime.evaluate`를 통해 DOM에서 이런 요소를 탐색하고, AX 트리의 `backend_node_id`와 매칭해서 ref를 부여한다.
 
-### 크로스 오리진 iframe
+### cross-origin iframe
 
-단일 페이지 앱이 아닌 실제 웹에서는 결제 위젯, 광고, 임베디드 콘텐츠 등 **크로스 오리진 iframe**이 빈번하다.
-크로스 오리진 iframe은 보안 정책상 부모 페이지에서 직접 접근할 수 없기 때문에, 일반적인 접근성 트리 조회로는 내부 요소가 보이지 않는다.
+단일 페이지 앱이 아닌 실제 웹에서는 결제 위젯, 광고, 임베디드 콘텐츠 등 **cross-origin iframe**이 빈번하다.
+cross-origin iframe은 보안 정책상 부모 페이지에서 직접 접근할 수 없기 때문에, 일반적인 접근성 트리 조회로는 내부 요소가 보이지 않는다.
 
 agent-browser는 CDP의 `Target.setAutoAttach`로 iframe이 생성될 때마다 별도의 CDP 세션을 자동으로 연결한다.
 각 iframe 세션에서 독립적으로 `Accessibility.getFullAXTree`를 호출하고, 결과를 부모 스냅샷에 인라인으로 합친다.
@@ -171,7 +171,7 @@ agent-browser는 CDP의 `Target.setAutoAttach`로 iframe이 생성될 때마다 
   - link "NAVER" [ref=e91]
 - combobox "검색어를 입력해 주세요." [ref=e154]
 - button "검색" [ref=e121]
-- Iframe "AD"                                    ← 크로스 오리진
+- Iframe "AD"                                    ← cross-origin
     - link "N+스토어 레저페스타 ..." [ref=e300]  ← iframe 내부 요소도 ref 할당
 - region "뉴스스탠드"
   - tab "뉴스스탠드" [ref=e66]
@@ -221,7 +221,7 @@ struct RefEntry {
     name: String,                   // "검색", "뉴스" 등
     nth: Option<usize>,             // 동일 role+name 중 몇 번째인지
     selector: Option<String>,       // 특수 케이스용 CSS 셀렉터 (getByRole 등)
-    frame_id: Option<String>,       // 크로스 오리진 iframe 식별
+    frame_id: Option<String>,       // cross-origin iframe 식별
 }
 ```
 
