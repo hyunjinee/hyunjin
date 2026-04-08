@@ -6,12 +6,27 @@ import type { ComponentPropsWithRef } from 'react'
 import Image from './Image'
 import CustomLink from './Link'
 import TableWrapper from './TableWrapper'
+import Mermaid from './Mermaid'
+
+function MdxPre(props: ComponentPropsWithRef<'pre'>) {
+  const className = props.className || ''
+  if (className.includes('mermaid')) {
+    const text =
+      typeof props.children === 'string'
+        ? props.children
+        : Array.isArray(props.children)
+          ? props.children.join('')
+          : String(props.children ?? '')
+    return <Mermaid>{text}</Mermaid>
+  }
+  return <Pre {...(props as { children: React.ReactNode })} />
+}
 
 export const components: MDXComponents = {
   Image,
   TOCInline,
   a: CustomLink,
-  pre: Pre,
+  pre: MdxPre,
   table: TableWrapper,
   BlogNewsletterForm,
   h1: (props: ComponentPropsWithRef<'h1'>) => <h1 {...props} />,

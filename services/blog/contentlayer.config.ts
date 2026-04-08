@@ -20,6 +20,7 @@ import rehypeAutolinkHeadings from 'rehype-autolink-headings'
 import rehypeKatex from 'rehype-katex'
 import rehypeCitation from 'rehype-citation'
 import rehypePrismPlus from 'rehype-prism-plus'
+import rehypeMermaid from 'rehype-mermaid'
 import rehypePresetMinify from 'rehype-preset-minify'
 import siteMetadata from './data/siteMetadata'
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer.js'
@@ -162,6 +163,7 @@ export default makeSource({
       rehypeKatex,
       [rehypeCitation, { path: path.join(root, 'data') }],
       [rehypePrismPlus, { defaultLanguage: 'js', ignoreMissing: true }],
+      [rehypeMermaid, { strategy: 'pre-mermaid' }],
       rehypePresetMinify,
     ],
   },
