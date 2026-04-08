@@ -8,16 +8,22 @@ import CustomLink from './Link'
 import TableWrapper from './TableWrapper'
 import Mermaid from './Mermaid'
 
+function extractText(node: React.ReactNode): string {
+  if (typeof node === 'string') return node
+  if (Array.isArray(node)) return node.map(extractText).join('')
+  if (node && typeof node === 'object' && 'props' in node) {
+    return extractText((node as React.ReactElement<{ children?: React.ReactNode }>).props.children)
+  }
+  return String(node ?? '')
+}
+
 function MdxPre(props: ComponentPropsWithRef<'pre'>) {
-  const className = props.className || ''
-  if (className.includes('mermaid')) {
-    const text =
-      typeof props.children === 'string'
-        ? props.children
-        : Array.isArray(props.children)
-          ? props.children.join('')
-          : String(props.children ?? '')
-    return <Mermaid>{text}</Mermaid>
+  const child = Array.isArray(props.children) ? props.children[0] : props.children
+  if (child && typeof child === 'object' && 'props' in child) {
+    const codeProps = (child as React.ReactElement<{ className?: string; children?: React.ReactNode }>).props
+    if (codeProps.className?.includes('language-mermaid')) {
+      return <Mermaid>{extractText(codeProps.children)}</Mermaid>
+    }
   }
   return <Pre {...(props as { children: React.ReactNode })} />
 }

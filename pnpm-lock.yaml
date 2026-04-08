@@ -587,9 +587,6 @@ importers:
       rehype-katex:
         specifier: ^7.0.0
         version: 7.0.1
-      rehype-mermaid:
-        specifier: ^3.0.0
-        version: 3.0.0(playwright@1.51.1)
       rehype-preset-minify:
         specifier: 7.0.0
         version: 7.0.0
@@ -3595,10 +3592,6 @@ packages:
 
   '@floating-ui/utils@0.2.9':
     resolution: {integrity: sha512-MDWhGtE+eHw5JW7lq4qhc5yRLS11ERl1c7Z6Xd0a58DozHES6EnNNwUWbMiG4J9Cgj053Bhk8zvlhFYKVhULwg==}
-
-  '@fortawesome/fontawesome-free@6.7.2':
-    resolution: {integrity: sha512-JUOtgFW6k9u4Y+xeIaEiLr3+cjoUPiAuLXoyKOJSia6Duzb7pq+A76P9ZdPDoAoxHdHzq6gE9/jKBGXlZT8FbA==}
-    engines: {node: '>=6'}
 
   '@giscus/react@3.0.0':
     resolution: {integrity: sha512-hgCjLpg3Wgh8VbTF5p8ZLcIHI74wvDk1VIFv12+eKhenNVUDjgwNg2B1aq/3puyHOad47u/ZSyqiMtohjy/OOA==}
@@ -11958,14 +11951,6 @@ packages:
     resolution: {integrity: sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==}
     engines: {node: '>= 8'}
 
-  mermaid-isomorphic@3.1.0:
-    resolution: {integrity: sha512-mzrvfEVjnJIkJlEqxp3eMuR1wS0TeLCH1VK5E/T5yzWaBwI3JqjJuw70yUIThSCDJ5bRs6O3rgfp00oBAbvSeQ==}
-    peerDependencies:
-      playwright: '1'
-    peerDependenciesMeta:
-      playwright:
-        optional: true
-
   mermaid@11.14.0:
     resolution: {integrity: sha512-GSGloRsBs+JINmmhl0JDwjpuezCsHB4WGI4NASHxL3fHo3o/BRXTxhDLKnln8/Q0lRFRyDdEjmk1/d5Sn1Xz8g==}
 
@@ -13821,14 +13806,6 @@ packages:
 
   rehype-katex@7.0.1:
     resolution: {integrity: sha512-OiM2wrZ/wuhKkigASodFoo8wimG3H12LWQaH8qSPVJn9apWKFSH3YOCtbKpBorTVw/eI7cuT21XBbvwEswbIOA==}
-
-  rehype-mermaid@3.0.0:
-    resolution: {integrity: sha512-fxrD5E4Fa1WXUjmjNDvLOMT4XB1WaxcfycFIWiYU0yEMQhcTDElc9aDFnbDFRLxG1Cfo1I3mfD5kg4sjlWaB+Q==}
-    peerDependencies:
-      playwright: '1'
-    peerDependenciesMeta:
-      playwright:
-        optional: true
 
   rehype-minify-attribute-whitespace@4.0.0:
     resolution: {integrity: sha512-F1MjgAY1wjD5cHhPrWBW8zDoD8YboJuYBj9wDOClibvbuAE34NmoWiEV2ortAwilzwuZFodJaxK6VaDp8uW6zA==}
@@ -20459,8 +20436,6 @@ snapshots:
       tabbable: 6.2.0
 
   '@floating-ui/utils@0.2.9': {}
-
-  '@fortawesome/fontawesome-free@6.7.2': {}
 
   '@giscus/react@3.0.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
     dependencies:
@@ -30662,14 +30637,6 @@ snapshots:
 
   merge2@1.4.1: {}
 
-  mermaid-isomorphic@3.1.0(playwright@1.51.1):
-    dependencies:
-      '@fortawesome/fontawesome-free': 6.7.2
-      katex: 0.16.27
-      mermaid: 11.14.0
-    optionalDependencies:
-      playwright: 1.51.1
-
   mermaid@11.14.0:
     dependencies:
       '@braintree/sanitize-url': 7.1.2
@@ -32915,20 +32882,6 @@ snapshots:
       katex: 0.16.27
       unist-util-visit-parents: 6.0.1
       vfile: 6.0.3
-
-  rehype-mermaid@3.0.0(playwright@1.51.1):
-    dependencies:
-      '@types/hast': 3.0.4
-      hast-util-from-html-isomorphic: 2.0.0
-      hast-util-to-text: 4.0.2
-      mermaid-isomorphic: 3.1.0(playwright@1.51.1)
-      mini-svg-data-uri: 1.4.4
-      space-separated-tokens: 2.0.2
-      unified: 11.0.5
-      unist-util-visit-parents: 6.0.1
-      vfile: 6.0.3
-    optionalDependencies:
-      playwright: 1.51.1
 
   rehype-minify-attribute-whitespace@4.0.0:
     dependencies:
