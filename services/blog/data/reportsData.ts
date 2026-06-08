@@ -9,6 +9,13 @@ type Report = {
 export const reports: Report[] = [
   {
     title: 'Claude Code Insights Report',
+    period: { from: '2026-05-20', to: '2026-06-08' },
+    sessions: 109,
+    messages: 1017,
+    slug: '2026-05-20_2026-06-08',
+  },
+  {
+    title: 'Claude Code Insights Report',
     period: { from: '2026-03-04', to: '2026-04-05' },
     sessions: 429,
     messages: 4038,
