@@ -20,6 +20,7 @@ function formatDate(dateString: string) {
 function TalkCard({ talk }) {
   const { title, description, date, event, href, slides, video, type } = talk
   const isExternalLink = href && !href.startsWith('/')
+  const isInternalDetail = href?.startsWith('/talks/')
 
   return (
     <div className="py-4">
@@ -61,7 +62,7 @@ function TalkCard({ talk }) {
             </div>
           </div>
           {description && <div className="max-w-none text-gray-500 prose dark:text-gray-400">{description}</div>}
-          {(slides || video) && (
+          {(slides || (video && !isInternalDetail)) && (
             <div className="flex gap-4 text-base font-medium leading-6">
               {slides && (
                 <Link
@@ -72,7 +73,7 @@ function TalkCard({ talk }) {
                   슬라이드 &rarr;
                 </Link>
               )}
-              {video && (
+              {video && !isInternalDetail && (
                 <Link
                   href={video}
                   className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"

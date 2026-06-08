@@ -16,6 +16,12 @@ const PDFPresentation = dynamic(() => import('./PDFPresentation'), {
   ),
 })
 
+function getYouTubeId(url?: string) {
+  if (!url) return null
+  const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([\w-]{11})/)
+  return match ? match[1] : null
+}
+
 interface Talk {
   title: string
   description?: string
@@ -37,6 +43,41 @@ export default function TalkPresentation({ talk, slug }: TalkPresentationClientP
   // PDF URL이 있으면 PDF 뷰어 렌더링
   if (talk.pdfUrl) {
     return <PDFPresentation pdfUrl={talk.pdfUrl} title={talk.title} />
+  }
+
+  // YouTube 영상이 있으면 일반 페이지 흐름으로 임베드 렌더링
+  const youTubeId = getYouTubeId(talk.video)
+  if (youTubeId) {
+    return (
+      <div className="container py-8 md:py-10">
+        <a
+          href="/talks"
+          className="inline-block mb-6 text-sm text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+        >
+          ← Talks
+        </a>
+        <h1 className="text-2xl font-bold text-gray-900 md:text-3xl dark:text-gray-100">{talk.title}</h1>
+        <div className="flex flex-wrap gap-2 mt-2 text-sm text-gray-500 dark:text-gray-400">
+          <span>{talk.date}</span>
+          {talk.event && (
+            <>
+              <span>·</span>
+              <span>{talk.event}</span>
+            </>
+          )}
+        </div>
+        {talk.description && <p className="mt-3 text-gray-600 dark:text-gray-400">{talk.description}</p>}
+        <div className="overflow-hidden mt-6 w-full bg-black rounded-xl aspect-video">
+          <iframe
+            className="w-full h-full"
+            src={`https://www.youtube-nocookie.com/embed/${youTubeId}`}
+            title={talk.title}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+          />
+        </div>
+      </div>
+    )
   }
 
   // Keynote export HTML 경로 매핑

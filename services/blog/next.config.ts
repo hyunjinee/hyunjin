@@ -21,7 +21,7 @@ const ContentSecurityPolicy = `
   media-src 'self' *.s3.amazonaws.com;
   connect-src *;
   font-src 'self';
-  frame-src 'self' giscus.app vercel.live codesandbox.io *.codesandbox.io;
+  frame-src 'self' giscus.app vercel.live codesandbox.io *.codesandbox.io www.youtube-nocookie.com www.youtube.com;
   worker-src 'self' blob:;
 `
 

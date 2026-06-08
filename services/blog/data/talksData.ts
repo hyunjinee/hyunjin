@@ -12,6 +12,14 @@ type Talk = {
 
 export const talks: Talk[] = [
   {
+    title: '서버 사이드 렌더링으로 유저 경험 개선하기',
+    description: 'CSR의 한계와 SSR이 초기 로딩·유저 경험·SEO에 주는 이점',
+    date: '2023-06-24',
+    href: '/talks/ssr-user-experience',
+    video: 'https://www.youtube.com/watch?v=wxxNS6hEptE',
+    type: 'talk',
+  },
+  {
     title: 'LUMOS',
     description: '전세대출 운영플랫폼을 개발하며 프로젝트의 개선점과 나아가야 할 방향 제시',
     date: '2023-10-15',
