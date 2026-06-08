@@ -8,7 +8,7 @@ import siteMetadata from '@/data/siteMetadata'
 const experiences = [
   {
     title: '카카오 엔터테인먼트',
-    period: 'Now',
+    period: '2024.07 ~ Now',
     role: 'Frontend Engineer',
     description: 'Berriz FE 개발팀',
     link: '/kakaoent',
@@ -183,7 +183,7 @@ export default function Page() {
                   href="/blog/agent-browser"
                   className="text-sm whitespace-nowrap transition-colors text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
                 >
-                  블로그 상세 →
+                  블로그
                 </CustomLink>
               </div>
             </div>
