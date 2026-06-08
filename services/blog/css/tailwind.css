@@ -28,18 +28,18 @@
   --color-bclguide: #f2003c;
   --color-kakaoent: #ffd200;
 
-  /* Primary Colors (Pink) */
-  --color-primary-50: oklch(0.971 0.014 0.946);
-  --color-primary-100: oklch(0.946 0.028 0.952);
-  --color-primary-200: oklch(0.898 0.061 0.956);
-  --color-primary-300: oklch(0.826 0.115 0.954);
-  --color-primary-400: oklch(0.729 0.172 0.943);
-  --color-primary-500: oklch(0.656 0.194 0.926);
-  --color-primary-600: oklch(0.586 0.195 0.91);
-  --color-primary-700: oklch(0.514 0.166 0.907);
-  --color-primary-800: oklch(0.459 0.138 0.905);
-  --color-primary-900: oklch(0.419 0.114 0.903);
-  --color-primary-950: oklch(0.27 0.079 0.914);
+  /* Primary Colors (Blue) */
+  --color-primary-50: oklch(0.97 0.014 254.604);
+  --color-primary-100: oklch(0.932 0.032 255.585);
+  --color-primary-200: oklch(0.882 0.059 254.128);
+  --color-primary-300: oklch(0.809 0.105 251.813);
+  --color-primary-400: oklch(0.707 0.165 254.624);
+  --color-primary-500: oklch(0.623 0.214 259.815);
+  --color-primary-600: oklch(0.546 0.245 262.881);
+  --color-primary-700: oklch(0.488 0.243 264.376);
+  --color-primary-800: oklch(0.424 0.199 265.638);
+  --color-primary-900: oklch(0.379 0.146 265.522);
+  --color-primary-950: oklch(0.282 0.091 267.935);
 
   /* Z-Index */
   --z-60: 60;

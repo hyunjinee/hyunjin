@@ -148,6 +148,48 @@ export default function Page() {
           </div>
         </section>
 
+        {/* 오픈소스 섹션 */}
+        <section className="mb-10">
+          <h2 className="pb-2 mb-8 text-2xl font-bold text-gray-900 border-b-2 border-gray-200 md:text-3xl dark:text-gray-100 dark:border-gray-700">
+            Open Source
+          </h2>
+          <div className="group">
+            <div className="flex flex-col gap-2 mb-2 sm:flex-row sm:justify-between sm:items-start">
+              <div className="flex-1">
+                <Link
+                  href="https://github.com/vercel-labs/agent-browser"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-lg font-semibold text-gray-900 transition-colors md:text-xl dark:text-gray-100 hover:text-primary-500 dark:hover:text-primary-400"
+                >
+                  agent-browser
+                </Link>
+                <p className="mt-1 text-sm text-gray-600 md:text-base dark:text-gray-400">
+                  vercel-labs ·{' '}
+                  <Link
+                    href="https://github.com/search?q=repo%3Avercel-labs%2Fagent-browser+is%3Apr+is%3Amerged+author%3Ajin-2-kakaoent+author%3Ahyunjinee&type=pullrequests"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="transition-colors text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+                  >
+                    28 PRs merged
+                  </Link>{' '}
+                  · Rust / TypeScript
+                </p>
+              </div>
+              <div className="flex flex-col gap-1 mt-1 sm:mt-0 sm:items-end">
+                <span className="text-sm text-gray-500 whitespace-nowrap dark:text-gray-500">2026.03 ~</span>
+                <CustomLink
+                  href="/blog/agent-browser"
+                  className="text-sm whitespace-nowrap transition-colors text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+                >
+                  블로그 상세 →
+                </CustomLink>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* 기술 섹션 */}
         <section className="mb-10">
           <h2 className="pb-2 mb-8 text-2xl font-bold text-gray-900 border-b-2 border-gray-200 md:text-3xl dark:text-gray-100 dark:border-gray-700">
