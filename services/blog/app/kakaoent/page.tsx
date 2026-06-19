@@ -1,88 +1,274 @@
+import { genPageMetadata } from 'app/seo'
 import Image from 'next/image'
+import Link from 'next/link'
+import CustomLink from '@/components/Link'
+
+export const metadata = genPageMetadata({ title: 'Kakao Entertainment' })
+
+const metrics = [
+  { value: '100만+', label: '유저', sub: '제로 베이스 → 글로벌 출시' },
+  { value: '3,566+', label: '커밋 · 680 PR', sub: '최다 기여자' },
+  { value: '7+', label: '서비스 / 레포', sub: '플랫폼 · 파트너센터 · 오디션 · 라이브 · 위키 · DevOps' },
+  { value: '~22개월', label: '2024.07 ~ 현재', sub: '진행 중' },
+]
+
+type Project = {
+  title: string
+  role: string
+  period: string
+  scale: string
+  bullets: string[]
+  href?: { label: string; url: string }
+}
+
+const projects: Project[] = [
+  {
+    title: 'Berriz 메인 플랫폼',
+    role: '제품 전반 주도',
+    period: '2024.08 ~ 현재',
+    scale: '3,566 커밋 · 680 PR',
+    bullets: [
+      '계정·멜론 연동·본인인증, 팬클럽·팬카드, 커머스(샵), 딥링크, 웹뷰 브릿지, 오디션 투표, 다국어까지 제품 전반을 주도',
+      '네이티브 앱-웹 상태 동기화 웹뷰 브릿지 아키텍처(setAppValues·스킴 네비·PTR 제어·디버그 패널) 설계',
+      '사내 AI 개발 자동화(Jira 폴링 → 코딩 에이전트 자동 spawn 오케스트레이터 + 평가 하네스) 구축',
+    ],
+    href: { label: '주제별 상세 보기', url: '/berriz' },
+  },
+  {
+    title: 'Live Player — AWS IVS SDK',
+    role: '다형 SDK 0 → 1 설계',
+    period: '2024.07 ~ 09',
+    scale: '121 커밋 · 10 PR',
+    bullets: [
+      'PlayerBase 추상 클래스 위에 IVS 재생 엔진을 구현 — IVS/DRM 백엔드 교체 가능한 다형적 SDK 아키텍처 확립',
+      'EventEmitter → zustand → React 단방향 상태 동기화, error taxonomy 정의',
+      'player-sdk / player-ui 2패키지 pnpm 모노레포 분리, Chromecast(CAF)·AirPlay 캐스팅 연동',
+    ],
+  },
+  {
+    title: '파트너센터 — 예약 · TVOD · 행사',
+    role: '0 → 1 도메인 구축',
+    period: '2026.02 ~ 05',
+    scale: '239 커밋 · 27 PR',
+    bullets: [
+      '예약(부킹) 도메인을 0부터 구축 — 4단계 멀티스텝 등록 퍼널 + 전용 CRUD API 레이어 설계',
+      'container/presentational 분리, TanStack Form + Zod 복합 검증, 폼 ↔ API 양방향 변환 유틸 도입',
+      'zero-prop bypass render props를 26개+ 컨테이너에서 제거하는 대규모 prop drilling 리팩토링',
+    ],
+  },
+  {
+    title: "오디션 — Debut's Plan",
+    role: '글로벌 실시간 투표',
+    period: '2025.01 ~ 04',
+    scale: '164 커밋 · 28 PR',
+    bullets: [
+      '글로벌 타임존 마감 시각 오산 크리티컬 버그를 dayjs KST 고정 로직으로 재설계, 18개 타임존 Vitest 테스트로 회귀 봉인',
+      'SSR/미들웨어 인증을 정적 익스포트 + 클라이언트 리다이렉트 + 404 폴백 구조로 재구성',
+      '투표 결과 처리·Countdown·SVG 렌더링 최적화로 처리량(TPS) 개선',
+    ],
+  },
+  {
+    title: 'berriz-wiki — LLM 지식베이스',
+    role: '단독 설계 · 구축',
+    period: '2026.04 ~ 05',
+    scale: '71 커밋',
+    bullets: [
+      'raw(원본) / pages(LLM 컴파일) / views(대시보드) 3계층 사람·AI 공용 지식베이스를 단독 설계·구축',
+      'Confluence 첨부 이미지 자동 인입 파이프라인(Python)으로 자료 정리 비용 제거',
+      'Quartz 정적 사이트 + GitHub Actions → S3·CloudFront 자동 배포',
+    ],
+  },
+  {
+    title: 'FE DevOps — Terraform IaC',
+    role: '인프라 도입 주도',
+    period: '2024.12 ~ 25.04',
+    scale: '27 커밋',
+    bullets: [
+      'Terraform 도입의 필요성을 직접 제안·주도 — CloudFront·Lambda·S3 인프라를 IaC로 전환해 재현 가능한 프로비저닝 체계 확립',
+      'FE develop 환경 Helm 배포(Deployment/Service/Ingress)와 멀티환경 values 작성',
+      'GKE BackendConfig로 Cloud Armor WAF·헬스체크 구성, host + path 라우팅 연계',
+    ],
+  },
+]
+
+type Writing = {
+  title: string
+  desc: string
+  date: string
+  url: string
+}
+
+const writings: Writing[] = [
+  { title: 'DeepLink', desc: '딥링크 시스템(link.berriz.in) 설계', date: '2025-06-09', url: '/blog/DeepLink' },
+  {
+    title: 'SSR은 선택이 아니다',
+    desc: 'AI 크롤러 시대의 렌더링 전략',
+    date: '2026-04-20',
+    url: '/blog/SSR은 선택이 아니다',
+  },
+  {
+    title: 'LLM 키우기',
+    desc: '발표 · Kakao Entertainment FE Chapter Lightning Talk',
+    date: '2025-02-20',
+    url: '/talks/llm-growing',
+  },
+]
+
+const techStack = [
+  'TypeScript',
+  'React',
+  'Next.js (App Router)',
+  'TanStack Query / Form',
+  'next-intl',
+  'AWS IVS · Lambda · CloudFront',
+  'Terraform',
+  'GKE · Helm',
+  'Vitest · agent-browser',
+  'GitHub Actions',
+]
 
 export default function KakaoentPage() {
   return (
-    <div>
-      <div className="mx-auto max-w-[700px]">
-        {/* Header Section */}
-        <div className="relative mb-6">
-          {/* Logos */}
-          <div className="flex gap-3 items-center mb-4">
-            <Image
-              src="/images/kakaoentertainment/kakaoent.svg"
-              alt="카카오엔터테인먼트 로고"
-              width={160}
-              height={32}
-              className="h-[32px] w-auto dark:invert"
-            />
-            <Image
-              src="/images/kakaoentertainment/berriz_logo.svg"
-              alt="Berriz 로고"
-              width={80}
-              height={28}
-              className="h-[28px] w-auto"
-            />
-          </div>
-
-          {/* Position and Period */}
-          <div className="absolute top-0 right-0 text-right">
-            <p className="mb-1 text-[13px] text-black dark:text-gray-200">Frontend Engineer</p>
-            <p className="text-[13px] text-black dark:text-gray-200">2024.07 ~ 현재</p>
-          </div>
+    <div className="container md:mt-5">
+      {/* Hero */}
+      <header className="pb-8 mb-10 border-b border-gray-200 dark:border-gray-700">
+        <h1 className="sr-only">Kakao Entertainment</h1>
+        <div className="flex flex-wrap items-center gap-3 mb-4">
+          <Image
+            src="/images/kakaoentertainment/kakaoent.svg"
+            alt="Kakao Entertainment"
+            width={150}
+            height={30}
+            className="h-[28px] w-auto dark:invert"
+          />
+          <span className="text-sm text-gray-400 dark:text-gray-600">·</span>
+          <span className="text-sm text-gray-600 dark:text-gray-400">Frontend Engineer · 2024.07 ~ 현재</span>
         </div>
-
-        {/* Project 1: Berriz */}
-        <div className="mb-8">
-          <h2 className="mb-3 text-[15px] font-bold text-kakaoent">
-            Berriz — Global Fan Platform Service
-          </h2>
-          <p className="mb-2 text-[13px] text-gray-500 dark:text-gray-400">
-            Community, Shop, Accounts, DeepLink, Live Player, Agents
-          </p>
-          <ul className="space-y-2 text-[14px]">
-            <li className="leading-[20px] text-black dark:text-gray-200">
-              - 제로 베이스에서 100만 유저 달성까지의 초기 구축에 기여
-            </li>
-            <li className="leading-[20px] text-black dark:text-gray-200">
-              - Universal Links, App Links, Custom Schemes를 활용한 딥링크 시스템(link.berriz.in) 설계 및 구현. Fallback 처리와 SEO 지원을 통해 웹-모바일 앱 간 원활한 내비게이션 제공
-            </li>
-            <li className="leading-[20px] text-black dark:text-gray-200">
-              - Webview와 Native 컴포넌트 간 인터페이스 처리를 통한 UX 개선
-            </li>
-            <li className="leading-[20px] text-black dark:text-gray-200">
-              - Terraform을 활용해 CloudFront, Lambda, S3 기반의 AWS 인프라 프로비저닝 및 관리
-            </li>
-            <li className="leading-[20px] text-black dark:text-gray-200">
-              - 커밋/PR 처리, 문서 요약, 태스크 생성 등 반복 워크플로우를 자동화하는 Berriz Agent 개발
-            </li>
-          </ul>
+        <p className="max-w-3xl text-sm leading-7 text-gray-700 md:text-base dark:text-gray-300">
+          글로벌 팬 플랫폼 <strong>Berriz</strong>의 프론트엔드 최다 기여자로, 메인 플랫폼 제품 전반을 주도하며 라이브
+          플레이어 SDK·파트너센터·오디션 실시간 투표 등 여러 도메인을 0부터 구축했습니다. 여기에 LLM 지식베이스와 AI
+          개발 자동화, Terraform 기반 인프라(IaC)까지 제품과 개발 생산성 양쪽을 함께 끌어올렸습니다.
+        </p>
+        <div className="flex flex-wrap items-center gap-3 mt-5 text-sm md:gap-4">
+          <Link
+            href="https://berriz.in/ko"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="transition-colors text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+          >
+            berriz.in ↗
+          </Link>
+          <span className="text-gray-400 dark:text-gray-600">·</span>
+          <CustomLink
+            href="/berriz"
+            className="transition-colors text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+          >
+            Berriz 주제별 상세
+          </CustomLink>
         </div>
+      </header>
 
-        {/* Project 2: Debut's Plan */}
-        <div className="mb-8">
-          <h2 className="mb-3 text-[15px] font-bold text-kakaoent">
-            Debut&apos;s Plan — Real-Time Voting Service
-          </h2>
-          <ul className="space-y-2 text-[14px]">
-            <li className="leading-[20px] text-black dark:text-gray-200">
-              - 글로벌 동기화 투표 시스템 구축 및 운영. 타임존 간 정확한 상태 관리와 실시간 업데이트 보장
+      {/* Metrics */}
+      <section className="mb-12">
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+          {metrics.map((m) => (
+            <div
+              key={m.label}
+              className="p-4 border border-gray-200 rounded-lg dark:border-gray-700 dark:bg-gray-800/30"
+            >
+              <div className="text-2xl font-bold text-primary-500 md:text-3xl">{m.value}</div>
+              <div className="mt-1 text-sm font-medium text-gray-900 dark:text-gray-200">{m.label}</div>
+              <div className="mt-0.5 text-xs text-gray-500 dark:text-gray-500">{m.sub}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Project timeline */}
+      <section className="mb-12">
+        <h2 className="pb-2 mb-8 text-2xl font-bold text-gray-900 border-b-2 border-gray-200 md:text-3xl dark:text-gray-100 dark:border-gray-700">
+          프로젝트
+        </h2>
+        <div className="space-y-8">
+          {projects.map((p, i) => (
+            <div key={p.title} className="group">
+              <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                <span className="font-mono text-sm text-gray-400 dark:text-gray-600">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <h3 className="text-lg font-semibold text-gray-900 md:text-xl dark:text-gray-100">{p.title}</h3>
+                <span className="text-sm text-gray-500 dark:text-gray-400">{p.role}</span>
+                <span className="ml-auto font-mono text-xs text-gray-400 dark:text-gray-600">
+                  {p.period} · {p.scale}
+                </span>
+              </div>
+              <ul className="mt-3 ml-8 space-y-2">
+                {p.bullets.map((b) => (
+                  <li
+                    key={b}
+                    className="text-sm md:text-base text-gray-700 dark:text-gray-300 pl-5 relative before:content-['–'] before:absolute before:left-0 before:text-primary-500"
+                  >
+                    {b}
+                  </li>
+                ))}
+              </ul>
+              {p.href && (
+                <div className="mt-3 ml-8">
+                  <CustomLink
+                    href={p.href.url}
+                    className="text-sm transition-colors text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+                  >
+                    {p.href.label} →
+                  </CustomLink>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Writings & talks */}
+      <section className="mb-12">
+        <h2 className="pb-2 mb-8 text-2xl font-bold text-gray-900 border-b-2 border-gray-200 md:text-3xl dark:text-gray-100 dark:border-gray-700">
+          관련 글 · 발표
+        </h2>
+        <ul className="space-y-3">
+          {writings.map((w) => (
+            <li key={w.title}>
+              <CustomLink href={w.url} className="group flex flex-wrap gap-x-3 gap-y-0.5 items-baseline">
+                <span className="font-medium text-gray-900 transition-colors dark:text-gray-100 group-hover:text-primary-500">
+                  {w.title}
+                </span>
+                <span className="text-sm text-gray-500 dark:text-gray-400">{w.desc}</span>
+                <span className="ml-auto font-mono text-xs text-gray-400 dark:text-gray-600">{w.date}</span>
+              </CustomLink>
             </li>
-          </ul>
-        </div>
+          ))}
+        </ul>
+      </section>
 
-        {/* Tech Stack */}
-        <div className="mb-6">
-          <h2 className="mb-2 text-[15px] font-bold text-kakaoent">기술 스택</h2>
-          <div className="space-y-1">
-            <p className="text-[14px] leading-[20px] text-black dark:text-gray-200">
-              TypeScript, React, Next.js
-            </p>
-            <p className="text-[14px] leading-[20px] text-black dark:text-gray-200">TailwindCSS, Emotion</p>
-            <p className="text-[14px] leading-[20px] text-black dark:text-gray-200">TanStack Query, Zustand</p>
-            <p className="text-[14px] leading-[20px] text-black dark:text-gray-200">Terraform, AWS (CloudFront, Lambda, S3)</p>
-          </div>
+      {/* Tech stack */}
+      <section className="mb-12">
+        <h2 className="pb-2 mb-8 text-2xl font-bold text-gray-900 border-b-2 border-gray-200 md:text-3xl dark:text-gray-100 dark:border-gray-700">
+          기술 스택
+        </h2>
+        <div className="flex flex-wrap items-center gap-2">
+          {techStack.map((t) => (
+            <span
+              key={t}
+              className="px-3 py-1 text-sm text-gray-700 border border-gray-200 rounded-full dark:text-gray-300 dark:border-gray-700"
+            >
+              {t}
+            </span>
+          ))}
+          <CustomLink
+            href="/berriz"
+            className="px-1 text-sm transition-colors text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+          >
+            전체 스택 →
+          </CustomLink>
         </div>
-      </div>
+      </section>
     </div>
   )
 }
