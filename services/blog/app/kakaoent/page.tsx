@@ -120,11 +120,22 @@ const techStack = [
   'Next.js (App Router)',
   'TanStack Query / Form',
   'next-intl',
-  'AWS IVS · Lambda · CloudFront',
+  'Zod',
+  'TailwindCSS · Emotion',
+  'Turborepo (pnpm)',
+  'zustand',
+  'AWS IVS Player',
+  'dayjs',
+  'AWS Lambda · CloudFront',
   'Terraform',
-  'GKE · Helm',
-  'Vitest · agent-browser',
+  'GKE · Helm · ArgoCD',
+  'Cloud Armor (WAF)',
   'GitHub Actions',
+  'Sentry',
+  'Storybook',
+  'Vitest · Cypress · agent-browser',
+  'Kakao Tiara',
+  'Python',
 ]
 
 export default function KakaoentPage() {
@@ -252,7 +263,7 @@ export default function KakaoentPage() {
         <h2 className="pb-2 mb-8 text-2xl font-bold text-gray-900 border-b-2 border-gray-200 md:text-3xl dark:text-gray-100 dark:border-gray-700">
           기술 스택
         </h2>
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap gap-2">
           {techStack.map((t) => (
             <span
               key={t}
@@ -261,12 +272,6 @@ export default function KakaoentPage() {
               {t}
             </span>
           ))}
-          <CustomLink
-            href="/berriz"
-            className="px-1 text-sm transition-colors text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
-          >
-            전체 스택 →
-          </CustomLink>
         </div>
       </section>
     </div>
