@@ -29,7 +29,7 @@ const experiences: Experience[] = [
         name: '글로벌 팬 플랫폼 Berriz — Community · Shop · Accounts · DeepLink · Live Player · Agents',
         bullets: [
           '서비스 초기 구축 단계부터 참여해 100만 유저 이상의 규모로 성장하는 과정에 기여했습니다.',
-          'Universal Links · App Links · Custom Scheme을 활용한 딥링크 시스템(link.berriz.in)을 설계·구현했습니다. 폴백 처리와 SEO 지원으로 웹과 모바일 앱 간 끊김 없는 이동을 가능하게 했습니다.',
+          'Universal Links · App Links · Custom Scheme을 활용한 딥링크 시스템(link.berriz.in)을 설계·구현했습니다. 폴백 처리와 SEO 지원으로, 링크 하나만 눌러도 앱이 있으면 곧장 그 화면으로, 없으면 막힘없이 설치까지 이어지게 했습니다.',
           '웹뷰와 네이티브 컴포넌트 사이의 인터페이스를 다듬어 UX를 개선했습니다.',
           'Terraform으로 CloudFront · Lambda · S3 기반 AWS 아키텍처를 프로비저닝하고 운영했습니다.',
           '커밋/PR 처리, 문서 요약, 태스크 생성 등 반복 작업을 자동화하는 Berriz 에이전트를 개발했습니다.',
