@@ -5,25 +5,72 @@ import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
 import CustomLink from '@/components/Link'
 import siteMetadata from '@/data/siteMetadata'
 
-const experiences = [
+type Experience = {
+  title: string
+  period: string
+  role: string
+  link?: string
+  logos?: { src: string; darkInvert?: boolean; href: string; height?: number }[]
+  projects: { name: string; bullets: string[] }[]
+}
+
+const experiences: Experience[] = [
   {
     title: '카카오 엔터테인먼트',
     period: '2024.07 ~ Now',
     role: 'Frontend Engineer',
-    description: 'Berriz FE 개발팀',
     link: '/kakaoent',
     logos: [
       { src: '/images/kakaoentertainment/kakaoent.svg', darkInvert: true, href: 'https://kakaoent.com/', height: 25 },
       { src: '/images/kakaoentertainment/berriz_logo.svg', href: 'https://berriz.in/ko', height: 24 },
     ],
+    projects: [
+      {
+        name: '글로벌 팬 플랫폼 Berriz — Community · Shop · Accounts · DeepLink · Live Player · Agents',
+        bullets: [
+          '서비스 초기 구축 단계부터 참여해 100만 유저 이상의 규모로 성장하는 과정에 기여했습니다.',
+          'Universal Links · App Links · Custom Scheme을 활용한 딥링크 시스템(link.berriz.in)을 설계·구현했습니다. 폴백 처리와 SEO 지원으로 웹과 모바일 앱 간 끊김 없는 이동을 가능하게 했습니다.',
+          '웹뷰와 네이티브 컴포넌트 사이의 인터페이스를 다듬어 UX를 개선했습니다.',
+          'Terraform으로 CloudFront · Lambda · S3 기반 AWS 아키텍처를 프로비저닝하고 운영했습니다.',
+          '커밋/PR 처리, 문서 요약, 태스크 생성 등 반복 작업을 자동화하는 Berriz 에이전트를 개발했습니다.',
+        ],
+      },
+      {
+        name: "실시간 투표 서비스 Debut's Plan",
+        bullets: [
+          '글로벌 동기화 투표 시스템을 구축·운영하며, 타임존을 넘나드는 정확한 상태 관리와 실시간 업데이트를 보장했습니다.',
+        ],
+      },
+    ],
   },
   {
     title: '토스뱅크',
     period: '2023.09 ~ 2024.04',
-    role: 'FullStack Engineer',
-    description: 'Housing Loan Squad 전월세 대출 심사 및 운영 서비스 개발',
+    role: 'Software Engineer',
     link: 'https://hyunjinee.notion.site/0d01b8a2b1ac4249a09a946885140870',
     logos: [{ src: '/images/tossbank/Toss_Symbol_Primary.png', href: 'https://www.tossbank.com/', height: 24 }],
+    projects: [
+      {
+        name: 'Housing Loan Squad',
+        bullets: [
+          'Loan Tribe의 대출 심사·승인 프로세스를 간소화하기 위해 설계된 LUMOS(Loan Universal Management Operating System)를 개발했습니다.',
+          '알림 서비스를 구현해 특정 문서 심사 프로세스 시간을 50% 단축했습니다.',
+          '낙관적 업데이트(optimistic update)를 적용해 UI 반응성과 사용자 경험을 개선했습니다.',
+          '런타임 검증의 중요성을 강조하고 Zod를 도입해 타입 안전한 애플리케이션을 개발했습니다.',
+        ],
+      },
+    ],
+  },
+  {
+    title: 'SW Maestro',
+    period: '2022.04 ~ 2022.12',
+    role: 'Software Engineer',
+    projects: [
+      {
+        name: '',
+        bullets: ['MOZI 서비스를 개발했으며, 13기를 빛낸 13인의 연수생에 선정되었습니다.'],
+      },
+    ],
   },
 ]
 
@@ -40,16 +87,14 @@ export default function Page() {
   const sortedPosts = sortPosts(allBlogs)
   const posts = allCoreContent(sortedPosts)
 
-  // return <Main posts={posts} />
-
   return (
     <div className="divide-y divide-gray-200 dark:divide-gray-700">
       <div className="container md:mt-5">
         {/* 프로필 헤더 */}
         <header className="mb-8">
-          <div className="flex flex-col gap-8 items-start md:flex-row">
+          <div className="flex flex-col items-start gap-8 md:flex-row">
             {/* 프로필 이미지 */}
-            <div className="overflow-hidden relative flex-shrink-0 mx-auto rounded-full w-50 h-50 md:w-50 md:h-50 md:mx-0">
+            <div className="relative flex-shrink-0 mx-auto overflow-hidden rounded-full w-50 h-50 md:w-50 md:h-50 md:mx-0">
               <Image
                 src="/images/hyunjin/hyunjin.jpg"
                 alt="이현진"
@@ -76,7 +121,7 @@ export default function Page() {
               </div>
 
               {/* 연락처 및 링크 */}
-              <div className="flex flex-wrap gap-3 justify-center text-sm md:gap-4 md:justify-start">
+              <div className="flex flex-wrap justify-center gap-3 text-sm md:gap-4 md:justify-start">
                 <span className="text-gray-600 dark:text-gray-400">{siteMetadata.email}</span>
                 <span className="text-gray-400 dark:text-gray-600">·</span>
                 <Link
@@ -111,7 +156,7 @@ export default function Page() {
               <div key={exp.title} className="group">
                 <div className="flex flex-col gap-2 mb-2 sm:flex-row sm:justify-between sm:items-start">
                   <div className="flex-1">
-                    <div className="flex gap-2 items-center">
+                    <div className="flex items-center gap-2">
                       {exp.link ? (
                         <Link
                           href={exp.link}
@@ -142,7 +187,27 @@ export default function Page() {
                   </div>
                   <span className="text-sm text-gray-500 whitespace-nowrap dark:text-gray-500">{exp.period}</span>
                 </div>
-                <p className="text-sm text-gray-700 md:text-base dark:text-gray-300">{exp.description}</p>
+                <div className="mt-3 space-y-4">
+                  {exp.projects.map((project) => (
+                    <div key={project.name}>
+                      {project.name && (
+                        <p className="text-sm font-medium text-gray-800 break-keep md:text-base dark:text-gray-200">
+                          {project.name}
+                        </p>
+                      )}
+                      <ul className={`${project.name ? 'mt-2' : ''} space-y-1.5`}>
+                        {project.bullets.map((bullet) => (
+                          <li
+                            key={bullet}
+                            className="text-sm text-gray-700 dark:text-gray-300 break-keep pl-5 relative before:content-['–'] before:absolute before:left-0 before:text-primary-500"
+                          >
+                            {bullet}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
               </div>
             ))}
           </div>
@@ -181,7 +246,7 @@ export default function Page() {
                 <span className="text-sm text-gray-500 whitespace-nowrap dark:text-gray-500">2026.03 ~</span>
                 <CustomLink
                   href="/blog/agent-browser"
-                  className="text-sm whitespace-nowrap transition-colors text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+                  className="text-sm transition-colors whitespace-nowrap text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
                 >
                   블로그
                 </CustomLink>
