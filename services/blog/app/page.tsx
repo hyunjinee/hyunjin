@@ -10,7 +10,7 @@ type Experience = {
   period: string
   role: string
   link?: string
-  logos?: { src: string; darkInvert?: boolean; href: string; height?: number }[]
+  logos?: { src: string; darkInvert?: boolean; href: string; width: number; height: number }[]
   projects: { name: string; bullets: string[] }[]
 }
 
@@ -21,8 +21,14 @@ const experiences: Experience[] = [
     role: 'Frontend Engineer',
     link: '/kakaoent',
     logos: [
-      { src: '/images/kakaoentertainment/kakaoent.svg', darkInvert: true, href: 'https://kakaoent.com/', height: 25 },
-      { src: '/images/kakaoentertainment/berriz_logo.svg', href: 'https://berriz.in/ko', height: 24 },
+      {
+        src: '/images/kakaoentertainment/kakaoent.svg',
+        darkInvert: true,
+        href: 'https://kakaoent.com/',
+        width: 57,
+        height: 25,
+      },
+      { src: '/images/kakaoentertainment/berriz_logo.svg', href: 'https://berriz.in/ko', width: 24, height: 24 },
     ],
     projects: [
       {
@@ -48,7 +54,9 @@ const experiences: Experience[] = [
     period: '2023.09 ~ 2024.04',
     role: 'Software Engineer',
     link: 'https://hyunjinee.notion.site/0d01b8a2b1ac4249a09a946885140870',
-    logos: [{ src: '/images/tossbank/Toss_Symbol_Primary.png', href: 'https://www.tossbank.com/', height: 24 }],
+    logos: [
+      { src: '/images/tossbank/Toss_Symbol_Primary.png', href: 'https://www.tossbank.com/', width: 24, height: 24 },
+    ],
     projects: [
       {
         name: 'Housing Loan Squad',
@@ -175,9 +183,9 @@ export default function Page() {
                           <Image
                             src={logo.src}
                             alt=""
-                            width={logo.height || 20}
-                            height={logo.height || 20}
-                            style={{ height: logo.height || 20, width: 'auto' }}
+                            width={logo.width}
+                            height={logo.height}
+                            style={{ height: logo.height, width: logo.width }}
                             className={`object-contain ${logo.darkInvert ? 'dark:invert' : ''}`}
                           />
                         </Link>
