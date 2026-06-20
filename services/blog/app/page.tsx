@@ -107,9 +107,10 @@ export default function Page() {
                 src="/images/hyunjin/hyunjin.jpg"
                 alt="이현진"
                 fill
+                sizes="200px"
                 className="object-cover"
                 priority
-                quality={100}
+                quality={75}
               />
             </div>
             {/* 기본 정보 */}
