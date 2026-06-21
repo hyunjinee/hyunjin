@@ -19,6 +19,7 @@ type Project = {
   scale: string
   bullets: string[]
   href?: { label: string; url: string }
+  image?: { src: string; alt: string; width: number; height: number }
 }
 
 const projects: Project[] = [
@@ -88,6 +89,19 @@ const projects: Project[] = [
       'FE develop 환경 Helm 배포(Deployment/Service/Ingress)와 멀티환경 values 작성',
       'GKE BackendConfig로 Cloud Armor WAF·헬스체크 구성, host + path 라우팅 연계',
     ],
+  },
+  {
+    title: 'ENTERTHON 2025',
+    role: '사내 해커톤',
+    period: '2025',
+    scale: '최종 7팀',
+    bullets: ['카카오엔터테인먼트 사내 해커톤 ENTERTHON 2025에 참여해 전체 참가 팀 중 최종 7팀에 선정되었습니다.'],
+    image: {
+      src: '/images/kakaoentertainment/enterthon-2025.jpg',
+      alt: 'ENTERTHON 2025 포스터',
+      width: 4000,
+      height: 1500,
+    },
   },
 ]
 
@@ -230,6 +244,18 @@ export default function KakaoentPage() {
                   >
                     {p.href.label} →
                   </CustomLink>
+                </div>
+              )}
+              {p.image && (
+                <div className="mt-4 ml-8">
+                  <Image
+                    src={p.image.src}
+                    alt={p.image.alt}
+                    width={p.image.width}
+                    height={p.image.height}
+                    sizes="(max-width: 768px) 100vw, 700px"
+                    className="w-full h-auto rounded-lg border border-gray-200 dark:border-gray-700"
+                  />
                 </div>
               )}
             </div>
