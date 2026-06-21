@@ -1,4 +1,5 @@
 import 'css/tailwind.css'
+import 'css/pretendard-dynamic-subset.css'
 import 'css/view-transition.css'
 import 'pliny/search/algolia.css'
 import 'remark-github-blockquote-alert/alert.css'
@@ -9,7 +10,6 @@ import type { Metadata } from 'next'
 import { Analytics, AnalyticsConfig } from 'pliny/analytics'
 import { SearchProvider, SearchConfig } from 'pliny/search'
 import { SpeedInsights } from '@vercel/speed-insights/next'
-import { pretendard } from 'fonts/pretendard'
 import { Analytics as NextAnalytics } from '@vercel/analytics/next'
 
 import Header from '@/components/Header'
@@ -63,7 +63,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const basePath = process.env.BASE_PATH || ''
 
   return (
-    <html lang={siteMetadata.language} className={`${pretendard.variable} scroll-smooth`} suppressHydrationWarning>
+    <html lang={siteMetadata.language} className="scroll-smooth" suppressHydrationWarning>
       <link rel="apple-touch-icon" sizes="76x76" href={`${basePath}/static/favicons/apple-touch-icon.png`} />
       <link rel="icon" type="image/png" sizes="32x32" href={`${basePath}/static/favicons/favicon-32x32.png`} />
       <link rel="icon" type="image/png" sizes="16x16" href={`${basePath}/static/favicons/favicon-16x16.png`} />
@@ -74,7 +74,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000" />
       <link rel="alternate" type="application/rss+xml" href={`${basePath}/feed.xml`} />
       <body
-        className={`bg-white pl-[calc(100vw-100%)] text-black antialiased dark:bg-gray-950 dark:text-white h-full ${pretendard.className}`}
+        className="bg-white pl-[calc(100vw-100%)] text-black antialiased dark:bg-gray-950 dark:text-white h-full"
       >
         <BtoaPolyfill />
         <ThemeProviders>
