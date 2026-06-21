@@ -168,7 +168,7 @@ export default function KakaoentPage() {
           <span className="text-sm text-gray-400 dark:text-gray-600">·</span>
           <span className="text-sm text-gray-600 dark:text-gray-400">Frontend Engineer · 2024.07 ~ 현재</span>
         </div>
-        <p className="max-w-3xl text-sm leading-7 text-gray-700 break-keep md:text-base dark:text-gray-300">
+        <p className="text-sm leading-7 text-gray-700 break-keep md:text-base dark:text-gray-300">
           글로벌 팬 플랫폼 <strong>Berriz</strong>의 프론트엔드 최다 기여자로, 메인 플랫폼 제품 전반을 주도하며 라이브
           플레이어 SDK·파트너센터·오디션 실시간 투표 등 여러 도메인을 0부터 구축했습니다. 여기에 LLM 지식베이스와 AI
           개발 자동화, Terraform 기반 인프라(IaC)까지 제품과 개발 생산성 양쪽을 함께 끌어올렸습니다.
@@ -254,7 +254,7 @@ export default function KakaoentPage() {
                     width={p.image.width}
                     height={p.image.height}
                     sizes="(max-width: 768px) 100vw, 700px"
-                    className="w-full h-auto rounded-lg border border-gray-200 dark:border-gray-700"
+                    className="w-full h-auto border border-gray-200 rounded-lg dark:border-gray-700"
                   />
                 </div>
               )}
