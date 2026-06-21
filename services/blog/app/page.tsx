@@ -32,17 +32,17 @@ const experiences: Experience[] = [
     ],
     projects: [
       {
-        name: '글로벌 팬 플랫폼 Berriz — Community · Shop · Accounts · DeepLink · Live Player · Agents',
+        name: 'Berriz 글로벌 팬 플랫폼 · Community · Shop · Accounts · DeepLink · Live Player · Agents',
         bullets: [
           '서비스 초기 구축 단계부터 참여해 100만 유저 이상의 규모로 성장하는 과정에 기여했습니다.',
-          'Universal Links · App Links · Custom Scheme을 활용한 딥링크 시스템(link.berriz.in)을 설계·구현했습니다. 폴백 처리와 SEO 지원으로, 링크 하나만 눌러도 앱이 있으면 곧장 그 화면으로, 없으면 막힘없이 설치까지 이어지게 했습니다.',
+          'Universal Links · App Links · Custom Scheme을 활용한 딥링크 시스템(link.berriz.in)을 설계·구현했습니다. 폴백 처리와 SEO 지원으로, 링크 하나만 눌러도 앱이 있으면 앱 내부의 화면으로, 없으면 막힘없이 설치까지 이어지게 했습니다.',
           '웹뷰와 네이티브 컴포넌트 사이의 인터페이스를 다듬어 UX를 개선했습니다.',
           'Terraform으로 CloudFront · Lambda · S3 기반 AWS 아키텍처를 프로비저닝하고 운영했습니다.',
           '커밋/PR 처리, 문서 요약, 태스크 생성 등 반복 작업을 자동화하는 Berriz 에이전트를 개발했습니다.',
         ],
       },
       {
-        name: "실시간 투표 서비스 Debut's Plan",
+        name: "Debut's Plan 실시간 투표 서비스",
         bullets: [
           '글로벌 동기화 투표 시스템을 구축·운영하며, 타임존을 넘나드는 정확한 상태 관리와 실시간 업데이트를 보장했습니다.',
         ],
@@ -53,7 +53,7 @@ const experiences: Experience[] = [
     title: '토스뱅크',
     period: '2023.09 ~ 2024.04',
     role: 'Software Engineer',
-    link: 'https://hyunjinee.notion.site/0d01b8a2b1ac4249a09a946885140870',
+    link: '/tossbank',
     logos: [
       { src: '/images/tossbank/Toss_Symbol_Primary.png', href: 'https://www.tossbank.com/', width: 24, height: 24 },
     ],
