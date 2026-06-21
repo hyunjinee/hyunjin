@@ -72,6 +72,12 @@
   color: var(--color-primary-400);
 }
 
+/* 인라인 코드의 백틱(`) 표시 제거 — 색상 강조만 유지 */
+.prose code::before,
+.prose code::after {
+  content: none;
+}
+
 .prose h1,
 .prose h2 {
   font-weight: 700;
