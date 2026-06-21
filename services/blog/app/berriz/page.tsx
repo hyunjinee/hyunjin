@@ -6,7 +6,7 @@ import { genPageMetadata } from 'app/seo'
 export const metadata = genPageMetadata({ title: 'Berriz' })
 
 const metrics = [
-  { value: '3,566+', label: '커밋 · 680 PR', sub: '메인 FE 최다 기여자' },
+  { value: '3,566+', label: '커밋 · 680 PR', sub: '최다 기여자' },
   { value: '~22개월', label: '2024.08 ~ 현재', sub: '진행 중' },
   { value: '7+', label: '서비스 / 레포', sub: '플랫폼 · 파트너센터 · 오디션 · 라이브' },
   { value: '100만+', label: '유저', sub: '제로 베이스 → 글로벌 출시' },
@@ -108,7 +108,6 @@ const techStack = [
   'Turborepo (pnpm)',
   'zustand',
   'AWS IVS Player',
-  'dayjs',
   'AWS Lambda · CloudFront',
   'Terraform',
   'GKE · Helm · ArgoCD',
@@ -117,7 +116,7 @@ const techStack = [
   'Sentry',
   'Storybook',
   'Vitest · Cypress · agent-browser',
-  'Kakao Tiara',
+  'LangChain',
   'Python',
 ]
 
@@ -138,9 +137,9 @@ export default function BerrizPage() {
           <span className="text-sm text-gray-400 dark:text-gray-600">·</span>
           <span className="text-sm text-gray-600 dark:text-gray-400">Kakao Entertainment · Frontend Engineer</span>
         </div>
-        <p className="max-w-3xl text-sm leading-7 text-gray-700 md:text-base dark:text-gray-300">
-          글로벌 K-pop 팬 플랫폼 <strong>Berriz</strong>의 프론트엔드 최다 기여자로, 계정·인증, 딥링크, 라이브
-          스트리밍, 커머스, 오디션 실시간 투표, 다국어까지 제품 전반을 주도했습니다. 메인 플랫폼을 축으로 파트너센터
+        <p className="text-sm leading-7 text-gray-700 break-keep md:text-base dark:text-gray-300">
+          글로벌 팬 플랫폼 <strong>Berriz</strong>의 프론트엔드 최다 기여자로, 계정·인증, 딥링크, 라이브
+          스트리밍, 커머스, 오디션 실시간 투표까지 제품 전반을 주도했습니다. 메인 플랫폼을 축으로 파트너센터
           예약·TVOD 도메인을 0부터 구축하고, 라이브 플레이어 SDK 코어를 설계했으며, AI 코딩 에이전트 오케스트레이터와
           평가 하네스로 팀의 개발 생산성까지 끌어올렸습니다.
         </p>

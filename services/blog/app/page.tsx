@@ -110,7 +110,7 @@ export default function Page() {
                 sizes="200px"
                 className="object-cover"
                 priority
-                quality={75}
+                quality={100}
               />
             </div>
             {/* 기본 정보 */}

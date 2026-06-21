@@ -125,7 +125,6 @@ const techStack = [
   'Turborepo (pnpm)',
   'zustand',
   'AWS IVS Player',
-  'dayjs',
   'AWS Lambda · CloudFront',
   'Terraform',
   'GKE · Helm · ArgoCD',
@@ -134,7 +133,7 @@ const techStack = [
   'Sentry',
   'Storybook',
   'Vitest · Cypress · agent-browser',
-  'Kakao Tiara',
+  'LangChain',
   'Python',
 ]
 
