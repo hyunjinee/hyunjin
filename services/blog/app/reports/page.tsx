@@ -1,12 +1,14 @@
 import { genPageMetadata } from 'app/seo'
 import Link from 'next/link'
 import { reports } from '@/data/reportsData'
+import VibeTip from './VibeTip'
 
 export const metadata = genPageMetadata({ title: 'Reports' })
 
 export default function ReportsPage() {
   return (
     <div className="divide-y divide-gray-200 dark:divide-gray-700">
+      <VibeTip />
       <div className="pt-6 pb-8 space-y-2 md:space-y-5">
         <h1 className="text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:leading-14">
           Reports
