@@ -7,7 +7,7 @@ export type CalendarEvent = {
   date: string
   /** 종료일 (다일 일정일 때만, 시작일 포함 ~ 종료일 포함) */
   endDate?: string
-  /** 색상 구분용 카테고리. 'talk' | 'lecture' | 'workshop' | 'podcast' 등 */
+  /** 색상 구분용 카테고리. 'talk' | 'lecture' | 'workshop' | 'podcast' | 'event' 등 */
   category?: string
   /** 모달에 표시할 설명 */
   description?: string
@@ -26,7 +26,15 @@ const normalizeEvent = (e: CalendarEvent): CalendarEvent => ({
 })
 
 // 직접 관리하는 일정 — 여기에 추가/수정하세요.
-const manualEvents: CalendarEvent[] = []
+const manualEvents: CalendarEvent[] = [
+  {
+    title: 'Snowflake X Bright Data | 판교 Brunch & Crunch',
+    date: '2026-06-24',
+    category: 'event',
+    description: '그래비티 조선 서울 판교 오토그래프 컬렉션 · 10:00–13:30',
+    url: 'https://www.snowflake.com/events/pangyo-brunch-crunch/',
+  },
+]
 
 // 발표 → 캘린더 일정 (실제 발표가 있었던 날)
 const talkEvents: CalendarEvent[] = talks.map((t) => ({
