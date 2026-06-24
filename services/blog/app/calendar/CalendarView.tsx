@@ -1,12 +1,13 @@
 'use client'
 
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
-import { useState } from 'react'
+import { type Dispatch, type SetStateAction, useEffect, useState } from 'react'
 import Link from '@/components/Link'
 import type { CalendarEvent } from '@/data/eventsData'
 
 const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토']
 
+type View = { year: number; month: number }
 type CategoryStyle = { chip: string; dot: string }
 
 const CATEGORY_COLORS: Record<string, CategoryStyle> = {
@@ -55,13 +56,23 @@ function eventsOnDay(events: CalendarEvent[], dayKey: string): CalendarEvent[] {
   return events.filter((e) => e.date <= dayKey && dayKey <= (e.endDate ?? e.date))
 }
 
-export default function CalendarView({ events }: { events: CalendarEvent[] }) {
-  const today = new Date()
-  const todayKey = toKey(today)
-
-  const [view, setView] = useState({ year: today.getFullYear(), month: today.getMonth() })
-  const [selected, setSelected] = useState<CalendarEvent | null>(null)
-
+/**
+ * 월간 그리드. 현재 날짜(today)에 의존하므로 클라이언트 마운트 후에만 렌더된다.
+ * (SSG 정적 HTML에 빌드 시점 날짜가 박제되어 hydration mismatch가 나는 것을 방지)
+ */
+function MonthGrid({
+  view,
+  setView,
+  todayKey,
+  events,
+  onSelect,
+}: {
+  view: View
+  setView: Dispatch<SetStateAction<View | null>>
+  todayKey: string
+  events: CalendarEvent[]
+  onSelect: (e: CalendarEvent) => void
+}) {
   const firstOfMonth = new Date(view.year, view.month, 1)
   const startWeekday = firstOfMonth.getDay() // 0=일
   const daysInMonth = new Date(view.year, view.month + 1, 0).getDate()
@@ -77,15 +88,17 @@ export default function CalendarView({ events }: { events: CalendarEvent[] }) {
     }
   })
 
-  const goPrev = () => setView((v) => (v.month === 0 ? { year: v.year - 1, month: 11 } : { ...v, month: v.month - 1 }))
-  const goNext = () => setView((v) => (v.month === 11 ? { year: v.year + 1, month: 0 } : { ...v, month: v.month + 1 }))
-  const goToday = () => setView({ year: today.getFullYear(), month: today.getMonth() })
-
-  const usedCategories = [...new Set(events.map((e) => e.category).filter(Boolean) as string[])]
-  const agenda = [...events].sort((a, b) => b.date.localeCompare(a.date))
+  const goPrev = () =>
+    setView((v) => (v ? (v.month === 0 ? { year: v.year - 1, month: 11 } : { year: v.year, month: v.month - 1 }) : v))
+  const goNext = () =>
+    setView((v) => (v ? (v.month === 11 ? { year: v.year + 1, month: 0 } : { year: v.year, month: v.month + 1 }) : v))
+  const goToday = () => {
+    const d = new Date()
+    setView({ year: d.getFullYear(), month: d.getMonth() })
+  }
 
   return (
-    <div>
+    <>
       {/* 상단: 월 이동 컨트롤 */}
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
@@ -161,7 +174,7 @@ export default function CalendarView({ events }: { events: CalendarEvent[] }) {
                     <button
                       key={`${e.title}-${idx}`}
                       type="button"
-                      onClick={() => setSelected(e)}
+                      onClick={() => onSelect(e)}
                       title={e.description || e.title}
                       className={`flex w-full cursor-pointer items-center gap-1 rounded px-1 py-0.5 text-left transition hover:brightness-95 sm:px-1.5 dark:hover:brightness-110 ${style.chip}`}
                     >
@@ -176,6 +189,33 @@ export default function CalendarView({ events }: { events: CalendarEvent[] }) {
           )
         })}
       </div>
+    </>
+  )
+}
+
+export default function CalendarView({ events }: { events: CalendarEvent[] }) {
+  // today/현재 월은 클라이언트 마운트 후에만 계산 → 정적 프리렌더와 hydration 불일치 방지
+  const [view, setView] = useState<View | null>(null)
+  const [todayKey, setTodayKey] = useState('')
+  const [selected, setSelected] = useState<CalendarEvent | null>(null)
+
+  useEffect(() => {
+    const d = new Date()
+    setView({ year: d.getFullYear(), month: d.getMonth() })
+    setTodayKey(toKey(d))
+  }, [])
+
+  const usedCategories = [...new Set(events.map((e) => e.category).filter(Boolean) as string[])]
+  const agenda = [...events].sort((a, b) => b.date.localeCompare(a.date))
+
+  return (
+    <div>
+      {/* 월간 그리드 (마운트 후). 마운트 전엔 레이아웃 점프 방지용 자리만 확보 */}
+      {view ? (
+        <MonthGrid view={view} setView={setView} todayKey={todayKey} events={events} onSelect={setSelected} />
+      ) : (
+        <div className="min-h-[28rem]" aria-hidden />
+      )}
 
       {/* 카테고리 범례 */}
       {usedCategories.length > 0 && (
@@ -189,7 +229,7 @@ export default function CalendarView({ events }: { events: CalendarEvent[] }) {
         </div>
       )}
 
-      {/* 전체 일정 (아젠다 리스트) */}
+      {/* 전체 일정 (아젠다 리스트) — 날짜 비의존이라 서버에서 그대로 렌더 */}
       {agenda.length > 0 && (
         <div className="mt-10">
           <h3 className="mb-2 text-sm font-semibold text-gray-500 dark:text-gray-400">전체 일정</h3>
