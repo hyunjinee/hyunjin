@@ -428,7 +428,7 @@ export default function CalendarView({ events }: { events: CalendarEvent[] }) {
           <div className="fixed inset-0 flex items-center justify-center p-4">
             <DialogPanel
               transition
-              className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl transition duration-200 data-[closed]:scale-95 data-[closed]:opacity-0 dark:bg-gray-900"
+              className="max-h-[85vh] w-full max-w-md overflow-y-auto rounded-2xl bg-white p-6 shadow-xl transition duration-200 data-[closed]:scale-95 data-[closed]:opacity-0 dark:bg-gray-900"
             >
               <div className="flex items-start justify-between gap-4">
                 <span
@@ -451,6 +451,26 @@ export default function CalendarView({ events }: { events: CalendarEvent[] }) {
               <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{formatWhen(selected)}</p>
               {selected.description && (
                 <p className="mt-4 text-sm leading-6 text-gray-700 dark:text-gray-300">{selected.description}</p>
+              )}
+              {selected.location && (
+                <div className="mt-4">
+                  <a
+                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selected.location)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mb-2 inline-flex items-start gap-1.5 text-sm text-gray-600 hover:text-primary-500 dark:text-gray-300 dark:hover:text-primary-400"
+                  >
+                    <span aria-hidden>📍</span>
+                    <span>{selected.location}</span>
+                  </a>
+                  <iframe
+                    title={`${selected.title} 위치`}
+                    src={`https://www.google.com/maps?q=${encodeURIComponent(selected.location)}&z=15&output=embed`}
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    className="h-44 w-full rounded-lg border border-gray-200 dark:border-gray-700"
+                  />
+                </div>
               )}
               {selected.url && (
                 <div className="mt-6">

@@ -15,6 +15,8 @@ export type CalendarEvent = {
   category?: string
   /** 모달에 표시할 설명 */
   description?: string
+  /** 장소 — 있으면 모달에 Google 지도 임베드 표시 */
+  location?: string
   /** 클릭 시 이동할 경로(블로그 글/외부 링크) */
   url?: string
 }
@@ -37,7 +39,8 @@ const manualEvents: CalendarEvent[] = [
     start: '09:00',
     end: '17:00',
     category: 'event',
-    description: 'Salesforce 국내 최대 컨퍼런스 (기조연설·강연·데모·핸즈온랩) · COEX, 강남',
+    description: 'Salesforce 국내 최대 컨퍼런스 (기조연설·강연·데모·핸즈온랩)',
+    location: 'COEX Convention & Exhibition Center, 영동대로 513, 강남구, 서울',
     url: 'https://www.salesforce.com/kr/events/world-tour/korea',
   },
   {
@@ -46,7 +49,7 @@ const manualEvents: CalendarEvent[] = [
     start: '10:00',
     end: '13:30',
     category: 'event',
-    description: '그래비티 조선 서울 판교 오토그래프 컬렉션',
+    location: '그래비티 조선 서울 판교 오토그래프 컬렉션',
     url: 'https://www.snowflake.com/events/pangyo-brunch-crunch/',
   },
 ]
