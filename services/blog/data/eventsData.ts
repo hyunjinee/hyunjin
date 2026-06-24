@@ -32,6 +32,15 @@ const normalizeEvent = (e: CalendarEvent): CalendarEvent => ({
 // 직접 관리하는 일정 — 여기에 추가/수정하세요.
 const manualEvents: CalendarEvent[] = [
   {
+    title: 'Agentforce World Tour Korea 2026',
+    date: '2026-06-10',
+    start: '09:00',
+    end: '17:00',
+    category: 'event',
+    description: 'Salesforce 국내 최대 컨퍼런스 (기조연설·강연·데모·핸즈온랩) · COEX, 강남',
+    url: 'https://www.salesforce.com/kr/events/world-tour/korea',
+  },
+  {
     title: 'Snowflake X Bright Data | 판교 Brunch & Crunch',
     date: '2026-06-24',
     start: '10:00',
