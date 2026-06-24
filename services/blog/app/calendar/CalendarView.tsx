@@ -452,26 +452,32 @@ export default function CalendarView({ events }: { events: CalendarEvent[] }) {
               {selected.description && (
                 <p className="mt-4 text-sm leading-6 text-gray-700 dark:text-gray-300">{selected.description}</p>
               )}
-              {selected.location && (
-                <div className="mt-4">
-                  <a
-                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selected.location)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mb-2 inline-flex items-start gap-1.5 text-sm text-gray-600 hover:text-primary-500 dark:text-gray-300 dark:hover:text-primary-400"
-                  >
+              {selected.location &&
+                (selected.mapEmbed ? (
+                  <div className="mt-4">
+                    <a
+                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selected.location)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mb-2 inline-flex items-start gap-1.5 text-sm text-gray-600 hover:text-primary-500 dark:text-gray-300 dark:hover:text-primary-400"
+                    >
+                      <span aria-hidden>📍</span>
+                      <span>{selected.location}</span>
+                    </a>
+                    <iframe
+                      title={`${selected.title} 위치`}
+                      src={`https://www.google.com/maps?q=${encodeURIComponent(selected.location)}&z=15&output=embed`}
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                      className="h-44 w-full rounded-lg border border-gray-200 dark:border-gray-700"
+                    />
+                  </div>
+                ) : (
+                  <p className="mt-4 inline-flex items-start gap-1.5 text-sm text-gray-600 dark:text-gray-300">
                     <span aria-hidden>📍</span>
                     <span>{selected.location}</span>
-                  </a>
-                  <iframe
-                    title={`${selected.title} 위치`}
-                    src={`https://www.google.com/maps?q=${encodeURIComponent(selected.location)}&z=15&output=embed`}
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                    className="h-44 w-full rounded-lg border border-gray-200 dark:border-gray-700"
-                  />
-                </div>
-              )}
+                  </p>
+                ))}
               {selected.url && (
                 <div className="mt-6">
                   <Link

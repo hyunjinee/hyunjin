@@ -15,8 +15,10 @@ export type CalendarEvent = {
   category?: string
   /** 모달에 표시할 설명 */
   description?: string
-  /** 장소 — 있으면 모달에 Google 지도 임베드 표시 */
+  /** 장소 텍스트 — 모달에 📍로 표시 */
   location?: string
+  /** true일 때만 location으로 Google 지도 임베드 (실제 주소가 있는 venue) */
+  mapEmbed?: boolean
   /** 클릭 시 이동할 경로(블로그 글/외부 링크) */
   url?: string
 }
@@ -41,6 +43,7 @@ const manualEvents: CalendarEvent[] = [
     category: 'event',
     description: 'Salesforce 국내 최대 컨퍼런스 (기조연설·강연·데모·핸즈온랩)',
     location: 'COEX Convention & Exhibition Center, 영동대로 513, 강남구, 서울',
+    mapEmbed: true,
     url: 'https://www.salesforce.com/kr/events/world-tour/korea',
   },
   {
@@ -50,6 +53,7 @@ const manualEvents: CalendarEvent[] = [
     end: '13:30',
     category: 'event',
     location: '그래비티 조선 서울 판교 오토그래프 컬렉션',
+    mapEmbed: true,
     url: 'https://www.snowflake.com/events/pangyo-brunch-crunch/',
   },
 ]
@@ -59,7 +63,8 @@ const talkEvents: CalendarEvent[] = talks.map((t) => ({
   title: t.title,
   date: t.date,
   category: t.type ?? 'talk',
-  description: [t.event, t.description].filter(Boolean).join(' · ') || undefined,
+  description: t.description,
+  location: t.event, // 주최/행사명 — 📍 텍스트로만 표시(지도 임베드는 안 함)
   url: t.href ?? t.video ?? t.slides ?? t.pdfUrl,
 }))
 
