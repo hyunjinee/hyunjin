@@ -290,6 +290,24 @@ function DayView({
   )
 }
 
+/** Google 지도 임베드 — 로딩 중 회색 스켈레톤, 로드 완료 시 페이드인(흰 박스 깜빡임 방지) */
+function MapEmbed({ query, title }: { query: string; title: string }) {
+  const [loaded, setLoaded] = useState(false)
+  return (
+    <div className="relative mt-2 h-44 w-full overflow-hidden rounded-lg border border-gray-200 bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
+      {!loaded && <div className="absolute inset-0 animate-pulse bg-gray-100 dark:bg-gray-800" />}
+      <iframe
+        title={title}
+        src={`https://www.google.com/maps?q=${encodeURIComponent(query)}&z=15&output=embed`}
+        loading="lazy"
+        referrerPolicy="no-referrer-when-downgrade"
+        onLoad={() => setLoaded(true)}
+        className={`relative h-full w-full transition-opacity duration-500 ${loaded ? 'opacity-100' : 'opacity-0'}`}
+      />
+    </div>
+  )
+}
+
 export default function CalendarView({ events }: { events: CalendarEvent[] }) {
   // today/현재 월·일은 클라이언트 마운트 후에만 계산 → 정적 프리렌더와 hydration 불일치 방지
   const [mode, setMode] = useState<'month' | 'day'>('month')
@@ -464,13 +482,7 @@ export default function CalendarView({ events }: { events: CalendarEvent[] }) {
                       <span aria-hidden>📍</span>
                       <span>{selected.location}</span>
                     </a>
-                    <iframe
-                      title={`${selected.title} 위치`}
-                      src={`https://www.google.com/maps?q=${encodeURIComponent(selected.location)}&z=15&output=embed`}
-                      loading="lazy"
-                      referrerPolicy="no-referrer-when-downgrade"
-                      className="h-44 w-full rounded-lg border border-gray-200 dark:border-gray-700"
-                    />
+                    <MapEmbed query={selected.location} title={`${selected.title} 위치`} />
                   </div>
                 ) : (
                   <p className="mt-4 inline-flex items-start gap-1.5 text-sm text-gray-600 dark:text-gray-300">
