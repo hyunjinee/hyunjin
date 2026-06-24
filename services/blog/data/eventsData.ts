@@ -7,6 +7,10 @@ export type CalendarEvent = {
   date: string
   /** 종료일 (다일 일정일 때만, 시작일 포함 ~ 종료일 포함) */
   endDate?: string
+  /** 시작 시각 'HH:mm' (있으면 시간 일정 → 일 뷰에서 시간 블록, 없으면 종일) */
+  start?: string
+  /** 종료 시각 'HH:mm' */
+  end?: string
   /** 색상 구분용 카테고리. 'talk' | 'lecture' | 'workshop' | 'podcast' | 'event' 등 */
   category?: string
   /** 모달에 표시할 설명 */
@@ -30,8 +34,10 @@ const manualEvents: CalendarEvent[] = [
   {
     title: 'Snowflake X Bright Data | 판교 Brunch & Crunch',
     date: '2026-06-24',
+    start: '10:00',
+    end: '13:30',
     category: 'event',
-    description: '그래비티 조선 서울 판교 오토그래프 컬렉션 · 10:00–13:30',
+    description: '그래비티 조선 서울 판교 오토그래프 컬렉션',
     url: 'https://www.snowflake.com/events/pangyo-brunch-crunch/',
   },
 ]
