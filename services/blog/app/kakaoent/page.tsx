@@ -135,7 +135,7 @@ const techStack = [
   'TanStack Query / Form',
   'next-intl',
   'Zod',
-  'TailwindCSS · Emotion',
+  'TailwindCSS',
   'Turborepo (pnpm)',
   'zustand',
   'AWS IVS Player',
