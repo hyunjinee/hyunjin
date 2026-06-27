@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 type Props = {
   title: string
@@ -26,33 +26,43 @@ export default function DeckCarousel({
   slides,
 }: Props) {
   const [i, setI] = useState(0)
-  const boxRef = useRef<HTMLDivElement>(null)
+  const [full, setFull] = useState(false)
   const srcs =
     slides ?? Array.from({ length: count }, (_, n) => `${basePath}${pad ? String(n + 1).padStart(pad, '0') : n + 1}.${ext}`)
   const total = srcs.length
 
   const prev = useCallback(() => setI((p) => (p - 1 + total) % total), [total])
   const next = useCallback(() => setI((p) => (p + 1) % total), [total])
-  const toggleFull = useCallback(() => {
-    if (document.fullscreenElement) document.exitFullscreen()
-    else boxRef.current?.requestFullscreen?.()
-  }, [])
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'ArrowLeft') prev()
       if (e.key === 'ArrowRight') next()
+      if (e.key === 'Escape') setFull(false)
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
   }, [prev, next])
 
+  // iOS Safari는 div에 Fullscreen API를 지원하지 않아 CSS 오버레이로 전체화면 처리
+  useEffect(() => {
+    if (!full) return
+    const prevOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = prevOverflow
+    }
+  }, [full])
+
   return (
     <div className={hideTitle ? '' : 'mb-8'}>
       {!hideTitle && <h3 className="mb-3 text-[14px] font-semibold text-black dark:text-gray-200">{title}</h3>}
       <div
-        ref={boxRef}
-        className="relative grid overflow-hidden bg-white border border-gray-200 rounded-lg place-items-center dark:border-gray-700"
+        className={
+          full
+            ? 'fixed inset-0 z-[60] grid place-items-center bg-black'
+            : 'relative grid overflow-hidden bg-white border border-gray-200 rounded-lg place-items-center dark:border-gray-700'
+        }
       >
         <Image
           src={srcs[i]}
@@ -62,7 +72,7 @@ export default function DeckCarousel({
           quality={100}
           priority
           unoptimized
-          className="w-full h-auto"
+          className={full ? 'max-h-[100dvh] max-w-[100vw] w-auto h-auto object-contain' : 'w-full h-auto'}
         />
         <button
           type="button"
@@ -82,11 +92,11 @@ export default function DeckCarousel({
         </button>
         <button
           type="button"
-          onClick={toggleFull}
-          aria-label="전체화면"
-          className="absolute top-2 right-2 grid place-items-center w-9 h-9 text-white rounded-full bg-black/40 hover:bg-black/60"
+          onClick={() => setFull((f) => !f)}
+          aria-label={full ? '전체화면 종료' : '전체화면'}
+          className="absolute top-2 right-2 z-10 grid place-items-center w-9 h-9 text-white rounded-full bg-black/40 hover:bg-black/60"
         >
-          ⤢
+          {full ? '✕' : '⤢'}
         </button>
         <div className="absolute bottom-2 left-1/2 -translate-x-1/2 px-2 py-0.5 text-xs text-white rounded-full bg-black/50">
           {i + 1} / {total}
