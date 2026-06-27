@@ -23,11 +23,13 @@ const projectsData: Project[] = [
   {
     title: 'agent-browser',
     description: 'Vercel Labs 오픈소스 브라우저 자동화 도구에 28개 PR 기여 (Rust / TypeScript).',
+    imgSrc: '/images/agent-browser-og.png',
     href: '/blog/agent-browser',
   },
   {
     title: '방슐랭 가이드',
-    description: '1인 가구 중심 부동산 플랫폼. 창업 동아리로 시작해 1500+ 유저, 98건 직거래 달성.',
+    description: '1인 가구 중심 부동산 플랫폼 1500+ 유저, 98건 직거래 달성',
+    imgSrc: '/images/bclguide/guide-better-life.png',
     href: '/bclguide',
   },
 ]
