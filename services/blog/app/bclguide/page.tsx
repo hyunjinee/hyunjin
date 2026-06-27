@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import DeckViewer from './DeckViewer'
 import appPromoImg from './images/app-promo.png'
 import appScreenshot1 from './images/app-screenshot-1.png'
 import appScreenshot2 from './images/app-screenshot-2.png'
@@ -18,7 +19,14 @@ export default function BclguidePage() {
         <div className="relative mb-6">
           {/* Logo */}
           <div className="mb-4">
-            <Image src={logoImg} alt="방슐랭 가이드 로고" width={193} height={42} quality={100} className="h-[42px] w-auto" />
+            <Image
+              src={logoImg}
+              alt="방슐랭 가이드 로고"
+              width={193}
+              height={42}
+              quality={100}
+              className="h-[42px] w-auto"
+            />
           </div>
 
           {/* Position and Period */}
@@ -58,9 +66,7 @@ export default function BclguidePage() {
               <p className="text-[16px] text-black dark:text-gray-200">
                 JavaScript, React Native, WebView, Redux, Pannellum
               </p>
-              <p className="text-[16px] text-black dark:text-gray-200">
-                Node, Express, Nginx, MongoDB, Redis
-              </p>
+              <p className="text-[16px] text-black dark:text-gray-200">Node, Express, Nginx, MongoDB, Redis</p>
               <p className="text-[16px] text-black dark:text-gray-200">AWS EC2, S3, Route 53</p>
             </div>
 
@@ -112,9 +118,7 @@ export default function BclguidePage() {
                 - 방에 대한 리뷰 작성 기능 및 해당 리뷰를 신고할 수 있도록 구현
               </li>
               <li className=" text-black dark:text-gray-200">- Webview를 사용하여 지도 및 마커 표시</li>
-              <li className=" text-black dark:text-gray-200">
-                - Webview와 Pannellum을 사용하여 3D 방 투어 기능 구현
-              </li>
+              <li className=" text-black dark:text-gray-200">- Webview와 Pannellum을 사용하여 3D 방 투어 기능 구현</li>
             </ul>
           </div>
         </div>
@@ -141,7 +145,14 @@ export default function BclguidePage() {
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {/* App Promo with Store Buttons */}
           <div className="overflow-hidden rounded-lg">
-            <Image src={appPromoImg} alt="앱 프로모션" width={215} height={187} quality={100} className="w-full h-auto" />
+            <Image
+              src={appPromoImg}
+              alt="앱 프로모션"
+              width={215}
+              height={187}
+              quality={100}
+              className="w-full h-auto"
+            />
           </div>
 
           {/* Guide Better Room Card with Screenshot */}
@@ -157,6 +168,24 @@ export default function BclguidePage() {
               />
             </div>
           </div>
+        </div>
+
+        {/* 발표자료 */}
+        <div className="mt-8">
+          <h2 className="mb-4 text-[15px] font-bold text-bclguide">발표자료</h2>
+          <DeckViewer
+            title="소개자료"
+            basePath="/images/bclguide/decks/intro/slide-"
+            count={8}
+            videoSrc="/images/bclguide/decks/intro.mp4"
+          />
+          <DeckViewer
+            title="IR 자료"
+            basePath="/images/bclguide/decks/ir/slide-"
+            count={21}
+            pad={2}
+            videoSrc="/images/bclguide/decks/ir.mp4"
+          />
         </div>
       </div>
     </div>
