@@ -81,8 +81,8 @@ export default function BclguidePage() {
               <Image
                 src={techDiagramImg}
                 alt="기술 스택 다이어그램"
-                width={245}
-                height={148}
+                width={1098}
+                height={663}
                 quality={100}
                 className="w-full h-auto"
               />
