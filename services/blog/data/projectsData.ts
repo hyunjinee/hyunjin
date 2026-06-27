@@ -10,7 +10,7 @@ const projectsData: Project[] = [
     title: 'Berriz — 글로벌 팬 플랫폼',
     description: `카카오엔터테인먼트의 글로벌 팬 플랫폼. 계정·커뮤니티·샵·딥링크·라이브 플레이어 SDK·실시간 투표까지
     제품 전반을 주도하며 100만+ 유저로 성장. 최다 기여자.`,
-    imgSrc: '/images/kakaoentertainment/enterthon-2025.jpg',
+    imgSrc: '/images/berriz/og-wordmark.png',
     href: '/kakaoent',
   },
   {
