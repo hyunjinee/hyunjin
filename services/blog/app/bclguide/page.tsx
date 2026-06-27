@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import DeckViewer from './DeckViewer'
+import DeckCarousel from './DeckCarousel'
 import appPromoImg from './images/app-promo.png'
 import appScreenshot1 from './images/app-screenshot-1.png'
 import appScreenshot2 from './images/app-screenshot-2.png'
@@ -10,6 +10,12 @@ import logoImg from './images/logo.png'
 import techDiagramImg from './images/tech-diagram.png'
 
 const appScreenshots = [appScreenshot1, appScreenshot2, appScreenshot3, appScreenshot4]
+
+// IR 자료 21장 뒤에 소개자료 8장을 이어붙여 한 덱으로
+const deckSlides = [
+  ...Array.from({ length: 21 }, (_, n) => `/images/bclguide/decks/ir/slide-${String(n + 1).padStart(2, '0')}.png`),
+  ...Array.from({ length: 8 }, (_, n) => `/images/bclguide/decks/intro/slide-${n + 1}.png`),
+]
 
 export default function BclguidePage() {
   return (
@@ -173,19 +179,7 @@ export default function BclguidePage() {
         {/* 발표자료 */}
         <div className="mt-8">
           <h2 className="mb-4 text-[15px] font-bold text-bclguide">발표자료</h2>
-          <DeckViewer
-            title="소개자료"
-            basePath="/images/bclguide/decks/intro/slide-"
-            count={8}
-            videoSrc="/images/bclguide/decks/intro.mp4"
-          />
-          <DeckViewer
-            title="IR 자료"
-            basePath="/images/bclguide/decks/ir/slide-"
-            count={21}
-            pad={2}
-            videoSrc="/images/bclguide/decks/ir.mp4"
-          />
+          <DeckCarousel title="발표자료" hideTitle slides={deckSlides} />
         </div>
       </div>
     </div>

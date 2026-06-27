@@ -14,17 +14,17 @@ const projectsData: Project[] = [
     href: '/kakaoent',
   },
   {
+    title: 'agent-browser',
+    description: 'Vercel Labs 오픈소스 브라우저 자동화 도구에 28개 PR 기여 (Rust / TypeScript).',
+    imgSrc: '/images/agent-browser-og.png',
+    href: '/blog/agent-browser',
+  },
+  {
     title: 'LUMOS 전월세 대출 운영 시스템',
     description: `토스뱅크 Housing Loan Squad. 전월세 대출 심사·운영 서비스(LUMOS)를 주도 개발해
     CS 건수와 심사 시간을 대폭 단축.`,
     imgSrc: '/images/tossbank/lumos-contract-review.png',
     href: '/tossbank',
-  },
-  {
-    title: 'agent-browser',
-    description: 'Vercel Labs 오픈소스 브라우저 자동화 도구에 28개 PR 기여 (Rust / TypeScript).',
-    imgSrc: '/images/agent-browser-og.png',
-    href: '/blog/agent-browser',
   },
   {
     title: '방슐랭 가이드',

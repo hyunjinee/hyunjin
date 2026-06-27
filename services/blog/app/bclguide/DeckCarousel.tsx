@@ -5,22 +5,34 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 type Props = {
   title: string
-  basePath: string
-  count: number
+  basePath?: string
+  count?: number
   pad?: number
   /** 'png'은 next/image 최적화, 'svg'는 벡터라 plain img */
   ext?: 'png' | 'svg'
   /** DeckViewer 등에 임베드될 때 제목·외부 마진 생략 */
   hideTitle?: boolean
+  /** basePath/count 대신 슬라이드 경로를 직접 지정 (여러 덱을 한 덱으로 합칠 때) */
+  slides?: string[]
 }
 
-export default function DeckCarousel({ title, basePath, count, pad = 0, ext = 'png', hideTitle = false }: Props) {
+export default function DeckCarousel({
+  title,
+  basePath = '',
+  count = 0,
+  pad = 0,
+  ext = 'png',
+  hideTitle = false,
+  slides,
+}: Props) {
   const [i, setI] = useState(0)
   const boxRef = useRef<HTMLDivElement>(null)
-  const srcOf = (n: number) => `${basePath}${pad ? String(n + 1).padStart(pad, '0') : n + 1}.${ext}`
+  const srcs =
+    slides ?? Array.from({ length: count }, (_, n) => `${basePath}${pad ? String(n + 1).padStart(pad, '0') : n + 1}.${ext}`)
+  const total = srcs.length
 
-  const prev = useCallback(() => setI((p) => (p - 1 + count) % count), [count])
-  const next = useCallback(() => setI((p) => (p + 1) % count), [count])
+  const prev = useCallback(() => setI((p) => (p - 1 + total) % total), [total])
+  const next = useCallback(() => setI((p) => (p + 1) % total), [total])
   const toggleFull = useCallback(() => {
     if (document.fullscreenElement) document.exitFullscreen()
     else boxRef.current?.requestFullscreen?.()
@@ -43,7 +55,7 @@ export default function DeckCarousel({ title, basePath, count, pad = 0, ext = 'p
         className="relative grid overflow-hidden bg-white border border-gray-200 rounded-lg place-items-center dark:border-gray-700"
       >
         <Image
-          src={srcOf(i)}
+          src={srcs[i]}
           alt={`${title} ${i + 1}`}
           width={4000}
           height={2250}
@@ -77,14 +89,14 @@ export default function DeckCarousel({ title, basePath, count, pad = 0, ext = 'p
           ⤢
         </button>
         <div className="absolute bottom-2 left-1/2 -translate-x-1/2 px-2 py-0.5 text-xs text-white rounded-full bg-black/50">
-          {i + 1} / {count}
+          {i + 1} / {total}
         </div>
       </div>
       {/* 썸네일 스트립 */}
       <div className="flex gap-1.5 mt-2 overflow-x-auto pb-1">
-        {Array.from({ length: count }, (_, n) => (
+        {srcs.map((src, n) => (
           <button
-            key={srcOf(n)}
+            key={src}
             type="button"
             onClick={() => setI(n)}
             aria-label={`${n + 1}번 슬라이드`}
@@ -94,9 +106,9 @@ export default function DeckCarousel({ title, basePath, count, pad = 0, ext = 'p
           >
             {ext === 'svg' ? (
               // biome-ignore lint/performance/noImgElement: SVG는 next/image 최적화 대상이 아니라 원본을 직접 표시합니다.
-              <img src={srcOf(n)} alt="" loading="lazy" className="w-full h-auto" />
+              <img src={src} alt="" loading="lazy" className="w-full h-auto" />
             ) : (
-              <Image src={srcOf(n)} alt="" width={160} height={90} quality={50} className="w-full h-auto" />
+              <Image src={src} alt="" width={160} height={90} quality={50} className="w-full h-auto" />
             )}
           </button>
         ))}
