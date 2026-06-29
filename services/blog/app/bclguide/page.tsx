@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import DeckCarousel from './DeckCarousel'
+import ZoomableImage from './ZoomableImage'
 import appPromoImg from './images/app-promo.png'
 import appScreenshot1 from './images/app-screenshot-1.png'
 import appScreenshot2 from './images/app-screenshot-2.png'
@@ -78,7 +79,7 @@ export default function BclguidePage() {
 
             {/* Tech Stack Diagram */}
             <div className="overflow-hidden rounded-lg bg-white p-3 max-w-[560px]">
-              <Image
+              <ZoomableImage
                 src={techDiagramImg}
                 alt="기술 스택 다이어그램"
                 width={1098}
@@ -134,7 +135,7 @@ export default function BclguidePage() {
           <div className="flex gap-4 justify-center">
             {appScreenshots.map((screenshot, index) => (
               <div key={screenshot.src} className="h-[216px] w-[100px] flex-none overflow-hidden">
-                <Image
+                <ZoomableImage
                   src={screenshot}
                   alt={`앱 스크린샷 ${index + 1}`}
                   width={100}
@@ -151,7 +152,7 @@ export default function BclguidePage() {
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {/* App Promo with Store Buttons */}
           <div className="overflow-hidden rounded-lg">
-            <Image
+            <ZoomableImage
               src={appPromoImg}
               alt="앱 프로모션"
               width={215}
@@ -164,7 +165,7 @@ export default function BclguidePage() {
           {/* Guide Better Room Card with Screenshot */}
           <div className="flex flex-col justify-center items-center rounded-lg bg-bclguide">
             <div className="overflow-hidden rounded-lg">
-              <Image
+              <ZoomableImage
                 src={bottomScreenshotImg}
                 alt="앱 스크린샷"
                 width={260}
