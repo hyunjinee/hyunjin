@@ -8,6 +8,7 @@ import { fromHtmlIsomorphic } from 'hast-util-from-html-isomorphic'
 import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
 import { remarkAlert } from 'remark-github-blockquote-alert'
+import remarkCjkFriendly from 'remark-cjk-friendly'
 import {
   remarkExtractFrontmatter,
   remarkCodeTitles,
@@ -146,7 +147,7 @@ export default makeSource({
   documentTypes: [Blog, Authors],
   mdx: {
     cwd: process.cwd(),
-    remarkPlugins: [remarkExtractFrontmatter, remarkGfm, remarkCodeTitles, remarkMath, remarkImgToJsx, remarkAlert],
+    remarkPlugins: [remarkExtractFrontmatter, remarkGfm, remarkCjkFriendly, remarkCodeTitles, remarkMath, remarkImgToJsx, remarkAlert],
     rehypePlugins: [
       rehypeSlug,
       [
