@@ -1,0 +1,389 @@
+---
+title: SSR은 선택이 아니다
+date: '2026-04-20'
+tags: ['react', 'nextjs', 'ssr', 'seo', 'geo', 'ai', 'architecture']
+draft: true
+layout: PostSimple
+summary: 'AI Overviews가 Google 쿼리의 27%에 등장하며 1위 CTR을 58% 떨궈냈고, AI 크롤러의 69%는 JavaScript를 실행하지 못한다. 렌더링 전략은 더 이상 성능 이슈가 아니라 "우리 브랜드가 AI 답변에 존재하느냐"라는 비즈니스 질문이 됐다. CSR+Lambda 프리렌더링, Next.js 16 PPR, TanStack Start, Astro 5까지 2026년 렌더링 선택지와 GEO 플레이북을 실무 관점에서 정리한다.'
+---
+
+"SSR이 정말 필요할까?" 이 질문을 2022년에 받았다면 "케바케"라고 답했을 거다. 하지만 2026년에 같은 질문을 받으면 답이 달라진다.
+
+SSR은 더 이상 선택의 문제가 아니다. 정확히 말하면, **"SSR을 쓸지 말지"가 아니라 "어디에, 어떻게 쓸지"가 남은 질문**이다. 이유를 하나씩 풀어본다.
+
+## CSR만으로도 충분하다는 착각
+
+SPA를 만들고 SEO가 필요해졌을 때, 가장 먼저 떠오르는 생각은 이것이다.
+
+> "Googlebot이 요즘 JavaScript 잘 렌더링한다던데?"
+
+맞다. Googlebot은 2019년부터 최신 Chromium을 쓰는 에버그린 렌더러다. Vercel/MERJ가 2024년에 nextjs.org에서 10만 건 이상의 Googlebot 페치를 분석한 결과, HTML 페이지의 **100%가 완전히 렌더링**됐다. 비동기 로드된 콘텐츠도, RSC 스트리밍 콘텐츠도 정상 인덱싱됐다. 중위값 10초, 90분위 ~3시간 안에 대부분 렌더링된다.
+
+여기까지만 보면 "CSR로도 되네"라고 생각할 수 있다. 문제는 **Google이 웹의 전부가 아니라는 점**이다.
+
+### 진짜 문제는 Google 바깥에 있다
+
+2025~2026년 기준으로 CSR의 치명적 약점은 세 가지다.
+
+**1. 소셜 미디어 크롤러는 JS를 전혀 실행하지 않는다.**
+Facebook, Twitter/X, LinkedIn, Slack, Discord — 이들이 링크를 미리보기로 만들 때 쓰는 크롤러는 **HTML만 읽는다**. CSR에서 `<meta property="og:*">`를 JavaScript로 주입하면, 소셜 프리뷰는 그냥 깨진다. 팀에 링크 공유했는데 썸네일도 제목도 안 나오는 경험, 한 번쯤 해봤을 거다. 이 문제 하나만으로도 SSR 또는 프리렌더링이 필수가 된다.
+
+**2. AI 크롤러의 약 69%가 JavaScript를 전혀 실행하지 않는다.**
+Vercel이 **5억 건 이상의 GPTBot 페치**를 분석한 결과 JavaScript 실행 흔적이 0이었다. 32개 AI 크롤러 분석에서 **JS를 렌더링하는 건 Googlebot, Google-Extended(Gemini), Applebot 세 개뿐**이다. GPTBot, ClaudeBot, PerplexityBot, Meta-ExternalAgent, Amazonbot, Bytespider, OAI-SearchBot — 전부 HTML만 긁어가고 떠난다. JS 파일을 10~25% 가져가긴 하는데 실행은 안 하고 버린다.
+
+이들 봇의 트래픽 증가는 현실로 와 있다. Cloudflare 2025 데이터 기준 **GPTBot +305% YoY, PerplexityBot +157,490%, ChatGPT-User +2,825%**. Alli AI의 2026년 초 프록시 레이어 분석에서는 **ChatGPT-User 단독으로 Googlebot보다 3.6배 더 많은 요청**을 보냈고, AI 크롤러 전체가 전통 검색 크롤러를 같은 비율로 앞질렀다.
+
+경제학이 비뚤어져 있긴 하다. Google의 crawl-to-referral 비율은 3:1~30:1인데, OpenAI는 **3,700:1**, Anthropic은 **25,000:1~100,000:1**이다. 긁어만 가고 거의 안 보내준다. 그렇다고 차단하면 더 큰 손해다 — Rutgers/Wharton의 2025년 12월 연구에서 AI 크롤러를 차단한 퍼블리셔들의 **월간 방문이 23.1% 감소**했다. 모델이 학습 데이터에서 여전히 인용하는데, 정작 원 사이트로 유입은 사라지기 때문이다.
+
+실무적 함의는 구체적이다. 제품 설명, 가격표, FAQ 답변이 React 하이드레이션 이후에만 존재한다면, **월 수십억 쿼리에 답하는 시스템 입장에서 당신의 사이트는 빈 껍데기**다. Vercel은 2027년쯤 AI 크롤러의 약 65%가 JS를 지원할 것으로 전망하지만, "기다려 보자"는 2026년 전략이 아니다. 경쟁사들은 이미 인용되고 있다.
+
+**3. Google이 동적 렌더링을 공식 "deprecated"로 격하했다.**
+2025년 12월, Google은 Dynamic Rendering(봇에게만 프리렌더 HTML 주는 기법)을 공식 비권장으로 내렸다. Rendertron 저장소도 deprecated 처리됐다. Google이 권장하는 건 이제 **SSR, SSG, 또는 hydration**이다.
+
+이게 끝이 아니다. Core Web Vitals는 여전히 랭킹 시그널이고, 2024년 3월에 INP가 FID를 대체했다. 2025년 12월 코어 업데이트 데이터에서 **LCP 3초 초과 사이트는 유사 콘텐츠 대비 23% 더 많은 트래픽 손실**을 기록했다.
+
+그리고 여기서 CSR의 진짜 한계가 드러난다. CWV는 CrUX — 실제 사용자의 필드 데이터 기반이다. 봇에게 아무리 예쁜 HTML을 줘도, 사용자에게 여전히 빈 셸 + 스피너가 보이면 점수는 올라가지 않는다.
+
+## 그리고 AI Overviews가 CTR을 반토막 냈다
+
+렌더링 전략이 "성능 이슈"에서 "비즈니스 생존 이슈"로 넘어간 결정적 변곡점은 AI Overviews다.
+
+Google AI Overviews가 등장하는 쿼리 비중은 **2025년 1월 3.9%에서 현재 ~27%**까지 올랐다. 그리고 그 영향은 관측된 CTR 연구마다 조금씩 다르지만 방향은 하나다 — **극적으로 감소**.
+
+- **Seer Interactive** (2,510만 organic impression, 3,119 쿼리): AIO 노출 시 organic CTR **-61%**, paid CTR **-68%**
+- **Ahrefs** (2025년 12월, 30만 키워드): AIO 있을 때 **1위 CTR -58%**
+- **Authoritas**: 상위 organic 링크 CTR **-79%**
+- **Pew Research** (2025년 3월, 미국 성인 900명 행동 연구): AI 요약 내부 링크 클릭은 **1%**, 요약 보고 **26%가 세션 종료**
+
+더 놀라운 건 AIO가 없는 쿼리도 전년 대비 CTR이 **약 41% 감소**했다는 점이다. 사용자 행동 자체가 바뀌었다. 사람들이 합성된 답변을 기대하도록 훈련됐고, 동시에 ChatGPT(주간 액티브 8억)·Perplexity(2025년 5월 한 달 7억 8천만 쿼리)·브랜드 직접 접속으로 분산됐다. **Zero-click 비율은 2024년 5월 56%에서 2025년 5월 69%로** 상승했다.
+
+체감은 불균등하다. **HubSpot의 organic 트래픽은 1,350만에서 600~700만으로 70~80% 급감**했지만, 1인칭 고유 콘텐츠로 피벗한 매체들은 오히려 성장했다(Men's Journal +415%, People.com +27%).
+
+그럼 희망은 어디에 있나? Seer 데이터의 유일한 밝은 점: **AIO 안에 인용된 브랜드는 그 쿼리에서 organic CTR +35%, paid CTR +91%**를 기록했다. 즉 2026년의 새로운 통화는 **"랭킹"이 아니라 "인용(citation)"** 이다. 그리고 인용되려면? 봇이 긁어갈 수 있는 raw HTML이 있어야 한다.
+
+Gartner는 2026년 말까지 전통 검색 트래픽이 **25% 감소**할 것으로 전망한다. 이제 이건 반대론이 아니라 기본 시나리오다.
+
+## CSR + Lambda@Edge 프리렌더링이라는 단기 처방
+
+그래도 "기존 SPA를 SSR로 다시 짜는 건 너무 크다"고 하면 현실적 타협안이 있다. **CSR + Lambda@Edge 프리렌더링**이다.
+
+아키텍처는 단순하다. CloudFront 앞단에서 User-Agent를 검사해서, 봇이면 미리 렌더링된 HTML을, 일반 사용자에게는 기존 SPA를 준다.
+
+```typescript
+// Lambda@Edge Viewer Request - Bot Detection
+const BOT_AGENTS = [
+  'googlebot', 'bingbot', 'facebot', 'facebookexternalhit',
+  'twitterbot', 'linkedinbot', 'slackbot', 'GPTBot', 'ClaudeBot'
+]
+
+export const handler = (
+  event: CloudFrontRequestEvent,
+  _ctx: Context,
+  cb: CloudFrontRequestCallback
+) => {
+  const request = event.Records[0].cf.request
+  const ua = request.headers['user-agent']?.[0]?.value?.toLowerCase() || ''
+  const isBot = BOT_AGENTS.some(bot => ua.includes(bot))
+  request.headers['x-is-bot'] = [{
+    key: 'X-Is-Bot',
+    value: isBot ? 'true' : 'false'
+  }]
+  cb(null, request)
+}
+```
+
+Viewer Request에서 봇 여부를 헤더로 달아주고, Origin Request에서 이 헤더를 보고 S3의 프리렌더 캐시 경로(`/prerender/products/foo/index.html`)로 URI를 리라이트하거나, Puppeteer Lambda로 오리진을 전환한다.
+
+프리렌더 HTML 생성에는 세 가지 선택지가 있다.
+
+- **Prerender.io** 같은 서드파티: 월 $90~$290, 관리 편함
+- **`@sparticuz/chromium` + 자체 Puppeteer Lambda**: 첫 렌더 5~10초, 이후 S3 캐시로 ~300ms, 비용 최소
+- **빌드 타임 사전 렌더링**: 배포 파이프라인에서 모든 페이지 미리 생성, 봇 요청 시 제로 레이턴시
+
+CloudFront Functions와 Lambda@Edge는 역할이 다르다. 봇 감지 + URI 리라이트는 **CloudFront Functions**가 압도적으로 싸다 ($0.10/백만 요청, \<1ms 실행, 225개 엣지 로케이션). 대신 네트워크 접근 불가, 10KB 패키지 제한, ES5.1만 지원이라는 한계가 있다. 오리진 전환이나 외부 서비스 호출이 필요하면 **Lambda@Edge**($0.60/백만 요청, 최대 30초)가 필수다. 실전에서는 하이브리드가 정답이다.
+
+### 비용은 확실히 싸다
+
+CSR + 자체 Puppeteer Lambda의 매력은 비용이다. 렌더링 횟수가 **트래픽이 아니라 `콘텐츠 수 × 캐시 TTL`에 바인딩**된다. 241페이지 사이트 기준 월 최대 7,230회 렌더링. 트래픽이 10배가 돼도 비용은 거의 같다.
+
+| 월간 페이지뷰 | CSR (S3+CF) | CSR + 자체 Lambda 프리렌더 | Prerender.io | Next.js (Vercel Pro) |
+|---|---|---|---|---|
+| 10K | ~$1–2 | ~$1–3 | $90 | $20+ |
+| 100K | ~$5–15 | ~$5–10 | $90 | $20–50 |
+| 1M | ~$30–80 | ~$15–40 | $290 | $50–200+ |
+| 10M | ~$200–700 | ~$50–150 | $290+ | $500–2,000+ |
+
+10M PV/월 규모에서 Vercel SSR이 $500~2,000인데 CSR+Lambda는 $50~150이다. 숫자만 보면 답이 나온 것 같다.
+
+### 그런데 치명적 약점이 하나 있다
+
+**CSR + Lambda 프리렌더링은 실사용자의 Core Web Vitals를 전혀 개선하지 못한다.**
+
+반복하지만, Google의 CWV 점수는 봇이 본 HTML이 아니라 CrUX의 실제 사용자 데이터 기반이다. 프리렌더링은 봇에게만 HTML을 주는 구조라서, 브라우저로 접속한 유저는 여전히 빈 셸 + JS 번들 다운로드 + 파싱 + 실행 + 데이터 페치 + 렌더링이라는 워터폴을 거친다. LCP 3~5초, FCP 2~5초, 레이아웃 시프트 — 아무것도 개선되지 않는다.
+
+| 지표 | CSR 단독 | CSR + Lambda 프리렌더 | SSR (Next.js) | ISR/PPR |
+|---|---|---|---|---|
+| Google 인덱싱 | 가능하나 지연 위험 | 즉시 | 즉시 | 즉시 |
+| 소셜 미디어 프리뷰 | ❌ 불가 | ✅ | ✅ | ✅ |
+| AI 크롤러 대응 | ❌ 69% 실패 | ✅ | ✅ | ✅ |
+| 실사용자 LCP | 3~5초+ | **3~5초+ (개선 없음)** | 1~2.5초 | \<1초 (CDN) |
+| 실사용자 CLS | 시프트 위험 | **동일** | 안정 | 안정 |
+| Google 공식 권장 | 비권장 | **Deprecated workaround** | ✅ 권장 | ✅ 권장 |
+
+그래서 프리렌더링은 "레거시 SPA를 당장 구해내는 단기 처방"이지, 2026년에 새 프로젝트의 아키텍처 전략으로 채택할 것은 아니다.
+
+## Next.js 16과 SSR 생태계의 진화
+
+반면 SSR 쪽은 계속 좋아지고 있다. **Next.js 16은 2025년 10월 21일 출시**됐는데, App Router 이후 가장 구조적으로 중요한 릴리스다. 변경의 거의 모든 방향이 위의 AI 크롤러·CTR 문제와 맞물린다.
+
+**Server Components가 기본값이 됐다.**
+Next.js App Router에서 모든 컴포넌트는 별도 선언 없이 서버 컴포넌트다. `'use client'` 붙인 것만 클라이언트로 간다. 서버 컴포넌트는 JS를 클라이언트로 **전혀 보내지 않으며**, DB 쿼리를 `await`로 직접 호출할 수 있다. API 레이어를 뺄 수 있다는 뜻이다.
+
+**`generateMetadata()`로 소셜 프리뷰 문제가 끝난다.**
+OG 태그, Twitter Cards, 구조화 데이터를 서버사이드에서 동적으로 생성한다. CSR에서 그렇게 고생하던 소셜 프리뷰가 그냥 된다.
+
+**ISR(Incremental Static Regeneration)이 성숙했다.**
+빌드 타임에 정적으로 만든 페이지를 CDN에서 서빙하되, `revalidate` 간격 이후 첫 요청이 백그라운드 재생성을 트리거한다. 사용자는 항상 즉시 응답을 받는다(stale-while-revalidate). Next.js 16에서는 `'use cache'` 디렉티브와 `cacheLife` 프로필로 **컴포넌트 단위 캐싱 제어**가 가능해졌고, `revalidateTag()`로 CMS 웹훅 연동 시 거의 즉시 캐시를 갱신한다.
+
+**스트리밍 SSR이 기본 동작이다.**
+React 18의 `renderToPipeableStream` 위에서, `<Suspense>` 바운더리로 감싼 비핵심 콘텐츠(댓글, 추천)는 데이터 준비 후 스트리밍되고, 핵심 UI(헤더, 히어로)는 즉시 전송된다. Vercel/MERJ 연구에서 **스트리밍된 콘텐츠도 Google에 의해 완전히 렌더링·인덱싱**됨이 확인됐다. TTFB가 페이지 크기와 무관해지고, 체감 로딩 시간이 기존 SSR 대비 최대 40% 단축된다.
+
+**그리고 Cache Components(= PPR)가 안정화됐다.**
+Next.js 16의 간판 기능이다. **정적 셸**(레이아웃, 네비게이션, above-the-fold)은 빌드 타임에 CDN 엣지에 캐시되고, **동적 홀**(사용자별 데이터, 실시간 가격)은 `<Suspense>` 바운더리로 정의돼서 **같은 HTTP 응답 안에서 병렬 스트리밍**된다.
+
+기본값도 뒤집혔다. 이제 **모든 것이 기본적으로 dynamic**이고, `use cache` 디렉티브로 명시적으로 캐시 opt-in한다. `<Suspense>` 바운더리가 pre-rendered 정적 셸과 request-time 동적 콘텐츠의 경계선이 된다. 과거 `experimental.ppr` 플래그는 사라지고 `next.config.ts`에 `cacheComponents: true` 한 줄로 켠다.
+
+CDN 수준의 TTFB + 개인화된 실시간 데이터를 하나의 요청으로 달성한다. AI 크롤러가 셸을 즉시 받아 콘텐츠를 추출할 수 있고(LCP + AI 추출 둘 다 잡힘), 유저는 개인화 조각을 스트리밍으로 받는다. Vercel은 이걸 **"SSG vs SSR 결정 트리의 종말"** 이라 부른다.
+
+**그 외 주목할 변경들.**
+
+- **Turbopack이 기본 stable 번들러**로 승격. Vercel 측정 기준 **프로덕션 빌드 2~5배, Fast Refresh 최대 10배** 빠름. dev 파일시스템 캐시는 beta, build는 opt-in
+- **Next.js 16.2**(2026년 3월) — Server Fast Refresh로 실제 앱에서 컴파일 시간 **400~900% 개선**
+- React 19.2 통합(View Transitions, `useEffectEvent`, `<Activity />`), **React Compiler stable**
+- 미들웨어가 `proxy.ts`로 이름 변경 — 네트워크 경계임을 명확히
+- 레이아웃 중복 제거 + incremental prefetching. 50개 링크 페이지가 공유 레이아웃을 **1번만** 다운로드
+- **Node.js 20.9** 최소 요구 사항
+- 마이그레이션 주의: 커스텀 webpack 설정 프로젝트는 `--webpack` 플래그 명시 전까지 빌드 실패. 이번 릴리스의 가장 큰 마이그레이션 절벽
+
+**한 가지 주의할 시그널.** 2025년에 **CVE-2025-55182 "React2Shell"**이라는 CVSS 10.0 RCE가 React 19 RSC Flight 프로토콜에서 발견됐다. 기본 `create-next-app` 프로젝트에 영향을 줬고 Next 15/16 패치 전까지 열려 있었다. 지금은 수정됐지만, **RSC의 직렬화 경계가 보안 임계 영역**이라는 점을 드러냈다. 이게 TanStack Start 팀이 자신들의 단방향 Flight payload 모델을 구조적 이점으로 마케팅하는 이유 중 하나다.
+
+| 지표 | CSR (SPA) | 전통적 SSR | 스트리밍 SSR + PPR | Edge SSR |
+|---|---|---|---|---|
+| TTFB | 50~150ms (빈 셸) | 300~900ms | **45ms** (셸) | 10~30ms |
+| FCP | 2~5s | 0.5~1.5s | ~400ms | ~200ms |
+| LCP | JS 워터폴로 지연 | ~1.2s | **~380ms** | ~300ms |
+| INP | Good (하이드레이션 없음) | Risk (하이드레이션 freeze) | Better (selective) | SSR과 동일 |
+| 앱 내 네비게이션 | ~80ms | 서버 왕복 | RSC payload fetch | Edge 왕복 |
+
+## 프레임워크 선택지가 드디어 다양해졌다
+
+지난 5년간 "일단 Next.js"가 무비판적 기본값이었다. 2026년에는 **각자 다른 베팅을 하는 세 개의 진지한 선택지**가 있다.
+
+**Next.js 16** — RSC 네이티브, Vercel 최적화, 가장 깊은 생태계. 자동 이미지·폰트 최적화와 가장 성숙한 렌더링 프리미티브. 콘텐츠 중심에 AI 가시성이 필요한 사이트, 컨벤션이 설정보다 낫다고 판단하는 팀, 이미 Vercel 플랫폼에 있는 조직에 정답. 트레이드오프는 실재한다 — RSC 런타임 무게, Vercel과의 강한 결합(멀티 클라우드 배포 비쌈), 13/14/15/16마다 멘탈 모델이 실질적으로 바뀐다.
+
+**TanStack Start v1**(2026년 초 출시) — 동적·인터랙티브 앱의 신뢰할 만한 대안으로 부상했다. SaaS 대시보드, 어드민 패널, SPA 모양에 SSR만 얹고 싶은 케이스. Vite + Nitro + TanStack Router 기반으로, 공개 벤치마크에서 **Next 대비 클라이언트 번들 30~35% 작음**. End-to-end 타입 세이프 라우팅과 검증된 search params, Node/Cloudflare Workers 어디든 배포 가능.
+
+한 프로덕션 벤치마크는 Next 16에서 마이그레이션 후:
+
+- 로컬 dev 시작 10~12초 → **2~3초**
+- HMR 836ms → **335ms**
+- 프로덕션 CI 빌드 **7배 빠름**
+
+비용은 더 신생 생태계, RSC 지원 성숙 중, Stack Overflow 답변 적음.
+
+**Astro 5 + Server Islands** — zero-click 검색에 가장 크게 얻어맞는 콘텐츠 사이트(블로그, 문서, 마케팅, 이커머스 스토어프론트)에 정답. **AI 크롤러에게 HTML을 내려주는 것이 명시적 목표**이고 JS 페이로드는 최소로 가져가고 싶을 때. Astro 5에서 stable된 Content Layer API는 어떤 API·CMS·DB에서든 타입 세이프 콘텐츠 소싱을 제공하며 **Markdown 빌드가 5배 빠르고 메모리 25~50% 적게** 쓴다.
+
+Server Islands는 RSC 모델을 뒤집는다. CDN 캐시된 정적 셸 + `server:defer` 컴포넌트가 요청 시점에 동적 렌더링, 각각이 표준 `Cache-Control` 헤더로 독립 캐시된다. 제품 설명은 안 변하지만 재고 수량과 유저 카트만 동적인 스토어프론트라면, **Next.js PPR보다 구조적으로 깔끔**할 수 있다. RSC 런타임 세금이 없기 때문이다.
+
+셋 다 정답이 아니고, 셋 다 정답일 수 있다. **공통점은 GPTBot이 봐야 할 static HTML을 전부 내려줄 수 있다는 것**. 프레임워크 전쟁보다 중요한 건 어떤 프레임워크 안에서든 내리는 **렌더링 결정**이고, 2026년의 그 결정은 더 이상 주로 성능 문제가 아니다. 사용자가 이제 검색 결과 대신 받는 답변에 우리 브랜드가 존재하느냐 아니냐의 문제다.
+
+## "SSR or CSR" 이분법은 끝났다
+
+여기서 중요한 반전이 있다. 이 모든 얘기에도 불구하고, **커뮤니티 앱은 순수 SSR로 만들면 안 된다**.
+
+State of React 2025 설문(3,760명)에서 SPA가 여전히 **84.5%**를 차지한다. Server Components를 프로덕션에서 써본 개발자는 29%뿐이다. 왜? 커뮤니티 앱의 많은 기능이 **SSR과 맞지 않기 때문**이다.
+
+### 실시간 기능은 클라이언트의 영역이다
+
+React Server Components는 WebSocket을 유지할 수 없다. 서버리스 배포(Vercel, Netlify)는 함수 타임아웃 때문에 영속 연결을 못 잡는다. 그래서 실전 패턴은 **SSR 셸 + 클라이언트 WebSocket 하이드레이션**이다.
+
+- 서버는 초기 데이터(기존 메시지, 현재 댓글 쓰레드)를 렌더링
+- `'use client'` 컴포넌트가 하이드레이션 후 WebSocket 연결 수립, 실시간 업데이트 처리
+
+관리형 WebSocket은 Ably(React hooks `useChannel`, 토큰 인증, 서버리스 친화)나 Supabase Realtime(Postgres 기반 presence + broadcast)이 무난하다. 더 단순하게 가려면 SWR의 `refreshInterval: 30000`으로 "near real-time" 폴링도 괜찮다.
+
+### 리치 텍스트 에디터는 무조건 클라이언트
+
+Tiptap, Lexical, Plate, BlockNote — 모든 프로덕션급 에디터는 브라우저 DOM을 요구한다. SSR에서는 `'use client'`와 `ssr: false` 동적 import로 띄워야 한다. 중요한 최적화는 이것이다:
+
+- **저장된 콘텐츠**는 서버에서 `remark`/`rehype` 파이프라인으로 정제된 HTML로 렌더링 (Shiki 기반 `rehype-pretty-code`, 클라이언트 JS 0)
+- **무거운 에디터 컴포넌트**는 사용자가 편집 모드에 진입할 때만 로드
+- **DOMPurify 샌티타이즈는 반드시 서버에서** — 클라이언트 샌티타이즈는 UGC에서 절대 믿으면 안 된다
+
+### 인증과 개인화는 "도넛 패턴"으로
+
+가장 어려운 캐싱 문제는 인증이다. 개인화된 SSR 페이지는 CDN 캐시가 안 된다 — 사용자마다 다르니까.
+
+해법은 **도넛 패턴**이다. 캐시 가능한 공개 셸(포럼 레이아웃, 게시글 본문, 카테고리 네비게이션)을 SSR하고, 개인화 요소(알림 카운트, 유저 아바타, "안녕하세요, OOO님")는 클라이언트 컴포넌트로 분리해서 마운트 시 fresh 데이터를 페치한다.
+
+Next.js 16의 Cache Components가 이 패턴을 공식화했다. 정적 셸은 엣지 캐시, 동적 홀은 오리진에서 스트리밍. 완전 인증 페이지는 `Cache-Control: private, no-store`로 요청당 렌더링 비용을 감수한다.
+
+### 페이지네이션은 두 전략을 동시에
+
+**URL 기반 페이지네이션**(`/forum?page=2`)은 SEO에 필수다 — 각 페이지가 고유한 크롤 가능 URL이어야 한다. 동시에 유저는 무한 스크롤을 원한다.
+
+프로덕션 패턴은 **둘 다 쓴다**.
+
+- SSR로 1페이지 렌더링 + 크롤러·JS 비활성 유저를 위한 `<a href>` 페이지 링크
+- 클라이언트 컴포넌트가 TanStack Query의 `useInfiniteQuery`로 무한 스크롤 구현, 서버가 prefetch한 1페이지를 `initialData`로 사용
+- 무한 스크롤은 커서 기반(성능·실시간 inserts 호환), 크롤 가능 URL은 offset 기반
+
+## 기능 매트릭스로 결정하는 법
+
+"프레임워크부터 고르자"가 아니라 **"기능별 접근 패턴부터 매핑하자"**가 핵심이다.
+
+| 기능 | 렌더링 전략 | 이유 |
+|---|---|---|
+| 포럼 쓰레드 목록 | ISR (revalidate 60~300s) | SEO 필수, 중간 정도 동적, SWR 허용 |
+| 개별 게시글 | ISR + on-demand revalidation | SEO 필수, 생성 후 안정, 수정 시 무효화 |
+| 공개 유저 프로필 | ISR | SEO 가치, 소셜 공유용 OG 태그 |
+| 실시간 채팅 | CSR | WebSocket, 인증 뒤, 즉각 인터랙션 |
+| 알림 | Client Component + 폴링/SSE | 유저별, SSR 캐시에서 항상 stale |
+| 리치 텍스트 에디터 | Client-only, lazy | DOM 필요, 무거운 번들 |
+| 마크다운 표시 | Server-rendered | `rehype` 파이프라인, 클라이언트 JS 0 |
+| 대시보드/설정 | CSR | 인증 뒤, 폼 중심, SEO 불필요 |
+| 랜딩 페이지 | SSG | 정적 콘텐츠, 최대 성능 |
+| 피드/타임라인 | 스트리밍 SSR 셸 + CSR 업데이트 | 빠른 초기 페인트 + 실시간 |
+
+### 실제로 다들 이렇게 한다
+
+- **Stack Overflow**: 전통적 SSR(ASP.NET MVC Razor + jQuery), 9대 웹서버로 중위 10~20ms 페이지 렌더링. SEO 의존·콘텐츠 중심 모델에 "보링한" 아키텍처가 완벽히 맞음.
+- **Reddit**: 하이브리드 SSR/CSR. 크롤러와 비로그인 유저에게 SSR HTML, 로그인 유저에게 React SPA. `old.reddit.com`을 여전히 SSR-only 경량 대안으로 유지.
+- **Discord**: 순수 CSR. 모든 콘텐츠가 인증 뒤, SEO 불필요, WebSocket 중심 → SSR은 복잡도만 추가.
+- **Dev.to/Forem**: Rails SSR + Preact 아일랜드. 상호작용 위젯만 3KB Preact로. Fastly 엣지 캐싱 + InstantClick SPA 네비게이션.
+- **Discourse**: Ember SPA + Rails 레이어에서 크롤러 감지해 서버 렌더 HTML 별도 제공.
+
+각자 SEO-인증 비율, 실시간 비중, 팀 규모에 맞는 전략을 골랐다. "모두에게 맞는 정답"은 없다.
+
+## 팀 규모와 복잡도의 현실
+
+SSR 얘기를 하다 보면 항상 외면하기 어려운 게 **복잡도 세금**이다.
+
+PropelAuth 분석, GitHub Discussion #59373, 여러 커뮤니티 설문에서 Next.js App Router에 대한 가장 일관된 불만은 **서버/클라이언트 경계의 학습 곡선**이다. 하이드레이션 에러는 디버깅이 악명 높다. `"use client"` 시스템은 강력하지만, "현재 URL 가져오기" 같은 기본 동작에 미들웨어 우회가 필요하다.
+
+테스팅도 갈라진다. CSR은 Jest/Vitest + RTL + jsdom으로 끝. SSR은 서버 컴포넌트와 클라이언트 컴포넌트를 따로 테스트해야 하고, DB/파일시스템 목킹, 하이드레이션 타이밍(Playwright에서 버튼이 HTML에는 있는데 인터랙션 안 되는 상태), 서버 액션 후 캐시 무효화 체인 검증까지 — 복잡도가 몇 단계 올라간다.
+
+비용 곡선도 다르다.
+
+| 규모 (DAU) | CSR (정적 + API) | SSR (Vercel Pro) | SSR (자체 호스팅) |
+|---|---|---|---|
+| 100 | Free~$5/월 | Free (Hobby) | $5~10/월 |
+| 10K | $5~20/월 | $20~50/월 | $20~50/월 |
+| 100K | $20~50/월 + API | $50~200/월 | $100~300/월 |
+| 1M | $50~200/월 + API | $200~1,000+/월 | $300~1,000/월 |
+
+CSR은 트래픽 무관하게 비용이 거의 고정(정적 파일 + CDN). SSR은 요청당 컴퓨트가 들어서 트래픽에 비례한다. Pagepro 사례에서 **불필요한 SSR 라우트를 정적으로 변환해 35% 비용 절감**을 달성했다. 서버리스 연결 풀링 문제(함수 호출마다 DB 커넥션 오픈)도 SSR 특유의 이슈다. Neon/Supabase/PlanetScale의 빌트인 풀링, PgBouncer, RDS Proxy, 또는 Upstash 같은 HTTP 기반 DB로 풀어야 한다.
+
+## 정리: 2026년의 결정 프레임워크
+
+여기까지 길게 왔으니 압축해서 정리한다.
+
+**기존 SPA를 유지하면서 최소 비용으로 SEO를 개선해야 한다면** — CSR + Lambda@Edge 프리렌더링이 합리적이다. 프레임워크 재작성 없이 인프라 레이어만 추가. 소셜 프리뷰와 봇 인덱싱을 즉시 해결. 단, **Google 공식 deprecated workaround**이고 실사용자 성능은 개선되지 않는다는 걸 인지하고 써야 한다. 단기 처방이다.
+
+**새 프로젝트이거나 SEO가 비즈니스 핵심이라면** — Next.js 16 App Router + ISR/PPR이 최적이다. 경로별로 혼합: 마케팅·콘텐츠에 SSG/ISR, 상품 카탈로그에 ISR(on-demand revalidation), 개인화 대시보드에 SSR, 인터랙티브 위젯에 CSR. Next.js 16의 PPR이 "SSG vs SSR" 결정 자체를 단순화한다.
+
+**팀이 작고(1~3명) 커뮤니티가 대부분 인증 뒤라면** (Discord/Slack류) — React + Vite + React Router의 CSR로 시작하고, 공개 페이지에 대해서만 SEO 측정 후 선별적으로 SSR 추가. 복잡도 세금은 엔지니어가 적을수록 무겁다.
+
+**이커머스·미디어·콘텐츠 사이트라면** — ISR + on-demand revalidation이 비용 대비 SEO 효과 최대. 정적 수준 TTFB + CMS 웹훅 연동으로 300ms 이내 글로벌 캐시 퍼지.
+
+**대규모 트래픽(10M+ PV/월)에서 비용이 최우선이라면** — CSR + 자체 Puppeteer Lambda 프리렌더링($50~150/월)이나 자체 호스팅 Next.js($100~500/월)가 Vercel 대비 현저히 싸다.
+
+## GEO 플레이북: AI 답변에 들어가기 위한 5가지 액션
+
+렌더링 전략은 입장권이다. 입장했다고 인용되는 건 아니다. **GEO(Generative Engine Optimization)** 가 별도의 레이어로 올라온 이유다. 지금 당장 실행할 다섯 가지를 정리한다.
+
+**1. Raw HTML을 감사하자.**
+우리 사이트에서 우클릭 → 페이지 소스 보기 → 제품 설명·가격·FAQ 답변을 찾아보자. `<div id="root">`와 스크립트 태그만 보인다면, GPTBot 눈에는 빈 페이지다. AI 답변에 들어가야 할 라우트는 SSR/SSG로 전환하자. 한 번의 아키텍처 결정이 영구적인 리턴을 준다.
+
+**2. "랭킹"이 아니라 "추출"을 위해 콘텐츠를 구조화하자.**
+Princeton의 GEO 연구(Aggarwal et al., KDD 2024)에 따르면, **권위 있는 인용·통계·전문가 인용 추가로 AI 가시성이 최대 40% 향상**된다. 실전 체크리스트:
+
+- 각 섹션 첫 40~60자로 직접적인 답변 리드
+- 상업적 리스티클의 첫 200자 안에 "Quick Answer" 블록
+- **3중 JSON-LD 스키마**(Article + ItemList + FAQPage) — Article만 쓴 페이지 대비 **1.8배 더 많은 인용** 받음
+- 코너스톤 페이지는 분기마다 갱신. **90일 안에 리프레시 안 된 콘텐츠는 AI 인용 잃을 확률 3배**. AI 답변 인용 소스의 50%가 13주 미만 신선도
+
+**3. robots.txt는 "봇 단위"가 아니라 "플릿 단위"로 설정하자.**
+OpenAI만 해도 크롤러가 세 개다 — GPTBot(학습), ChatGPT-User(실시간 retrieval), OAI-SearchBot(검색 인덱싱). 하나 차단해도 나머지는 그대로다. 실용적 기본값은 **retrieval과 training 크롤러 둘 다 허용**. 학습 코퍼스에 들어가는 것이 모델에게 우리 브랜드의 존재를 가르치는 방법이다.
+
+**4. 렌더링 전략은 프레임워크 취향이 아니라 콘텐츠 타입으로 결정하자.**
+마케팅 페이지, 블로그, 제품 페이지, 문서 — **완전히 서버 렌더링된 HTML**로 나가야 한다. Next.js 16 Cache Components, Astro Server Islands, SvelteKit SSR 다 된다. 애플리케이션 표면(대시보드, 인증 필요 화면)은 클라이언트 무거워도 됨. AI 가시성이 목표가 아닌 영역이다. 2025년 CVE 상황 + RSC 런타임 무게를 고려하면, **모든 라우트에 RSC가 정답인 것은 아니다**. 하이브리드가 답이다.
+
+**5. "랭킹"이 아니라 "인용 점유율(citation share)"을 측정하자.**
+
+- 서버 로그에서 AI 봇 트래픽 추적
+- ChatGPT, Claude, Perplexity, Gemini, Copilot에서 **브랜드 등장 빈도를 각각 별개로** 모니터링 — 각 엔진이 소스를 다르게 가중치함 (ChatGPT는 백과사전적 깊이, Perplexity는 최신성·Reddit 시그널, AI Overviews는 기존 상위 랭킹 페이지 인용 경향)
+- Bing Webmaster Tools의 AI Performance 대시보드가 Copilot grounding 쿼리를 노출
+- Google Search Console regex 필터로 AI 요약을 트리거하는 대화형 롱테일 쿼리 발견
+
+---
+
+2026년의 SEO 지형에서 가장 중요한 변화는 Googlebot의 JS 렌더링 개선이 아니다. **웹의 정보 아키텍처가 "static HTML을 읽어 인간에게 요약해주는 기계들"을 중심으로 다시 쓰이고 있다**는 것이다. 소셜 봇, AI 크롤러, 기타 검색엔진의 대다수가 JavaScript를 실행하지 못하고, 인간 유저의 69%는 클릭 없이 답변만 소비한다. 서버 렌더링은 "SEO 최적화"를 넘어 **우리 브랜드가 AI 답변에 존재하기 위한 기본 인프라**가 됐다.
+
+지금까지 승자들이 공유한 세 가지 특성이 있다. **raw HTML로 콘텐츠를 내보낸다** — 크롤러가 코드 실행 없이 추출 가능. **모델이 인용할 이유가 있는 원본 리서치·독점 데이터·1인칭 전문성을 만든다** — 유사 복제품 열두 개가 아니라 이쪽을. 성공을 **트래픽 점유율이 아니라 답변 점유율로 측정한다**.
+
+"SSR or CSR?"이라는 이분법은 끝났다. 프레임워크는 per-route, per-component 렌더링 제어를 제공한다. 프레임워크 선택은 Next.js 16·TanStack Start·Astro 5 중 어느 것이든 **정답일 수 있다** — 셋 다 GPTBot이 봐야 할 static HTML을 내려줄 수 있기 때문이다. 진짜 결정은 어떤 프레임워크를 쓰느냐가 아니라 **그 안에서 어떤 렌더링 전략을 고르느냐**다. 그리고 2026년의 그 결정은 주로 성능 문제가 아니다.
+
+**우리 브랜드가 사용자가 검색 결과 대신 받는 답변 안에 존재하느냐 아니냐의 문제다.**
+
+기능 매트릭스부터 시작하자. 프레임워크는 그다음이다. 그리고 프레임워크가 결정되면, 라우트 하나하나에 대해 질문을 하나만 던지면 된다 — **"이 페이지는 AI가 인용할 수 있어야 하는가?"** Yes면 HTML을 서버에서 완성해서 내려라. No면 자유롭게 클라이언트로 가라.
+
+## 참고자료
+
+**Googlebot · JS 렌더링**
+
+- Vercel/MERJ, "How Google handles JavaScript throughout the indexing process" (2024.07) — [vercel.com/blog](https://vercel.com/blog/how-google-handles-javascript-throughout-the-indexing-process)
+- Google Search Central, Dynamic Rendering 문서 (deprecated 표기) — [developers.google.com/search](https://developers.google.com/search/docs/crawling-indexing/javascript/dynamic-rendering)
+- Google Search Central Blog, Core Web Vitals & Page Experience — [developers.google.com/search/blog](https://developers.google.com/search/blog)
+
+**AI 크롤러 데이터**
+
+- Cloudflare, "AI crawler traffic trends" (Radar / 2025 블로그 시리즈) — [radar.cloudflare.com](https://radar.cloudflare.com/), [blog.cloudflare.com](https://blog.cloudflare.com/)
+- Vercel, "The Rise of the AI Crawler" (GPTBot 5억 건 페치 분석) — [vercel.com/blog](https://vercel.com/blog)
+- SearchVIU, AI 크롤러 JavaScript 렌더링 능력 분석 (2025) — [searchviu.com](https://www.searchviu.com/)
+- Alli AI, 프록시 레이어 기반 AI 크롤러 트래픽 분석 (2026.01)
+- Rutgers · Wharton, "Impact of AI crawler blocking on publisher traffic" (2025.12)
+
+**AI Overviews · CTR 영향**
+
+- Seer Interactive, "AI Overviews click-through rate analysis" (2,510만 impression / 3,119 쿼리) — [seerinteractive.com](https://www.seerinteractive.com/)
+- Ahrefs Blog, AI Overviews CTR 연구 (2025.12, 30만 키워드) — [ahrefs.com/blog](https://ahrefs.com/blog/)
+- Authoritas, AI Overviews CTR 영향 연구 — [authoritas.com](https://www.authoritas.com/)
+- Pew Research Center, "Americans and AI search summaries" (2025.03) — [pewresearch.org](https://www.pewresearch.org/)
+- Similarweb, Zero-click search rate 리포트 — [similarweb.com](https://www.similarweb.com/)
+- Gartner, 2026 Search Traffic Forecast — [gartner.com](https://www.gartner.com/)
+
+**GEO 리서치**
+
+- Aggarwal et al., "GEO: Generative Engine Optimization" (KDD 2024) — [arxiv.org/abs/2311.09735](https://arxiv.org/abs/2311.09735)
+
+**Next.js · React · 프레임워크**
+
+- Next.js 16 릴리스 노트 (2025.10.21) — [nextjs.org/blog/next-16](https://nextjs.org/blog/next-16)
+- Next.js Cache Components / Partial Prerendering 문서 — [nextjs.org/docs](https://nextjs.org/docs)
+- React 19.2 릴리스 노트 — [react.dev/blog](https://react.dev/blog)
+- CVE-2025-55182 "React2Shell" — [nvd.nist.gov/vuln/detail/CVE-2025-55182](https://nvd.nist.gov/vuln/detail/CVE-2025-55182)
+- TanStack Start v1 — [tanstack.com/start](https://tanstack.com/start)
+- Astro 5 & Server Islands — [astro.build/blog/astro-5](https://astro.build/blog/astro-5/)
+- State of React 2025 Survey — [stateofreact.com](https://stateofreact.com/)
+
+**실전 사례 · 벤치마크**
+
+- Wix Engineering, Selective Hydration & INP 개선 사례
+- Softonic, Airbnb, Nanobébé, HubSpot, Men's Journal, People.com 트래픽 사례 (각 사 공개 자료 및 업계 분석 기반)
+- Stack Overflow, Reddit, Discord, Dev.to/Forem, Discourse 렌더링 아키텍처 (각 사 엔지니어링 블로그)
+- Pagepro, SSR → 정적 변환 비용 절감 케이스 스터디 — [pagepro.co](https://pagepro.co/)
+- LogRocket, "2025 Frontend Wrapped" — [blog.logrocket.com](https://blog.logrocket.com/)
+- PropelAuth, Next.js App Router 학습 곡선 분석 — [propelauth.com/blog](https://www.propelauth.com/blog)
+
+> 본문에 인용된 통계·연구·벤치마크는 2025~2026년 공개 자료를 기반으로 하며, 수치는 각 출처의 측정 방법·표본에 따라 차이가 있을 수 있다. 의사결정에 활용할 때는 원 출처를 직접 확인하는 것을 권한다.

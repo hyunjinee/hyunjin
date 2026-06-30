@@ -12,6 +12,14 @@ type Talk = {
 
 export const talks: Talk[] = [
   {
+    title: 'Berriz AI 아티스트 마인드맵 & 연예고사',
+    description: 'AI가 아티스트의 정적·동적 정보를 지식그래프(마인드맵)로 엮고, 연예고사 게임으로 팬 온보딩을 돕는 서비스 — ENTERTHON 2025 (team 천만원, 최종 7팀)',
+    date: '2025-12-05',
+    event: 'Kakao Entertainment · ENTERTHON 2025',
+    href: '/talks/enterthon-2025',
+    type: 'talk',
+  },
+  {
     title: '서버 사이드 렌더링으로 유저 경험 개선하기',
     description: 'CSR의 한계와 SSR이 초기 로딩·유저 경험·SEO에 주는 이점',
     date: '2023-06-24',

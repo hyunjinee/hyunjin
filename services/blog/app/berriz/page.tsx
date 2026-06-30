@@ -5,13 +5,6 @@ import { genPageMetadata } from 'app/seo'
 
 export const metadata = genPageMetadata({ title: 'Berriz' })
 
-const metrics = [
-  { value: '3,566+', label: '커밋 · 680 PR', sub: '최다 기여자' },
-  { value: '~22개월', label: '2024.08 ~ 현재', sub: '진행 중' },
-  { value: '7+', label: '서비스 / 레포', sub: '플랫폼 · 파트너센터 · 오디션 · 라이브' },
-  { value: '100만+', label: '유저', sub: '제로 베이스 → 글로벌 출시' },
-]
-
 type Section = {
   title: string
   bullets: string[]
@@ -67,14 +60,6 @@ const sections: Section[] = [
       '파트너센터 예약(부킹)·TVOD 구매혜택·행사 도메인을 0부터 구축 — 4단계 멀티스텝 등록 퍼널 + 전용 CRUD API 레이어 설계',
       'container/presentational 분리 패턴과 TanStack Form + Zod 검증 일원화, 폼 ↔ API 양방향 변환 유틸 도입',
       'zero-prop bypass render props를 26개+ 컨테이너에서 제거하는 대규모 리팩토링으로 prop drilling 해소',
-    ],
-  },
-  {
-    title: '다국어 · SSR 안정성',
-    bullets: [
-      'next-intl 기반 다국어 체계 + Google Sheet 연동 번역 동기화 파이프라인을 플랫폼 전반에 운영',
-      '헤더 useId 고정으로 SSR 하이드레이션 불일치를 해소하고, MD/SM 반응형 조건부 렌더링으로 레이아웃 일관성 확보',
-      '상태바·바텀 네비 높이를 CSS 변수화해 하이브리드 화면의 safe-area 처리를 표준화',
     ],
   },
   {
@@ -138,9 +123,9 @@ export default function BerrizPage() {
           <span className="text-sm text-gray-600 dark:text-gray-400">Kakao Entertainment · Frontend Engineer</span>
         </div>
         <p className="text-sm leading-7 text-gray-700 break-keep md:text-base dark:text-gray-300">
-          글로벌 팬 플랫폼 <strong>Berriz</strong>의 프론트엔드 최다 기여자로, 계정·인증, 딥링크, 라이브
-          스트리밍, 커머스, 오디션 실시간 투표까지 제품 전반을 주도했습니다. 메인 플랫폼을 축으로 파트너센터
-          예약·TVOD 도메인을 0부터 구축하고, 라이브 플레이어 SDK 코어를 설계했으며, AI 코딩 에이전트 오케스트레이터와
+          글로벌 팬 플랫폼 <strong>Berriz</strong>의 프론트엔드 개발자로, 계정·인증, 딥링크, 라이브
+          스트리밍, 커머스, 오디션 실시간 투표까지 폭넓게 참여했습니다. 파트너센터
+          예약·TVOD 도메인을 직접 만들고, 라이브 플레이어 SDK 코어를 설계했으며, AI 코딩 에이전트 오케스트레이터와
           평가 하네스로 팀의 개발 생산성까지 끌어올렸습니다.
         </p>
         <div className="flex flex-wrap gap-3 items-center mt-5 text-sm md:gap-4">
@@ -168,22 +153,6 @@ export default function BerrizPage() {
           </CustomLink>
         </div>
       </header>
-
-      {/* Metrics */}
-      <section className="mb-12">
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-          {metrics.map((m) => (
-            <div
-              key={m.label}
-              className="p-4 rounded-lg border border-gray-200 dark:border-gray-700 dark:bg-gray-800/30"
-            >
-              <div className="text-2xl font-bold text-primary-500 md:text-3xl">{m.value}</div>
-              <div className="mt-1 text-sm font-medium text-gray-900 dark:text-gray-200">{m.label}</div>
-              <div className="mt-0.5 text-xs text-gray-500 dark:text-gray-500">{m.sub}</div>
-            </div>
-          ))}
-        </div>
-      </section>
 
       {/* Contribution sections */}
       <section className="mb-12">

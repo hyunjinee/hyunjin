@@ -7,7 +7,7 @@ export const metadata = genPageMetadata({ title: 'Kakao Entertainment' })
 
 const metrics = [
   { value: '100만+', label: '유저', sub: '제로 베이스 → 글로벌 출시' },
-  { value: '3,566+', label: '커밋 · 680 PR', sub: '최다 기여자' },
+  { value: '3,566+', label: '커밋 · 680 PR', sub: '메인 FE 레포 기준' },
   { value: '7+', label: '서비스 / 레포', sub: '플랫폼 · 파트너센터 · 오디션 · 라이브 · 위키 · DevOps' },
   { value: '~22개월', label: '2024.07 ~ 현재', sub: '진행 중' },
 ]
@@ -24,12 +24,12 @@ type Project = {
 
 const projects: Project[] = [
   {
-    title: 'Berriz 메인 플랫폼',
-    role: '제품 전반 주도',
+    title: 'Berriz',
+    role: 'Frontend Engineer',
     period: '2024.08 ~ 현재',
     scale: '3,566 커밋 · 680 PR',
     bullets: [
-      '계정·멜론 연동·본인인증, 팬클럽·팬카드, 커머스(샵), 딥링크, 웹뷰 브릿지, 오디션 투표, 다국어까지 제품 전반을 주도',
+      '계정·멜론 연동·본인인증, 팬클럽·팬카드, 커머스(샵), 딥링크, 웹뷰 브릿지, 오디션 투표, 다국어 등 여러 도메인을 구현',
       '네이티브 앱-웹 상태 동기화 웹뷰 브릿지 아키텍처(setAppValues·스킴 네비·PTR 제어·디버그 패널) 설계',
       '사내 AI 개발 자동화(Jira 폴링 → 코딩 에이전트 자동 spawn 오케스트레이터 + 평가 하네스) 구축',
     ],
@@ -169,8 +169,8 @@ export default function KakaoentPage() {
           <span className="text-sm text-gray-600 dark:text-gray-400">Frontend Engineer · 2024.07 ~ 현재</span>
         </div>
         <p className="text-sm leading-7 text-gray-700 break-keep md:text-base dark:text-gray-300">
-          글로벌 팬 플랫폼 <strong>Berriz</strong>의 프론트엔드 최다 기여자로, 메인 플랫폼 제품 전반을 주도하며 라이브
-          플레이어 SDK·파트너센터·오디션 실시간 투표 등 여러 도메인을 0부터 구축했습니다. 여기에 LLM 지식베이스와 AI
+          글로벌 팬 플랫폼 <strong>Berriz</strong>의 프론트엔드 개발자로, 라이브
+          플레이어 SDK·파트너센터·오디션 실시간 투표 등 여러 도메인을 직접 만들었습니다. 여기에 LLM 지식베이스와 AI
           개발 자동화, Terraform 기반 인프라(IaC)까지 제품과 개발 생산성 양쪽을 함께 끌어올렸습니다.
         </p>
         <div className="flex flex-wrap items-center gap-3 mt-5 text-sm md:gap-4">
