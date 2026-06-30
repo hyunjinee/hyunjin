@@ -32,8 +32,7 @@ const sections: Section[] = [
     bullets: [
       'PlayerBase 추상 클래스 위에 IVS 재생 엔진을 구현 — IVS/DRM 백엔드를 교체 가능한 다형적 SDK 아키텍처 확립',
       'EventEmitter → zustand → React 구독의 단방향 상태 동기화로 UI가 재생 상태에 반응형 연동',
-      '버퍼링·송출 종료·미지원 브라우저 등 error taxonomy를 정의하고, player-sdk / player-ui 2패키지 모노레포로 분리',
-      'Chromecast(CAF)·AirPlay 등 외부 캐스팅 디바이스 연동',
+      '버퍼링·송출 종료·미지원 브라우저 등 error taxonomy를 정의',
     ],
   },
   {

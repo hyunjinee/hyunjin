@@ -36,7 +36,6 @@ const projects: Project[] = [
     bullets: [
       'PlayerBase 추상 클래스 위에 IVS 재생 엔진을 구현 — IVS/DRM 백엔드 교체 가능한 다형적 SDK 아키텍처 확립',
       'EventEmitter → zustand → React 단방향 상태 동기화, error taxonomy 정의',
-      'player-sdk / player-ui 2패키지 pnpm 모노레포 분리, Chromecast(CAF)·AirPlay 캐스팅 연동',
     ],
   },
   {
