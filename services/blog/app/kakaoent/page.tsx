@@ -41,7 +41,6 @@ const projects: Project[] = [
   },
   {
     title: '파트너센터 — 예약 · TVOD · 행사',
-    role: '0 → 1 도메인 구축',
     period: '2026.02 ~ 05',
     scale: '239 커밋 · 27 PR',
     bullets: [
