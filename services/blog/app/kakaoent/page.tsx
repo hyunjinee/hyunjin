@@ -8,7 +8,7 @@ export const metadata = genPageMetadata({ title: 'Kakao Entertainment' })
 
 type Project = {
   title: string
-  role: string
+  role?: string
   period: string
   scale: string
   bullets: string[]
@@ -31,7 +31,6 @@ const projects: Project[] = [
   },
   {
     title: 'Live Player — AWS IVS SDK',
-    role: '다형 SDK 0 → 1 설계',
     period: '2024.07 ~ 09',
     scale: '121 커밋 · 10 PR',
     bullets: [
@@ -199,7 +198,7 @@ export default function KakaoentPage() {
                   {String(i + 1).padStart(2, '0')}
                 </span>
                 <h3 className="text-lg font-semibold text-gray-900 md:text-xl dark:text-gray-100">{p.title}</h3>
-                <span className="text-sm text-gray-500 dark:text-gray-400">{p.role}</span>
+                {p.role && <span className="text-sm text-gray-500 dark:text-gray-400">{p.role}</span>}
                 <span className="ml-auto font-mono text-xs text-gray-400 dark:text-gray-600">
                   {p.period} · {p.scale}
                 </span>
