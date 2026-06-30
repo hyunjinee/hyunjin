@@ -43,7 +43,7 @@ export async function generateMetadata({
   const publishedAt = new Date(post.date).toISOString();
   const modifiedAt = new Date(post.lastmod || post.date).toISOString();
   const authors = authorDetails.map((author) => author.name);
-  let imageList = [siteMetadata.socialBanner];
+  let imageList = [`${siteMetadata.siteUrl}/og?title=${encodeURIComponent(post.title)}`];
   if (post.images) {
     imageList = typeof post.images === 'string' ? [post.images] : post.images;
   }
@@ -60,7 +60,7 @@ export async function generateMetadata({
       title: post.title,
       description: post.summary,
       siteName: siteMetadata.title,
-      locale: 'en_US',
+      locale: 'ko_KR',
       type: 'article',
       publishedTime: publishedAt,
       modifiedTime: modifiedAt,

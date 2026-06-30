@@ -22,17 +22,17 @@ import BtoaPolyfill from '@/components/BtoaPolyfill'
 export const metadata: Metadata = {
   metadataBase: new URL(siteMetadata.siteUrl),
   title: {
-    default: siteMetadata.title,
+    default: '이현진 (Hyunjin Lee) — Software Engineer',
     template: `%s | ${siteMetadata.title}`,
   },
   description: siteMetadata.description,
   openGraph: {
-    title: siteMetadata.title,
+    title: '이현진 (Hyunjin Lee) — Software Engineer',
     description: siteMetadata.description,
     url: './',
     siteName: siteMetadata.title,
-    images: [siteMetadata.socialBanner],
-    locale: 'ko',
+    images: [`${siteMetadata.siteUrl}/og`],
+    locale: 'ko_KR',
     type: 'website',
   },
   alternates: {
@@ -53,9 +53,9 @@ export const metadata: Metadata = {
     },
   },
   twitter: {
-    title: siteMetadata.title,
+    title: '이현진 (Hyunjin Lee) — Software Engineer',
     card: 'summary_large_image',
-    images: [siteMetadata.socialBanner],
+    images: [`${siteMetadata.siteUrl}/og`],
   },
 }
 

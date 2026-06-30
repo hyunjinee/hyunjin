@@ -1,9 +1,10 @@
 // /** @type {import("pliny/config").PlinyConfig } */
 const siteMetadata = {
-  title: 'hyunjin',
-  author: 'hyunjin',
+  title: '이현진 (Hyunjin Lee)',
+  author: '이현진 (Hyunjin Lee)',
   headerTitle: 'hyunjin',
-  description: '🤔',
+  description:
+    '프론트엔드 엔지니어 이현진(Hyunjin Lee). 카카오엔터테인먼트에서 글로벌 팬 플랫폼 Berriz를, 토스뱅크에서 대출 운영 시스템 LUMOS를 개발했습니다. React·Next.js·TypeScript 경험과 기록을 공유합니다.',
   language: 'ko-KR',
   theme: 'dark', // system, dark or light
   siteUrl: 'https://hyunjinlee.com',

@@ -91,12 +91,30 @@ const skills = [
   'Github Action, CodeDeploy등을 사용하여 CI/CD 환경을 구축하여 코드의 안정성 및 신뢰성을 높일 수 있습니다.',
 ]
 
+const personJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: '이현진 (Hyunjin Lee)',
+  alternateName: 'Hyunjin Lee',
+  url: siteMetadata.siteUrl,
+  image: `${siteMetadata.siteUrl}/images/hyunjin/hyunjin.jpg`,
+  jobTitle: 'Software Engineer',
+  email: `mailto:${siteMetadata.email}`,
+  worksFor: { '@type': 'Organization', name: 'Kakao Entertainment' },
+  sameAs: [siteMetadata.github, siteMetadata.linkedin, siteMetadata.youtube].filter(Boolean),
+}
+
 export default function Page() {
   const sortedPosts = sortPosts(allBlogs)
   const posts = allCoreContent(sortedPosts)
 
   return (
     <div className="divide-y divide-gray-200 dark:divide-gray-700">
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+      />
       <div className="container md:mt-5">
         {/* 프로필 헤더 */}
         <header className="mb-8">
