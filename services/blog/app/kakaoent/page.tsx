@@ -5,12 +5,6 @@ import CustomLink from '@/components/Link'
 
 export const metadata = genPageMetadata({ title: 'Kakao Entertainment' })
 
-const metrics = [
-  { value: '100만+', label: '유저', sub: '제로 베이스 → 글로벌 출시' },
-  { value: '3,566+', label: '커밋 · 680 PR', sub: '메인 FE 레포 기준' },
-  { value: '7+', label: '서비스 / 레포', sub: '플랫폼 · 파트너센터 · 오디션 · 라이브 · 위키 · DevOps' },
-  { value: '~22개월', label: '2024.07 ~ 현재', sub: '진행 중' },
-]
 
 type Project = {
   title: string
@@ -191,22 +185,6 @@ export default function KakaoentPage() {
           </CustomLink>
         </div>
       </header>
-
-      {/* Metrics */}
-      <section className="mb-12">
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-          {metrics.map((m) => (
-            <div
-              key={m.label}
-              className="p-4 border border-gray-200 rounded-lg dark:border-gray-700 dark:bg-gray-800/30"
-            >
-              <div className="text-2xl font-bold text-primary-500 md:text-3xl">{m.value}</div>
-              <div className="mt-1 text-sm font-medium text-gray-900 dark:text-gray-200">{m.label}</div>
-              <div className="mt-0.5 text-xs text-gray-500 dark:text-gray-500">{m.sub}</div>
-            </div>
-          ))}
-        </div>
-      </section>
 
       {/* Project timeline */}
       <section className="mb-12">
