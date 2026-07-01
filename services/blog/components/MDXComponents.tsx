@@ -3,7 +3,7 @@ import Pre from 'pliny/ui/Pre'
 import BlogNewsletterForm from 'pliny/ui/BlogNewsletterForm'
 import type { MDXComponents } from 'mdx/types'
 import type { ComponentPropsWithRef } from 'react'
-import Image from './Image'
+import ImageViewer from './ImageViewer'
 import CustomLink from './Link'
 import TableWrapper from './TableWrapper'
 import Mermaid from './Mermaid'
@@ -29,7 +29,7 @@ function MdxPre(props: ComponentPropsWithRef<'pre'>) {
 }
 
 export const components: MDXComponents = {
-  Image,
+  Image: ImageViewer,
   TOCInline,
   a: CustomLink,
   pre: MdxPre,
