@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react'
 import { ViewTransition } from 'react'
 import Image from '@/components/Image'
-import Bleed from 'pliny/ui/Bleed'
 import { CoreContent } from 'pliny/utils/contentlayer'
 import type { Blog } from 'contentlayer/generated'
 import Comments from '@/components/Comments'
@@ -29,11 +28,9 @@ export default function PostMinimal({ content, next, prev, children }: LayoutPro
         <div>
           <div className="pb-10 space-y-1 text-center dark:border-gray-700">
             <div className="w-full">
-              <Bleed>
-                <div className="relative aspect-[3/1] max-h-[280px] w-full overflow-hidden rounded-lg">
-                  <Image src={displayImage} alt={title} fill priority className="object-cover" />
-                </div>
-              </Bleed>
+              <div className="relative mx-auto aspect-[2/1] max-h-[320px] w-full max-w-2xl overflow-hidden rounded-lg">
+                <Image src={displayImage} alt={title} fill priority className="object-contain" />
+              </div>
             </div>
             <div className="relative pt-8">
               <PageTitle>
