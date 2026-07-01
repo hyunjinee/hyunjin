@@ -20,6 +20,8 @@ interface LayoutProps {
 export default function PostMinimal({ content, next, prev, children }: LayoutProps) {
   const { slug, title, images } = content
   const displayImage = images && images.length > 0 ? images[0] : 'https://picsum.photos/seed/picsum/800/400'
+  // cover: 16:9로 꽉 채워 크롭(Toss형, 16:9 제작 이미지용) / contain: 잘림 없이 전체 표시(가장자리 콘텐츠 이미지용)
+  const bannerFit = (content as { bannerFit?: 'cover' | 'contain' }).bannerFit ?? 'contain'
 
   return (
     <SectionContainer>
@@ -28,8 +30,18 @@ export default function PostMinimal({ content, next, prev, children }: LayoutPro
         <div>
           <div className="pb-10 space-y-1 text-center dark:border-gray-700">
             <div className="w-full">
-              <div className="relative mx-auto aspect-[2/1] max-h-[320px] w-full max-w-2xl overflow-hidden rounded-lg">
-                <Image src={displayImage} alt={title} fill priority className="object-contain" />
+              <div
+                className={`relative mx-auto aspect-video w-full max-w-3xl overflow-hidden rounded-lg ${
+                  bannerFit === 'contain' ? 'bg-gray-50 dark:bg-gray-800/40' : ''
+                }`}
+              >
+                <Image
+                  src={displayImage}
+                  alt={title}
+                  fill
+                  priority
+                  className={bannerFit === 'cover' ? 'object-cover' : 'object-contain'}
+                />
               </div>
             </div>
             <div className="relative pt-8">
