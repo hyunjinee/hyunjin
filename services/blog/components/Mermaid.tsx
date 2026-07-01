@@ -14,12 +14,17 @@ export default function Mermaid({ children }: { children: string }) {
     // 테마 변경 시 재렌더: 원본 소스 복원 + 처리 플래그 제거
     el.innerHTML = children
     el.removeAttribute('data-processed')
-    mermaid.initialize({
-      startOnLoad: false,
-      securityLevel: 'loose',
-      theme: resolvedTheme === 'dark' ? 'dark' : 'default',
-    })
-    mermaid.run({ nodes: [el] })
+    // mermaid 파싱/렌더 에러가 페이지 전체를 죽이지 않도록 방어 (mermaid는 non-Error를 throw/reject함)
+    try {
+      mermaid.initialize({
+        startOnLoad: false,
+        securityLevel: 'loose',
+        theme: resolvedTheme === 'dark' ? 'dark' : 'default',
+      })
+      void Promise.resolve(mermaid.run({ nodes: [el] })).catch(() => {})
+    } catch {
+      /* 다이어그램 렌더 실패는 무시 */
+    }
   }, [children, resolvedTheme])
 
   return (
