@@ -30,12 +30,12 @@ export default function PostMinimal({ content, next, prev, children }: LayoutPro
           <div className="pb-10 space-y-1 text-center dark:border-gray-700">
             <div className="w-full">
               <Bleed>
-                <div className="relative aspect-[2/1] w-full">
-                  <Image src={displayImage} alt={title} fill className="object-cover" />
+                <div className="relative aspect-[3/1] max-h-[280px] w-full overflow-hidden rounded-lg">
+                  <Image src={displayImage} alt={title} fill priority className="object-cover" />
                 </div>
               </Bleed>
             </div>
-            <div className="relative pt-10">
+            <div className="relative pt-8">
               <PageTitle>
                 <ViewTransition name={`title-${slug}`}>
                   <span>{title}</span>
