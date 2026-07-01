@@ -308,6 +308,28 @@ function MapEmbed({ query, title }: { query: string; title: string }) {
   )
 }
 
+/** view 계산(마운트 후) 전까지 보여줄 그리드 스켈레톤. 빈 흰 박스/CLS 방지 */
+function CalendarSkeleton() {
+  return (
+    <div aria-hidden className="animate-pulse">
+      <div className="mb-4 h-7 w-32 rounded bg-gray-100 dark:bg-gray-800" />
+      <div className="grid grid-cols-7 overflow-hidden rounded-md border border-gray-200 dark:border-gray-700">
+        {WEEKDAYS.map((d) => (
+          <div
+            key={d}
+            className="border-b border-r border-gray-200 py-2 text-center text-xs text-gray-300 dark:border-gray-700 dark:text-gray-600"
+          >
+            {d}
+          </div>
+        ))}
+        {Array.from({ length: 42 }, (_, i) => (
+          <div key={i} className="min-h-20 border-b border-r border-gray-200 sm:min-h-24 dark:border-gray-700" />
+        ))}
+      </div>
+    </div>
+  )
+}
+
 export default function CalendarView({ events }: { events: CalendarEvent[] }) {
   // today/현재 월·일은 클라이언트 마운트 후에만 계산 → 정적 프리렌더와 hydration 불일치 방지
   const [mode, setMode] = useState<'month' | 'day'>('month')
@@ -318,10 +340,22 @@ export default function CalendarView({ events }: { events: CalendarEvent[] }) {
 
   useEffect(() => {
     const d = new Date()
-    setView({ year: d.getFullYear(), month: d.getMonth() })
-    setTodayKey(toKey(d))
-    setDayKey(toKey(d))
-  }, [])
+    const todayK = toKey(d)
+    setTodayKey(todayK)
+    setDayKey(todayK)
+    // 첫 화면은 오늘이 아니라 "가장 가까운 일정"의 달로 — 예정 일정 우선, 없으면 가장 최근 일정
+    const upcoming = events
+      .filter((e) => (e.endDate ?? e.date) >= todayK)
+      .sort((a, b) => a.date.localeCompare(b.date))[0]
+    const recent = [...events].sort((a, b) => b.date.localeCompare(a.date))[0]
+    const focus = upcoming ?? recent
+    if (focus) {
+      const [fy, fm] = focus.date.split('-').map(Number)
+      setView({ year: fy, month: fm - 1 })
+    } else {
+      setView({ year: d.getFullYear(), month: d.getMonth() })
+    }
+  }, [events])
 
   const usedCategories = [...new Set(events.map((e) => e.category).filter(Boolean) as string[])]
   const agenda = [...events].sort((a, b) => b.date.localeCompare(a.date))
@@ -384,13 +418,26 @@ export default function CalendarView({ events }: { events: CalendarEvent[] }) {
           </div>
 
           {mode === 'month' ? (
-            <MonthGrid view={view} todayKey={todayKey} events={events} onSelectDay={openDay} onSelect={setSelected} />
+            <>
+              <MonthGrid view={view} todayKey={todayKey} events={events} onSelectDay={openDay} onSelect={setSelected} />
+              {(() => {
+                const prefix = `${view.year}-${String(view.month + 1).padStart(2, '0')}`
+                const monthStart = `${prefix}-01`
+                const monthEnd = `${prefix}-31`
+                const hasEvents = events.some((e) => (e.endDate ?? e.date) >= monthStart && e.date <= monthEnd)
+                return hasEvents ? null : (
+                  <p className="mt-3 text-center text-sm text-gray-400 dark:text-gray-500">
+                    이 달에는 일정이 없습니다. 아래 전체 일정을 확인해 보세요.
+                  </p>
+                )
+              })()}
+            </>
           ) : (
             <DayView dayKey={dayKey} todayKey={todayKey} events={events} onSelect={setSelected} />
           )}
         </>
       ) : (
-        <div className="min-h-[28rem]" aria-hidden />
+        <CalendarSkeleton />
       )}
 
       {/* 카테고리 범례 */}
