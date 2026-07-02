@@ -55,7 +55,8 @@ export default function ExcalidrawViewer({ src }: { src: string }) {
     <div className="overflow-hidden h-[600px] rounded-lg border border-gray-200 dark:border-gray-700">
       {initialData && (
         <Excalidraw
-          initialData={initialData}
+          // 파일 JSON을 그대로 넘김 — ExcalidrawInitialDataState 타입은 moduleResolution 제약으로 import 불가
+          initialData={initialData as never}
           viewModeEnabled
           excalidrawAPI={(a) => setApi(a as unknown as ExcalidrawApi)}
         />

@@ -61,6 +61,13 @@ export const talks: Talk[] = [
     type: 'talk',
   },
   {
+    title: 'Git을 활용한 협업',
+    description: 'VCS 개념부터 브랜치·머지·Pull Request·커밋 컨벤션까지 5회차 Git 협업 실습',
+    date: '2022-07',
+    href: '/talks/git-collaboration',
+    type: 'lecture',
+  },
+  {
     title: 'Asynchronous JavaScript',
     description: '비동기 JavaScript에 대한 이해',
     date: '2022-10',
