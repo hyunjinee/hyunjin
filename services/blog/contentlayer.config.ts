@@ -41,15 +41,18 @@ const icon = fromHtmlIsomorphic(
   { fragment: true },
 )
 
+// frontmatter의 slug가 있으면 우선, 없으면 파일명을 소문자 kebab-case로 정규화
+const resolveSlug = (doc) => doc.slug ?? slug(doc._raw.flattenedPath.replace(/^.+?(\/)/, ''))
+
 const computedFields: ComputedFields = {
   readingTime: { type: 'json', resolve: (doc) => readingTime(doc.body.raw) },
   slug: {
     type: 'string',
-    resolve: (doc) => doc._raw.flattenedPath.replace(/^.+?(\/)/, ''),
+    resolve: resolveSlug,
   },
   path: {
     type: 'string',
-    resolve: (doc) => doc._raw.flattenedPath,
+    resolve: (doc) => `${doc._raw.flattenedPath.split('/')[0]}/${resolveSlug(doc)}`,
   },
   filePath: {
     type: 'string',
@@ -94,6 +97,7 @@ export const Blog = defineDocumentType(() => ({
   contentType: 'mdx',
   fields: {
     title: { type: 'string', required: true },
+    slug: { type: 'string' },
     date: { type: 'date', required: true },
     tags: { type: 'list', of: { type: 'string' }, default: [] },
     lastmod: { type: 'date' },
@@ -118,7 +122,7 @@ export const Blog = defineDocumentType(() => ({
         dateModified: doc.lastmod || doc.date,
         description: doc.summary,
         image: doc.images ? doc.images[0] : siteMetadata.socialBanner,
-        url: `${siteMetadata.siteUrl}/${doc._raw.flattenedPath}`,
+        url: `${siteMetadata.siteUrl}/${doc._raw.flattenedPath.split('/')[0]}/${resolveSlug(doc)}`,
       }),
     },
   },

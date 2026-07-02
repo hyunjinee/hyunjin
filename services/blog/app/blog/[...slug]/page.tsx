@@ -12,7 +12,8 @@ import PostSimple from '@/layouts/PostSimple';
 import PostLayout from '@/layouts/PostLayout';
 import PostBanner from '@/layouts/PostBanner';
 import siteMetadata from '@/data/siteMetadata';
-import { notFound } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
+import { slug as slugify } from 'github-slugger';
 
 const defaultLayout = 'PostLayout';
 
@@ -78,7 +79,8 @@ export async function generateMetadata({
 }
 
 export const generateStaticParams = async () => {
-  return allBlogs.map((p) => ({ slug: p.slug.split('/').map((name) => decodeURI(name)) }));
+  // slug는 computed field라 항상 존재하지만, frontmatter의 optional slug 필드와 이름이 겹쳐 타입이 optional로 생성됨
+  return allBlogs.map((p) => ({ slug: (p.slug as string).split('/').map((name) => decodeURI(name)) }));
 };
 
 export default async function Page({ params }: { params: Promise<{ slug: string[] }> }) {
@@ -89,6 +91,14 @@ export default async function Page({ params }: { params: Promise<{ slug: string[
   const sortedCoreContents = allCoreContent(sortPosts(allBlogs));
   const postIndex = sortedCoreContents.findIndex((p) => p.slug === slug);
   if (postIndex === -1) {
+    // 구 URL(한글 파일명·대소문자 변형)을 새 슬러그로 301
+    const requested = slugify(slug);
+    const legacy = allBlogs.find(
+      (p) => p.slug === requested || slugify(p._raw.flattenedPath.replace(/^.+?(\/)/, '')) === requested,
+    );
+    if (legacy) {
+      permanentRedirect(`/blog/${legacy.slug}`);
+    }
     return notFound();
   }
 
