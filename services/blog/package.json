@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@chenglou/pretext": "^0.0.3",
+    "@excalidraw/excalidraw": "^0.18.1",
     "@headlessui/react": "2.2.9",
     "@mdx-js/loader": "3.1.1",
     "@next/bundle-analyzer": "16.1.1",

@@ -47,6 +47,17 @@ const manualEvents: CalendarEvent[] = [
     url: 'https://www.salesforce.com/kr/events/world-tour/korea',
   },
   {
+    title: 'Maker Collective: Seoul IRL (Figma)',
+    date: '2026-07-14',
+    start: '16:00',
+    end: '21:00',
+    category: 'event',
+    description:
+      'Figma의 AI·디자인 통합 비전 공유 행사. Yuhki Yamashita(CPO) 키노트, Config 2026 Recap, 네트워킹. 등록코드 IB5KWZ',
+    location: 'Conrad Seoul, 국제금융로 10, 영등포구, 서울',
+    mapEmbed: true,
+  },
+  {
     title: 'Snowflake X Bright Data | 판교 Brunch & Crunch',
     date: '2026-06-24',
     start: '10:00',

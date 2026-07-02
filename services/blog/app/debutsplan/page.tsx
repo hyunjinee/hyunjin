@@ -1,5 +1,6 @@
 import CustomLink from '@/components/Link'
 import { genPageMetadata } from 'app/seo'
+import ExcalidrawViewer from './ExcalidrawViewer'
 
 export const metadata = genPageMetadata({ title: "Debut's Plan" })
 
@@ -56,6 +57,9 @@ export default function DebutsPlanPage() {
               className="w-full h-full"
             />
           </div>
+        </figure>
+        <figure className="mt-8">
+          <ExcalidrawViewer src="/images/debutsplan/audition.excalidraw" />
         </figure>
       </section>
     </div>
