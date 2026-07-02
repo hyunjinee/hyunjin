@@ -11,7 +11,7 @@ type Experience = {
   role: string
   link?: string
   logos?: { src: string; darkInvert?: boolean; href: string; width: number; height: number }[]
-  projects: { name: string; bullets: string[] }[]
+  projects: { name: string; link?: string; bullets: string[] }[]
 }
 
 const experiences: Experience[] = [
@@ -43,6 +43,7 @@ const experiences: Experience[] = [
       },
       {
         name: "Debut's Plan 실시간 투표 서비스",
+        link: '/debutsplan',
         bullets: [],
       },
     ],
@@ -215,11 +216,19 @@ export default function Page() {
                 <div className="mt-3 space-y-4">
                   {exp.projects.map((project) => (
                     <div key={project.name}>
-                      {project.name && (
-                        <p className="text-sm font-medium text-gray-800 break-keep md:text-base dark:text-gray-200">
-                          {project.name}
-                        </p>
-                      )}
+                      {project.name &&
+                        (project.link ? (
+                          <Link
+                            href={project.link}
+                            className="text-sm font-medium text-gray-800 break-keep md:text-base dark:text-gray-200 transition-colors hover:text-primary-500 dark:hover:text-primary-400"
+                          >
+                            {project.name}
+                          </Link>
+                        ) : (
+                          <p className="text-sm font-medium text-gray-800 break-keep md:text-base dark:text-gray-200">
+                            {project.name}
+                          </p>
+                        ))}
                       <ul className={`${project.name ? 'mt-2' : ''} space-y-1.5`}>
                         {project.bullets.map((bullet) => (
                           <li

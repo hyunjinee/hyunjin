@@ -78,7 +78,7 @@ export default function TossbankPage() {
           </Link>
           <span className="text-gray-400 dark:text-gray-600">·</span>
           <CustomLink
-            href="/blog/낙관적 업데이트 순서제어"
+            href="/blog/optimistic-update-ordering"
             className="transition-colors text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
           >
             Optimistic Update 글 보기

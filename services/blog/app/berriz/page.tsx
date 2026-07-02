@@ -143,7 +143,7 @@ export default function BerrizPage() {
           </CustomLink>
           <span className="text-gray-400 dark:text-gray-600">·</span>
           <CustomLink
-            href="/blog/DeepLink"
+            href="/blog/deeplink"
             className="transition-colors text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
           >
             딥링크 기술 글
