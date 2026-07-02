@@ -43,9 +43,7 @@ const experiences: Experience[] = [
       },
       {
         name: "Debut's Plan 실시간 투표 서비스",
-        bullets: [
-          '글로벌 동기화 투표 시스템을 구축·운영하며, 타임존을 넘나드는 정확한 상태 관리와 실시간 업데이트를 보장했습니다.',
-        ],
+        bullets: [],
       },
     ],
   },
@@ -137,7 +135,7 @@ export default function Page() {
               <p className="mb-6 text-lg text-gray-600 md:text-xl dark:text-gray-400">Software Engineer</p>
 
               {/* 소개 */}
-              <div className="mb-6 space-y-3 text-sm text-gray-700 md:text-base dark:text-gray-300">
+              <div className="mb-6 space-y-3 text-base text-gray-700 dark:text-gray-300">
                 <p>
                   웹 페이지 위에 내 생각을 표현할 수 있다는 것에 매력을 느껴서 프론트엔드 개발을 좋아하게 되었습니다.
                 </p>
@@ -148,7 +146,7 @@ export default function Page() {
               </div>
 
               {/* 연락처 및 링크 */}
-              <div className="flex flex-wrap justify-center gap-3 text-sm md:gap-4 md:justify-start">
+              <div className="flex flex-wrap justify-center gap-3 text-base md:gap-4 md:justify-start">
                 <span className="text-gray-600 dark:text-gray-400">{siteMetadata.email}</span>
                 <span className="text-gray-400 dark:text-gray-600">·</span>
                 <Link
