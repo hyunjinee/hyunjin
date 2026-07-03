@@ -22,8 +22,10 @@ export default function GitCollaborationPage() {
         <h1 className="mb-4 text-3xl font-bold text-gray-900 md:text-4xl dark:text-gray-100">Git을 활용한 협업</h1>
         <p className="text-sm leading-7 text-gray-700 break-keep md:text-base dark:text-gray-300">
           충남대학교 구성원 대상 소프트웨어 교육 <strong>CNU SW Academy</strong>에서 TA로 Git·알고리즘 실습을
-          진행했습니다. 버전 관리의 개념부터 브랜치·머지·Pull Request·커밋 컨벤션까지, 협업에 필요한 Git을 5회차
-          실습으로 정리한 자료입니다.
+          진행했습니다.
+          <br />
+          버전 관리의 개념부터 브랜치·머지·Pull Request·커밋 컨벤션까지, 협업에 필요한 Git을 5회차 실습으로 정리한
+          자료입니다.
         </p>
       </header>
 
