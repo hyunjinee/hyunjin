@@ -81,11 +81,29 @@ function createTagCount(allBlogs) {
   writeFileSync('./app/tag-data.json', JSON.stringify(tagCount))
 }
 
+// MDX 원문에서 검색 매칭용 평문만 추출 (import/export·코드펜스·마크다운 기호 제거)
+function toSearchText(raw) {
+  if (!raw) return ''
+  return raw
+    .replace(/^(import|export)\s.*$/gm, '')
+    .replace(/```[\s\S]*?```/g, ' ')
+    .replace(/[#>*`_~|\-]+/g, ' ')
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
 function createSearchIndex(allBlogs) {
   if (siteMetadata?.search?.provider === 'kbar' && siteMetadata.search.kbarConfig.searchDocumentsPath) {
+    // pliny kbar는 keywords(=summary)로만 매칭하므로, 본문 평문을 keywords에 합쳐 본문 검색을 가능하게 함
+    const documents = allCoreContent(sortPosts(allBlogs)).map((doc) => {
+      const full = allBlogs.find((b) => b.slug === doc.slug)
+      const body = toSearchText(full?.body?.raw)
+      return { ...doc, summary: [doc.summary, body].filter(Boolean).join(' ') }
+    })
     writeFileSync(
       `public/${path.basename(siteMetadata.search.kbarConfig.searchDocumentsPath)}`,
-      JSON.stringify(allCoreContent(sortPosts(allBlogs))),
+      JSON.stringify(documents),
     )
     console.log('Local search index generated...')
   }
