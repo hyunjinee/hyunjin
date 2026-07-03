@@ -54,6 +54,26 @@ export default function GitCollaborationPage() {
             </div>
           ))}
         </div>
+        <div className="grid gap-6 mt-10 sm:grid-cols-2">
+          {[
+            { id: 'VadEWpLVnGU', title: '브랜치(Branch)' },
+            { id: 'elDrj5mauJU', title: '머지(Merge)' },
+          ].map((v) => (
+            <figure key={v.id}>
+              <div className="overflow-hidden border border-gray-200 rounded-lg aspect-video dark:border-gray-700">
+                <iframe
+                  src={`https://www.youtube-nocookie.com/embed/${v.id}`}
+                  title={v.title}
+                  loading="lazy"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                  className="w-full h-full"
+                />
+              </div>
+              <figcaption className="mt-2 text-sm text-gray-500 break-keep dark:text-gray-500">{v.title}</figcaption>
+            </figure>
+          ))}
+        </div>
       </section>
     </div>
   )

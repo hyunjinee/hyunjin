@@ -1,11 +1,11 @@
+import { readFile } from 'node:fs/promises'
+import path from 'node:path'
 import { notFound } from 'next/navigation'
 import CustomLink from '@/components/Link'
 import { genPageMetadata } from 'app/seo'
-import { NotionAPI } from 'notion-client'
+import type { ExtendedRecordMap } from 'notion-types'
 import NotionPage from '../NotionPage'
 import { materials } from '../materials'
-
-export const revalidate = 3600
 
 export function generateStaticParams() {
   return materials.map((m) => ({ id: m.id }))
@@ -20,13 +20,16 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
-  const material = materials.find((m) => m.id === id)
-  if (!material) notFound()
-
-  const notion = new NotionAPI()
-  const recordMap = await notion.getPage(material.notionPageId)
-
   const index = materials.findIndex((m) => m.id === id)
+  if (index === -1) notFound()
+
+  // Notion 스냅샷(레포 내 JSON) — 빌드·런타임 모두 네트워크 의존 없음
+  const raw = await readFile(
+    path.join(process.cwd(), 'app/talks/git-collaboration/records', `${materials[index].id}.json`),
+    'utf8',
+  )
+  const recordMap = JSON.parse(raw) as ExtendedRecordMap
+
   const prev = materials[index - 1]
   const next = materials[index + 1]
 
@@ -50,15 +53,13 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
         ) : (
           <span />
         )}
-        {next ? (
+        {next && (
           <CustomLink
             href={`/talks/git-collaboration/${next.id}`}
             className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
           >
             {next.title} →
           </CustomLink>
-        ) : (
-          <span />
         )}
       </nav>
     </div>
