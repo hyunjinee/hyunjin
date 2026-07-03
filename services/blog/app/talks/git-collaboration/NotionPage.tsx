@@ -2,6 +2,7 @@
 
 import 'react-notion-x/src/styles.css'
 import 'prismjs/themes/prism-tomorrow.css'
+import './notion-overrides.css'
 import type { ExtendedRecordMap } from 'notion-types'
 import { useTheme } from 'next-themes'
 import dynamic from 'next/dynamic'

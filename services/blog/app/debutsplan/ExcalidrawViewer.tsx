@@ -2,7 +2,7 @@
 
 import '@excalidraw/excalidraw/index.css'
 import dynamic from 'next/dynamic'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 // 손글씨 폰트를 CDN(esm.sh) 대신 로컬(public/excalidraw/fonts)에서 서빙
 if (typeof window !== 'undefined') {
@@ -30,6 +30,19 @@ const FOCUS = { minX: 6900, maxX: 11000, minY: 9600, maxY: 11500 }
 export default function ExcalidrawViewer({ src }: { src: string }) {
   const [initialData, setInitialData] = useState<SceneData | null>(null)
   const [api, setApi] = useState<ExcalidrawApi | null>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [isFullscreen, setIsFullscreen] = useState(false)
+
+  useEffect(() => {
+    const onChange = () => setIsFullscreen(document.fullscreenElement === containerRef.current)
+    document.addEventListener('fullscreenchange', onChange)
+    return () => document.removeEventListener('fullscreenchange', onChange)
+  }, [])
+
+  const toggleFullscreen = () => {
+    if (document.fullscreenElement) document.exitFullscreen()
+    else containerRef.current?.requestFullscreen()
+  }
 
   useEffect(() => {
     fetch(src)
@@ -52,7 +65,20 @@ export default function ExcalidrawViewer({ src }: { src: string }) {
   }, [api, initialData])
 
   return (
-    <div className="overflow-hidden h-[600px] rounded-lg border border-gray-200 dark:border-gray-700">
+    <div
+      ref={containerRef}
+      className={`relative overflow-hidden bg-white dark:bg-gray-900 ${
+        isFullscreen ? 'h-full' : 'h-[600px] rounded-lg border border-gray-200 dark:border-gray-700'
+      }`}
+    >
+      <button
+        type="button"
+        onClick={toggleFullscreen}
+        aria-label={isFullscreen ? '전체화면 종료' : '전체화면'}
+        className="absolute top-3 right-3 z-10 px-2.5 py-1.5 text-xs rounded-md border border-gray-300 bg-white/90 text-gray-600 shadow-sm hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-800/90 dark:text-gray-300 dark:hover:bg-gray-700"
+      >
+        {isFullscreen ? '✕ 닫기' : '⛶ 전체화면'}
+      </button>
       {initialData && (
         <Excalidraw
           // 파일 JSON을 그대로 넘김 — ExcalidrawInitialDataState 타입은 moduleResolution 제약으로 import 불가
