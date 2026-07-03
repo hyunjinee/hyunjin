@@ -105,12 +105,6 @@ type Writing = {
 const writings: Writing[] = [
   { title: 'DeepLink', desc: '딥링크 시스템(link.berriz.in) 설계', date: '2025-06-09', url: '/blog/deeplink' },
   {
-    title: 'SSR은 선택이 아니다',
-    desc: 'AI 크롤러 시대의 렌더링 전략',
-    date: '2026-04-20',
-    url: '/blog/ssr-is-not-optional',
-  },
-  {
     title: 'LLM 키우기',
     desc: '발표 · Kakao Entertainment FE Chapter Lightning Talk',
     date: '2025-02-20',
