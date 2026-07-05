@@ -1,3 +1,4 @@
+import { genPageMetadata } from 'app/seo'
 import Image from 'next/image'
 import DeckCarousel from './DeckCarousel'
 import ZoomableImage from './ZoomableImage'
@@ -17,6 +18,11 @@ const deckSlides = [
   ...Array.from({ length: 21 }, (_, n) => `/images/bclguide/decks/ir/slide-${String(n + 1).padStart(2, '0')}.png`),
   ...Array.from({ length: 8 }, (_, n) => `/images/bclguide/decks/intro/slide-${n + 1}.png`),
 ]
+
+export const metadata = genPageMetadata({
+  title: '방슐랭 가이드',
+  description: '1인 가구 중심 부동산 직거래 플랫폼 방슐랭 가이드',
+})
 
 export default function BclguidePage() {
   return (
