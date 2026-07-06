@@ -44,7 +44,9 @@ export async function generateMetadata({
   const publishedAt = new Date(post.date).toISOString();
   const modifiedAt = new Date(post.lastmod || post.date).toISOString();
   const authors = authorDetails.map((author) => author.name);
-  let imageList = [`${siteMetadata.siteUrl}/og?title=${encodeURIComponent(post.title)}`];
+  // 이미지 없는 글의 동적 OG 카드: 첫 태그를 subtitle로 넣어 글 주제를 노출
+  const ogSubtitle = post.tags?.[0] ? `&subtitle=${encodeURIComponent(post.tags[0])}` : '';
+  let imageList = [`${siteMetadata.siteUrl}/og?title=${encodeURIComponent(post.title)}${ogSubtitle}`];
   if (post.images) {
     imageList = typeof post.images === 'string' ? [post.images] : post.images;
   }
@@ -80,7 +82,10 @@ export async function generateMetadata({
 
 export const generateStaticParams = async () => {
   // slug는 computed field라 항상 존재하지만, frontmatter의 optional slug 필드와 이름이 겹쳐 타입이 optional로 생성됨
-  return allBlogs.map((p) => ({ slug: (p.slug as string).split('/').map((name) => decodeURI(name)) }));
+  // draft는 프로덕션에서 404 처리되므로 정적 경로에서 제외
+  return allBlogs
+    .filter((p) => !p.draft)
+    .map((p) => ({ slug: (p.slug as string).split('/').map((name) => decodeURI(name)) }));
 };
 
 export default async function Page({ params }: { params: Promise<{ slug: string[] }> }) {
