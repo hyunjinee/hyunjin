@@ -18,8 +18,13 @@ interface LayoutProps {
 }
 
 export default function PostMinimal({ content, next, prev, children }: LayoutProps) {
-  const { slug, title, images } = content
-  const displayImage = images && images.length > 0 ? images[0] : 'https://picsum.photos/seed/picsum/800/400'
+  const { slug, title, images, tags } = content
+  // 이미지가 없으면 동적 OG 카드로 대체(빈 배너 방지) — 첫 태그를 subtitle로 노출
+  const ogSubtitle = tags?.[0] ? `&subtitle=${encodeURIComponent(tags[0])}` : ''
+  const displayImage =
+    images && images.length > 0
+      ? images[0]
+      : `${siteMetadata.siteUrl}/og?title=${encodeURIComponent(title)}${ogSubtitle}`
   // cover: 16:9로 꽉 채워 크롭(Toss형, 16:9 제작 이미지용) / contain: 잘림 없이 전체 표시(가장자리 콘텐츠 이미지용)
   const bannerFit = (content as { bannerFit?: 'cover' | 'contain' }).bannerFit ?? 'contain'
 
@@ -27,11 +32,12 @@ export default function PostMinimal({ content, next, prev, children }: LayoutPro
     <SectionContainer>
       <ScrollTopAndComment />
       <article>
-        <div>
+        {/* 히어로·제목·본문 전부 700px 단일 컬럼으로 통일 */}
+        <div className="mx-auto max-w-[700px]">
           <div className="pb-10 space-y-1 text-center dark:border-gray-700">
             <div className="w-full">
               <div
-                className={`relative mx-auto aspect-video w-full max-w-3xl overflow-hidden rounded-lg ${
+                className={`relative aspect-video w-full overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 ${
                   bannerFit === 'contain' ? 'bg-gray-50 dark:bg-gray-800/40' : ''
                 }`}
               >
