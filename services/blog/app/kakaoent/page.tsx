@@ -224,11 +224,11 @@ export default function KakaoentPage() {
           {writings.map((w) => (
             <li key={w.title}>
               <CustomLink href={w.url} className="group flex flex-wrap gap-x-3 gap-y-0.5 items-baseline">
-                <span className="font-medium text-gray-900 transition-colors dark:text-gray-100 group-hover:text-primary-500">
+                <span className="text-base font-semibold text-gray-900 transition-colors md:text-lg dark:text-gray-100 group-hover:text-primary-500">
                   {w.title}
                 </span>
-                <span className="text-sm text-gray-500 dark:text-gray-400">{w.desc}</span>
-                <span className="ml-auto font-mono text-xs text-gray-400 dark:text-gray-600">{w.date}</span>
+                <span className="text-sm text-gray-500 md:text-base dark:text-gray-400">{w.desc}</span>
+                <span className="ml-auto font-mono text-sm text-gray-400 dark:text-gray-600">{w.date}</span>
               </CustomLink>
             </li>
           ))}
