@@ -25,7 +25,7 @@ const generateRss = (config, posts, page = 'feed.xml', language = config.languag
   <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
       <title>${escape(config.title)}</title>
-      <link>${config.siteUrl}/blog</link>
+      <link>${config.siteUrl}${page.startsWith('en/') ? '/en/blog' : '/blog'}</link>
       <description>${escape(config.description)}</description>
       <language>${language}</language>
       <managingEditor>${config.email} (${config.author})</managingEditor>

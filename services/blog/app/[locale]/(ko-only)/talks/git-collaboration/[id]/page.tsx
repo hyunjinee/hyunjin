@@ -25,7 +25,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 
   // Notion 스냅샷(레포 내 JSON) — 빌드·런타임 모두 네트워크 의존 없음
   const raw = await readFile(
-    path.join(process.cwd(), 'app/talks/git-collaboration/records', `${materials[index].id}.json`),
+    path.join(process.cwd(), 'app/[locale]/(ko-only)/talks/git-collaboration/records', `${materials[index].id}.json`),
     'utf8',
   )
   const recordMap = JSON.parse(raw) as ExtendedRecordMap
