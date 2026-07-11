@@ -15,14 +15,19 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale, tag: rawTag } = await params;
   const tag = decodeURI(rawTag);
+  const loc = isLocale(locale) ? locale : 'ko';
   return genPageMetadata({
     title: tag,
     description: `${siteMetadata.title} ${tag} tagged content`,
+    locale: loc,
     alternates: {
-      canonical: './',
-      types: {
-        'application/rss+xml': `${siteMetadata.siteUrl}${localePath(isLocale(locale) ? locale : 'ko', `/tags/${tag}/feed.xml`)}`,
-      },
+      canonical: `${siteMetadata.siteUrl}${localePath(loc, `/tags/${tag}`)}`,
+      // en 태그 피드는 생성되지 않으므로 ko에서만 RSS alternate 노출
+      ...(loc === 'ko' && {
+        types: {
+          'application/rss+xml': `${siteMetadata.siteUrl}${localePath(loc, `/tags/${tag}/feed.xml`)}`,
+        },
+      }),
     },
   });
 }

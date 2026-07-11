@@ -84,7 +84,7 @@ export async function generateMetadata({
       type: 'article',
       publishedTime: publishedAt,
       modifiedTime: modifiedAt,
-      url: './',
+      url: canonical,
       images: ogImages,
       authors: authors.length > 0 ? authors : [siteMetadata.author],
     },

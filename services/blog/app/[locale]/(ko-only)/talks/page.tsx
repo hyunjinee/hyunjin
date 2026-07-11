@@ -2,7 +2,7 @@ import { talks } from '@/data/talksData'
 import { genPageMetadata } from 'app/seo'
 import Link from '@/components/Link'
 
-export const metadata = genPageMetadata({ title: 'Talks' })
+export const metadata = genPageMetadata({ title: 'Talks', path: '/talks' })
 
 function formatDate(dateString: string) {
   const parts = dateString.split('-')

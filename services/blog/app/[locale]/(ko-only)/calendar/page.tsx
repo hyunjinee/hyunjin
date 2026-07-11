@@ -2,7 +2,7 @@ import { genPageMetadata } from 'app/seo'
 import { events } from '@/data/eventsData'
 import CalendarView from './CalendarView'
 
-export const metadata = genPageMetadata({ title: 'Calendar' })
+export const metadata = genPageMetadata({ title: 'Calendar', path: '/calendar' })
 
 export default function CalendarPage() {
   return (

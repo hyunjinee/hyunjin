@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { reports } from '@/data/reportsData'
 import VibeTip from './VibeTip'
 
-export const metadata = genPageMetadata({ title: 'Reports' })
+export const metadata = genPageMetadata({ title: 'Reports', path: '/reports' })
 
 export default function ReportsPage() {
   return (

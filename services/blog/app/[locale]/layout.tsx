@@ -19,7 +19,7 @@ import Footer from '@/components/Footer'
 import siteMetadata from '@/data/siteMetadata'
 import { ThemeProviders } from '../theme-providers'
 import BtoaPolyfill from '@/components/BtoaPolyfill'
-import { LOCALES, isLocale, type Locale } from '../../lib/posts'
+import { LOCALES, isLocale, type Locale } from 'lib/posts'
 
 export function generateStaticParams() {
   return LOCALES.map((locale) => ({ locale }))
@@ -35,14 +35,12 @@ export const metadata: Metadata = {
   openGraph: {
     title: '이현진 (Hyunjin Lee) — Software Engineer',
     description: siteMetadata.description,
-    url: './',
     siteName: siteMetadata.title,
     images: [`${siteMetadata.siteUrl}/og`],
     locale: 'ko_KR',
     type: 'website',
   },
   alternates: {
-    canonical: './',
     types: {
       'application/rss+xml': `${siteMetadata.siteUrl}/feed.xml`,
     },
