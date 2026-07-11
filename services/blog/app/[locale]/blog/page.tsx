@@ -1,27 +1,12 @@
-import ListLayout from '@/layouts/ListLayoutWithTags'
-import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
-import { allBlogs } from 'contentlayer/generated'
+import { coreListFor, isLocale } from 'lib/posts'
 import { genPageMetadata } from 'app/seo'
+import { notFound } from 'next/navigation'
 import Main from '../Main'
-
-const POSTS_PER_PAGE = 10
 
 export const metadata = genPageMetadata({ title: 'Blog' })
 
-export default function BlogPage() {
-  const posts = allCoreContent(sortPosts(allBlogs))
-  const pageNumber = 1
-  const initialDisplayPosts = posts.slice(POSTS_PER_PAGE * (pageNumber - 1), POSTS_PER_PAGE * pageNumber)
-  const pagination = {
-    currentPage: pageNumber,
-    totalPages: Math.ceil(posts.length / POSTS_PER_PAGE),
-  }
-
-  return <Main posts={posts} />
-  // <ListLayout
-  //   posts={posts}
-  //   initialDisplayPosts={initialDisplayPosts}
-  //   pagination={pagination}
-  //   title="All Posts"
-  // />
+export default async function BlogPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params
+  if (!isLocale(locale)) notFound()
+  return <Main posts={coreListFor(locale)} />
 }

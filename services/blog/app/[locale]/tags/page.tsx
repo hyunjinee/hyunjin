@@ -3,11 +3,15 @@ import Tag from '@/components/Tag';
 import { slug } from 'github-slugger';
 import tagData from 'app/tag-data.json';
 import { genPageMetadata } from 'app/seo';
+import { isLocale, localePath } from 'lib/posts';
+import { notFound } from 'next/navigation';
 
 export const metadata = genPageMetadata({ title: 'Tags', description: 'Things I blog about' });
 
-export default async function Page() {
-  const tagCounts = tagData as Record<string, number>;
+export default async function Page({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  if (!isLocale(locale)) notFound();
+  const tagCounts = (tagData as Record<string, Record<string, number>>)[locale];
   const tagKeys = Object.keys(tagCounts);
   const sortedTags = tagKeys.sort((a, b) => tagCounts[b] - tagCounts[a]);
   return (
@@ -25,7 +29,7 @@ export default async function Page() {
               <div key={t} className="mb-2 mr-5 mt-2">
                 <Tag text={t} />
                 <Link
-                  href={`/tags/${slug(t)}`}
+                  href={localePath(locale, `/tags/${slug(t)}`)}
                   className="-ml-2 text-sm font-semibold uppercase text-gray-600 dark:text-gray-300"
                   aria-label={`View posts tagged ${t}`}
                 >
