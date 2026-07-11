@@ -5,8 +5,9 @@ import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'bo
 import { Fragment, useState, useEffect, useRef } from 'react'
 import Link from './Link'
 import headerNavLinks from '@/data/headerNavLinks'
+import { localePath, type Locale } from 'lib/posts'
 
-const MobileNav = () => {
+const MobileNav = ({ locale = 'ko' }: { locale?: Locale }) => {
   const [navShow, setNavShow] = useState(false)
   const [mounted, setMounted] = useState(false)
   const navRef = useRef(null)
@@ -75,16 +76,18 @@ const MobileNav = () => {
                   ref={navRef}
                   className="flex overflow-y-auto flex-col items-start pt-2 pl-12 mt-8 h-full text-left basis-0"
                 >
-                  {headerNavLinks.map((link) => (
-                    <Link
-                      key={link.title}
-                      href={link.href}
-                      className="py-2 pr-4 mb-4 text-2xl font-bold tracking-widest text-gray-900 outline outline-0 hover:text-primary-500 dark:text-gray-100 dark:hover:text-primary-400"
-                      onClick={onToggleNav}
-                    >
-                      {link.title}
-                    </Link>
-                  ))}
+                  {headerNavLinks
+                    .filter((link) => locale === 'ko' || link.localized)
+                    .map((link) => (
+                      <Link
+                        key={link.title}
+                        href={link.localized ? localePath(locale, link.href) : link.href}
+                        className="py-2 pr-4 mb-4 text-2xl font-bold tracking-widest text-gray-900 outline outline-0 hover:text-primary-500 dark:text-gray-100 dark:hover:text-primary-400"
+                        onClick={onToggleNav}
+                      >
+                        {link.title}
+                      </Link>
+                    ))}
                 </nav>
 
                 <button

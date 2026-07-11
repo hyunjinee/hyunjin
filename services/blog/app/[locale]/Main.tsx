@@ -14,7 +14,8 @@ export default function Home({ posts }) {
         <ul className="divide-y divide-gray-200 dark:divide-gray-700">
           {!posts.length && 'No posts found.'}
           {posts.slice(0, MAX_DISPLAY).map((post) => {
-            const { slug, date, title, summary, tags } = post
+            const { slug, date, title, summary, tags, locale } = post
+            const href = locale === 'en' ? `/en/blog/${slug}` : `/blog/${slug}`
             return (
               <li key={slug} className="py-5">
                 <article>
@@ -29,7 +30,7 @@ export default function Home({ posts }) {
                       <div className="space-y-6">
                         <div>
                           <h2 className="text-2xl font-bold tracking-tight leading-8">
-                            <Link href={`/blog/${slug}`} className="text-gray-900 dark:text-gray-100">
+                            <Link href={href} className="text-gray-900 dark:text-gray-100">
                               <ViewTransition name={`title-${slug}`}>
                                 <span>{title}</span>
                               </ViewTransition>
@@ -45,7 +46,7 @@ export default function Home({ posts }) {
                       </div>
                       <div className="text-base font-medium leading-6">
                         <Link
-                          href={`/blog/${slug}`}
+                          href={href}
                           className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
                           aria-label={`Read more: "${title}"`}
                         >

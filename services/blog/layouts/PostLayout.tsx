@@ -6,7 +6,7 @@ import Link from '@/components/Link'
 import PageTitle from '@/components/PageTitle'
 import SectionContainer from '@/components/SectionContainer'
 import Image from '@/components/Image'
-import { slug as slugifyTag } from 'github-slugger'
+import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
 import ScrollTopAndComment from '@/components/ScrollTopAndComment'
 
@@ -122,13 +122,7 @@ export default function PostLayout({ content, authorDetails, next, prev, altLoca
                     <h2 className="text-xs tracking-wide text-gray-500 uppercase dark:text-gray-400">Tags</h2>
                     <div className="flex flex-wrap">
                       {tags.map((tag) => (
-                        <Link
-                          key={tag}
-                          href={withLocalePrefix(`tags/${slugifyTag(tag)}`)}
-                          className="mr-3 text-sm font-medium text-primary-500 uppercase hover:text-primary-600 dark:hover:text-primary-400"
-                        >
-                          {tag.split(' ').join('-')}
-                        </Link>
+                        <Tag key={tag} text={tag} />
                       ))}
                     </div>
                   </div>

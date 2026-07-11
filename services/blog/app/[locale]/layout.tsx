@@ -19,7 +19,7 @@ import Footer from '@/components/Footer'
 import siteMetadata from '@/data/siteMetadata'
 import { ThemeProviders } from '../theme-providers'
 import BtoaPolyfill from '@/components/BtoaPolyfill'
-import { LOCALES, isLocale } from '../../lib/posts'
+import { LOCALES, isLocale, type Locale } from '../../lib/posts'
 
 export function generateStaticParams() {
   return LOCALES.map((locale) => ({ locale }))
@@ -102,7 +102,7 @@ export default async function RootLayout({
           <Analytics analyticsConfig={siteMetadata.analytics as AnalyticsConfig} />
           <SectionContainer>
             <SearchProvider searchConfig={searchConfig}>
-              <Header />
+              <Header locale={locale as Locale} />
               <main className="flex-1">{children}</main>
               <NextAnalytics />
               <SpeedInsights />
