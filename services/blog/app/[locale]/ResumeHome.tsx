@@ -1,7 +1,5 @@
-import { allBlogs } from 'contentlayer/generated'
 import Image from 'next/image'
 import Link from 'next/link'
-import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
 import CustomLink from '@/components/Link'
 import siteMetadata from '@/data/siteMetadata'
 
@@ -103,10 +101,7 @@ const personJsonLd = {
   sameAs: [siteMetadata.github, siteMetadata.linkedin, siteMetadata.youtube].filter(Boolean),
 }
 
-export default function Page() {
-  const sortedPosts = sortPosts(allBlogs)
-  const posts = allCoreContent(sortedPosts)
-
+export default function ResumeHome() {
   return (
     <div className="divide-y divide-gray-200 dark:divide-gray-700">
       <script

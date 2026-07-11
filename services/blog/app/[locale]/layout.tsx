@@ -6,6 +6,7 @@ import 'remark-github-blockquote-alert/alert.css'
 import 'css/code-highlight.css'
 
 import type { Metadata } from 'next'
+import { notFound } from 'next/navigation'
 
 import { Analytics, AnalyticsConfig } from 'pliny/analytics'
 import { SearchProvider, SearchConfig } from 'pliny/search'
@@ -16,8 +17,13 @@ import Header from '@/components/Header'
 import SectionContainer from '@/components/SectionContainer'
 import Footer from '@/components/Footer'
 import siteMetadata from '@/data/siteMetadata'
-import { ThemeProviders } from './theme-providers'
+import { ThemeProviders } from '../theme-providers'
 import BtoaPolyfill from '@/components/BtoaPolyfill'
+import { LOCALES, isLocale } from '../../lib/posts'
+
+export function generateStaticParams() {
+  return LOCALES.map((locale) => ({ locale }))
+}
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteMetadata.siteUrl),
@@ -59,11 +65,28 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({
+  children,
+  params,
+}: {
+  children: React.ReactNode
+  params: Promise<{ locale: string }>
+}) {
+  const { locale } = await params
+  if (!isLocale(locale)) notFound()
+  const htmlLang = locale === 'en' ? 'en-US' : siteMetadata.language
+  const feedPath = locale === 'en' ? '/en/feed.xml' : '/feed.xml'
+  const searchConfig = {
+    ...(siteMetadata.search as SearchConfig),
+    kbarConfig: {
+      ...(siteMetadata.search as SearchConfig & { kbarConfig: object }).kbarConfig,
+      searchDocumentsPath: locale === 'en' ? 'search-en.json' : 'search.json',
+    },
+  } as SearchConfig
   const basePath = process.env.BASE_PATH || ''
 
   return (
-    <html lang={siteMetadata.language} className="scroll-smooth" suppressHydrationWarning>
+    <html lang={htmlLang} className="scroll-smooth" suppressHydrationWarning>
       <link rel="apple-touch-icon" sizes="76x76" href={`${basePath}/static/favicons/apple-touch-icon.png`} />
       <link rel="icon" type="image/png" sizes="32x32" href={`${basePath}/static/favicons/favicon-32x32.png`} />
       <link rel="icon" type="image/png" sizes="16x16" href={`${basePath}/static/favicons/favicon-16x16.png`} />
@@ -72,15 +95,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <meta name="msapplication-TileColor" content="#000000" />
       <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fff" />
       <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000" />
-      <link rel="alternate" type="application/rss+xml" href={`${basePath}/feed.xml`} />
-      <body
-        className="bg-white pl-[calc(100vw-100%)] text-black antialiased dark:bg-gray-950 dark:text-white h-full"
-      >
+      <link rel="alternate" type="application/rss+xml" href={`${basePath}${feedPath}`} />
+      <body className="bg-white pl-[calc(100vw-100%)] text-black antialiased dark:bg-gray-950 dark:text-white h-full">
         <BtoaPolyfill />
         <ThemeProviders>
           <Analytics analyticsConfig={siteMetadata.analytics as AnalyticsConfig} />
           <SectionContainer>
-            <SearchProvider searchConfig={siteMetadata.search as SearchConfig}>
+            <SearchProvider searchConfig={searchConfig}>
               <Header />
               <main className="flex-1">{children}</main>
               <NextAnalytics />
