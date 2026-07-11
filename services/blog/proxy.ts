@@ -48,5 +48,6 @@ export function proxy(request: NextRequest) {
 
 export const config = {
   // api·og·Next 내부·정적 파일(점 포함 경로: feed.xml, search.json, favicon 등)은 제외
+  // ponytail: 점 포함 slug(예: node.js)는 정적 파일과 구분 불가 → rewrite를 건너뛴다. 슬러그에 점이 필요하면 matcher를 정교화할 것
   matcher: ['/((?!api|og|_next|.*\\..*).*)'],
 }

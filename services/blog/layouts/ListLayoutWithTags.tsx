@@ -10,6 +10,7 @@ import Link from '@/components/Link'
 import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
 import tagData from 'app/tag-data.json'
+import { stripLocalePrefix } from 'lib/locale'
 
 interface PaginationProps {
   totalPages: number
@@ -23,11 +24,9 @@ interface ListLayoutProps {
 }
 
 function Pagination({ totalPages, currentPage }: PaginationProps) {
-  const pathname = usePathname()
-  const isEn = pathname === '/en' || pathname.startsWith('/en/')
-  const prefix = isEn ? '/en' : ''
-  const localPathname = isEn ? pathname.slice(3) || '/' : pathname
-  const basePath = localPathname.split('/')[1]
+  const { locale, path } = stripLocalePrefix(usePathname() ?? '/')
+  const prefix = locale === 'en' ? '/en' : ''
+  const basePath = path.split('/')[1]
   const prevPage = currentPage - 1 > 0
   const nextPage = currentPage + 1 <= totalPages
 
@@ -66,11 +65,10 @@ function Pagination({ totalPages, currentPage }: PaginationProps) {
 }
 
 export default function ListLayoutWithTags({ posts, title, initialDisplayPosts = [], pagination }: ListLayoutProps) {
-  const pathname = usePathname()
-  const isEn = pathname === '/en' || pathname.startsWith('/en/')
-  const prefix = isEn ? '/en' : ''
-  const locale = isEn ? 'en' : 'ko'
-  const localPathname = isEn ? pathname.slice(3) || '/' : pathname
+  const pathname = usePathname() ?? '/'
+  const { locale, path } = stripLocalePrefix(pathname)
+  const prefix = locale === 'en' ? '/en' : ''
+  const localPathname = path
   const tagCounts = (tagData as Record<string, Record<string, number>>)[locale]
   const tagKeys = Object.keys(tagCounts)
   const sortedTags = tagKeys.sort((a, b) => tagCounts[b] - tagCounts[a])

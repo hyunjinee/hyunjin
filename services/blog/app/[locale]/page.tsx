@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import siteMetadata from '@/data/siteMetadata'
-import { coreListFor, isLocale } from '../../lib/posts'
+import { coreListFor, isLocale } from 'lib/posts'
 import Main from './Main'
 import ResumeHome from './ResumeHome'
 

@@ -1,9 +1,9 @@
 import { allBlogs, type Blog } from 'contentlayer/generated'
 import { allCoreContent, sortPosts, type CoreContent } from 'pliny/utils/contentlayer'
+import { type Locale, LOCALES, isLocale, postUrl, localePath, stripLocalePrefix } from './locale'
 
-export type Locale = 'ko' | 'en'
-export const LOCALES: Locale[] = ['ko', 'en']
-export const isLocale = (v: string): v is Locale => (LOCALES as string[]).includes(v)
+// 기존 소비자 무파손을 위해 lib/locale 심볼을 re-export
+export { type Locale, LOCALES, isLocale, postUrl, localePath, stripLocalePrefix }
 
 export function postsForLocale(locale: Locale): Blog[] {
   return allBlogs.filter((p) => p.locale === locale)
@@ -30,15 +30,6 @@ export function pairOf(post: Blog): { ko: Blog; en: Blog } | undefined {
   }
   const ko = originalOf(post)
   return ko ? { ko, en: post } : undefined
-}
-
-export function postUrl(locale: Locale, slug: string): string {
-  return locale === 'en' ? `/en/blog/${slug}` : `/blog/${slug}`
-}
-
-export function localePath(locale: Locale, path: string): string {
-  if (locale === 'ko') return path
-  return path === '/' ? '/en' : `/en${path}`
 }
 
 export function findBySlug(locale: Locale, slug: string): Blog | undefined {

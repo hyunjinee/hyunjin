@@ -111,7 +111,9 @@ function createSearchIndex(allBlogs) {
       const documents = allCoreContent(sortPosts(localeBlogs)).map((doc) => {
         const full = localeBlogs.find((b) => b.slug === doc.slug)
         const body = toSearchText(full?.body?.raw)
-        return { ...doc, summary: [doc.summary, body].filter(Boolean).join(' ') }
+        // kbar는 '/'+path로 이동한다. en 문서의 path는 blog/<slug>라 무프리픽스 ko 글로 새므로 en 프리픽스를 강제
+        const path = loc === 'en' ? `en/blog/${doc.slug}` : doc.path
+        return { ...doc, path, summary: [doc.summary, body].filter(Boolean).join(' ') }
       })
       const filename = loc === 'ko' ? 'search.json' : 'search-en.json'
       writeFileSync(`public/${filename}`, JSON.stringify(documents))

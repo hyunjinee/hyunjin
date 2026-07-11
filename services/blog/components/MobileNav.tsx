@@ -5,7 +5,7 @@ import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'bo
 import { Fragment, useState, useEffect, useRef } from 'react'
 import Link from './Link'
 import headerNavLinks from '@/data/headerNavLinks'
-import { localePath, type Locale } from 'lib/posts'
+import { localePath, type Locale } from 'lib/locale'
 
 const MobileNav = ({ locale = 'ko' }: { locale?: Locale }) => {
   const [navShow, setNavShow] = useState(false)

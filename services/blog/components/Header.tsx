@@ -1,7 +1,7 @@
 import siteMetadata from '@/data/siteMetadata'
 import headerNavLinks from '@/data/headerNavLinks'
 import Logo from '@/data/logo.svg'
-import { localePath, type Locale } from 'lib/posts'
+import { localePath, type Locale } from 'lib/locale'
 import Link from './Link'
 import LocaleSwitcher from './LocaleSwitcher'
 import MobileNav from './MobileNav'

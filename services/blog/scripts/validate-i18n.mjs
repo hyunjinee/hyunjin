@@ -57,6 +57,10 @@ for (const dir of ['app', 'layouts', 'components']) {
     if (ALLOWED.has(rel)) continue
     const src = readFileSync(file, 'utf8')
     if (/\ballBlogs\b/.test(src)) err(`${rel}: allBlogs 직접 사용 금지 — lib/posts.ts 헬퍼를 사용하세요`)
+    // 클라이언트 번들에 allBlogs(contentlayer)가 새지 않도록: 'use client' 파일은 lib/posts 대신 lib/locale만 import
+    const isClient = /^\s*['"]use client['"]/m.test(src)
+    if (isClient && /from\s+['"][^'"]*lib\/posts['"]/.test(src))
+      err(`${rel}: 'use client' 파일은 lib/posts import 금지 — lib/locale을 사용하세요`)
   }
 }
 

@@ -2,6 +2,7 @@ import { ViewTransition } from 'react'
 import Link from '@/components/Link'
 import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
+import { postUrl, type Locale } from 'lib/locale'
 
 import { formatDate } from 'pliny/utils/formatDate'
 
@@ -15,7 +16,7 @@ export default function Home({ posts }) {
           {!posts.length && 'No posts found.'}
           {posts.slice(0, MAX_DISPLAY).map((post) => {
             const { slug, date, title, summary, tags, locale } = post
-            const href = locale === 'en' ? `/en/blog/${slug}` : `/blog/${slug}`
+            const href = postUrl(locale as Locale, slug)
             return (
               <li key={slug} className="py-5">
                 <article>
