@@ -43,6 +43,8 @@ lib/
 lib64/
 # Allow Next.js src/lib directories
 !**/src/lib/
+# Allow services/*/lib/ source directories
+!services/*/lib/
 parts/
 sdist/
 var/
