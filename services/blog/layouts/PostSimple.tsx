@@ -12,11 +12,12 @@ import ScrollTopAndComment from '@/components/ScrollTopAndComment'
 interface LayoutProps {
   content: CoreContent<Blog>
   children: ReactNode
-  next?: { path: string; title: string }
-  prev?: { path: string; title: string }
+  next?: { path: string; title: string; locale: string }
+  prev?: { path: string; title: string; locale: string }
+  altLocale?: { href: string; label: string }
 }
 
-export default function PostLayout({ content, next, prev, children }: LayoutProps) {
+export default function PostLayout({ content, next, prev, altLocale, children }: LayoutProps) {
   const { path, slug, date, title } = content
 
   return (
@@ -34,6 +35,13 @@ export default function PostLayout({ content, next, prev, children }: LayoutProp
                   </dd>
                 </div>
               </dl>
+              {altLocale && (
+                <div className="pt-2">
+                  <Link href={altLocale.href} className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
+                    {altLocale.label}
+                  </Link>
+                </div>
+              )}
               <div>
                 <PageTitle>{title}</PageTitle>
               </div>
@@ -53,7 +61,7 @@ export default function PostLayout({ content, next, prev, children }: LayoutProp
                 {prev && prev.path && (
                   <div className="pt-4 xl:pt-8">
                     <Link
-                      href={`/${prev.path}`}
+                      href={prev.locale === 'en' ? `/en/${prev.path}` : `/${prev.path}`}
                       className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
                       aria-label={`Previous post: ${prev.title}`}
                     >
@@ -64,7 +72,7 @@ export default function PostLayout({ content, next, prev, children }: LayoutProp
                 {next && next.path && (
                   <div className="pt-4 xl:pt-8">
                     <Link
-                      href={`/${next.path}`}
+                      href={next.locale === 'en' ? `/en/${next.path}` : `/${next.path}`}
                       className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
                       aria-label={`Next post: ${next.title}`}
                     >

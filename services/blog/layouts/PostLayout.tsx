@@ -6,7 +6,7 @@ import Link from '@/components/Link'
 import PageTitle from '@/components/PageTitle'
 import SectionContainer from '@/components/SectionContainer'
 import Image from '@/components/Image'
-import Tag from '@/components/Tag'
+import { slug as slugifyTag } from 'github-slugger'
 import siteMetadata from '@/data/siteMetadata'
 import ScrollTopAndComment from '@/components/ScrollTopAndComment'
 
@@ -24,14 +24,16 @@ const postDateTemplate: Intl.DateTimeFormatOptions = {
 interface LayoutProps {
   content: CoreContent<Blog>
   authorDetails: CoreContent<Authors>[]
-  next?: { path: string; title: string }
-  prev?: { path: string; title: string }
+  next?: { path: string; title: string; locale: string }
+  prev?: { path: string; title: string; locale: string }
+  altLocale?: { href: string; label: string }
   children: ReactNode
 }
 
-export default function PostLayout({ content, authorDetails, next, prev, children }: LayoutProps) {
-  const { filePath, path, slug, date, title, tags } = content
+export default function PostLayout({ content, authorDetails, next, prev, altLocale, children }: LayoutProps) {
+  const { filePath, path, slug, date, title, tags, locale } = content
   const basePath = path.split('/')[0]
+  const withLocalePrefix = (p: string) => (locale === 'en' ? `/en/${p}` : `/${p}`)
 
   return (
     <SectionContainer>
@@ -50,6 +52,13 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                   </dd>
                 </div>
               </dl>
+              {altLocale && (
+                <div className="pt-2">
+                  <Link href={altLocale.href} className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
+                    {altLocale.label}
+                  </Link>
+                </div>
+              )}
               <div>
                 <PageTitle>{title}</PageTitle>
               </div>
@@ -113,7 +122,13 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                     <h2 className="text-xs tracking-wide text-gray-500 uppercase dark:text-gray-400">Tags</h2>
                     <div className="flex flex-wrap">
                       {tags.map((tag) => (
-                        <Tag key={tag} text={tag} />
+                        <Link
+                          key={tag}
+                          href={withLocalePrefix(`tags/${slugifyTag(tag)}`)}
+                          className="mr-3 text-sm font-medium text-primary-500 uppercase hover:text-primary-600 dark:hover:text-primary-400"
+                        >
+                          {tag.split(' ').join('-')}
+                        </Link>
                       ))}
                     </div>
                   </div>
@@ -126,7 +141,7 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                           Previous Article
                         </h2>
                         <div className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
-                          <Link href={`/${prev.path}`}>{prev.title}</Link>
+                          <Link href={prev.locale === 'en' ? `/en/${prev.path}` : `/${prev.path}`}>{prev.title}</Link>
                         </div>
                       </div>
                     )}
@@ -136,7 +151,7 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                           Next Article
                         </h2>
                         <div className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
-                          <Link href={`/${next.path}`}>{next.title}</Link>
+                          <Link href={next.locale === 'en' ? `/en/${next.path}` : `/${next.path}`}>{next.title}</Link>
                         </div>
                       </div>
                     )}
@@ -145,7 +160,7 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
               </div>
               <div className="pt-4 xl:pt-8">
                 <Link
-                  href={`/${basePath}`}
+                  href={withLocalePrefix(basePath)}
                   className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
                   aria-label="Back to the blog"
                 >

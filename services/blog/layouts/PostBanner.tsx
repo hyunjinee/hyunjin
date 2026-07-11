@@ -13,11 +13,12 @@ import ScrollTopAndComment from '@/components/ScrollTopAndComment'
 interface LayoutProps {
   content: CoreContent<Blog>
   children: ReactNode
-  next?: { path: string; title: string }
-  prev?: { path: string; title: string }
+  next?: { path: string; title: string; locale: string }
+  prev?: { path: string; title: string; locale: string }
+  altLocale?: { href: string; label: string }
 }
 
-export default function PostMinimal({ content, next, prev, children }: LayoutProps) {
+export default function PostMinimal({ content, next, prev, altLocale, children }: LayoutProps) {
   const { slug, title, images, tags } = content
   // 이미지가 없으면 동적 OG 카드로 대체(빈 배너 방지) — 첫 태그를 subtitle로 노출
   const ogSubtitle = tags?.[0] ? `&subtitle=${encodeURIComponent(tags[0])}` : ''
@@ -57,6 +58,13 @@ export default function PostMinimal({ content, next, prev, children }: LayoutPro
                 </ViewTransition>
               </PageTitle>
             </div>
+            {altLocale && (
+              <div className="pt-2">
+                <Link href={altLocale.href} className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
+                  {altLocale.label}
+                </Link>
+              </div>
+            )}
           </div>
           <div className="py-4 max-w-none prose dark:prose-invert">{children}</div>
           {/* {siteMetadata.comments && (
@@ -69,7 +77,7 @@ export default function PostMinimal({ content, next, prev, children }: LayoutPro
               {prev && prev.path && (
                 <div className="pt-4 xl:pt-8">
                   <Link
-                    href={`/${prev.path}`}
+                    href={prev.locale === 'en' ? `/en/${prev.path}` : `/${prev.path}`}
                     className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
                     aria-label={`Previous post: ${prev.title}`}
                   >
@@ -80,7 +88,7 @@ export default function PostMinimal({ content, next, prev, children }: LayoutPro
               {next && next.path && (
                 <div className="pt-4 xl:pt-8">
                   <Link
-                    href={`/${next.path}`}
+                    href={next.locale === 'en' ? `/en/${next.path}` : `/${next.path}`}
                     className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
                     aria-label={`Next post: ${next.title}`}
                   >
