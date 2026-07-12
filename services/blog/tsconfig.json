@@ -21,7 +21,11 @@
       "@/data/*": ["data/*"],
       "@/layouts/*": ["layouts/*"],
       "@/css/*": ["css/*"],
-      "contentlayer/generated": ["./.contentlayer/generated"]
+      "contentlayer/generated": ["./.contentlayer/generated"],
+      // moduleResolution "node"는 @opennextjs/cloudflare의 package.json "exports" 서브패스를 못 읽음(pliny도 exports 의존이라 "bundler"로 전면 전환 불가) — 이 서브패스만 직접 매핑
+      "@opennextjs/cloudflare/overrides/incremental-cache/static-assets-incremental-cache": [
+        "node_modules/@opennextjs/cloudflare/dist/api/overrides/incremental-cache/static-assets-incremental-cache.d.ts"
+      ]
     },
     "plugins": [
       {

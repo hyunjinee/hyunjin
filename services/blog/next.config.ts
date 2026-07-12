@@ -1,5 +1,5 @@
-import { withContentlayer } from 'next-contentlayer2'
 import { NextConfig } from 'next'
+import { initOpenNextCloudflareForDev } from '@opennextjs/cloudflare'
 import createMDX from '@next/mdx'
 import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
@@ -65,7 +65,6 @@ const securityHeaders = [
 
 const output = process.env.EXPORT ? 'export' : undefined
 const basePath = process.env.BASE_PATH || undefined
-const unoptimized = process.env.UNOPTIMIZED ? true : undefined
 
 const config: NextConfig = {
   output,
@@ -84,7 +83,8 @@ const config: NextConfig = {
         hostname: 'velog.velcdn.com',
       },
     ],
-    unoptimized,
+    // Cloudflare Workers엔 next/image 최적화 서버가 없음 — OpenNext Cloudflare 권장 설정
+    unoptimized: true,
   },
   async headers() {
     return [
@@ -140,4 +140,12 @@ const withMDX = createMDX({
       },
 })
 
-export default withContentlayer(withBundleAnalyzer(withMDX(config)))
+initOpenNextCloudflareForDev()
+
+// ponytail: withContentlayer(next-contentlayer2)의 webpack 플러그인은 Turbopack(dev/build 둘 다) 하에서 무동작 —
+// 콘텐츠 생성은 이미 package.json의 `contentlayer2 build`/`contentlayer2 dev` CLI 호출이 전담한다.
+// 이 래퍼가 next.config.ts에 남아있으면 next-contentlayer2 → @contentlayer2/core(markdown-wasm, fsevents)가
+// 정적 import로 딸려 들어와 OpenNext Cloudflare의 esbuild Worker 번들링이 실패한다 (ERROR: Could not resolve
+// "markdown-wasm/dist/markdown.node.js" / No loader for ".node" files). Turbopack 전용 워크플로가 아니게 되면
+// (예: `dev:no-turbo`에서 webpack 기반 자동 재생성이 필요해지면) withContentlayer를 다시 도입할 것.
+export default withBundleAnalyzer(withMDX(config))

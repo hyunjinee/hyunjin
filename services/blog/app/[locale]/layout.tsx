@@ -10,8 +10,6 @@ import { notFound } from 'next/navigation'
 
 import { Analytics, AnalyticsConfig } from 'pliny/analytics'
 import { SearchProvider, SearchConfig } from 'pliny/search'
-import { SpeedInsights } from '@vercel/speed-insights/next'
-import { Analytics as NextAnalytics } from '@vercel/analytics/next'
 
 import Header from '@/components/Header'
 import SectionContainer from '@/components/SectionContainer'
@@ -36,7 +34,7 @@ export const metadata: Metadata = {
     title: '이현진 (Hyunjin Lee) — Software Engineer',
     description: siteMetadata.description,
     siteName: siteMetadata.title,
-    images: [`${siteMetadata.siteUrl}/og`],
+    images: [`${siteMetadata.siteUrl}/og/default.png`],
     locale: 'ko_KR',
     type: 'website',
   },
@@ -59,7 +57,7 @@ export const metadata: Metadata = {
   twitter: {
     title: '이현진 (Hyunjin Lee) — Software Engineer',
     card: 'summary_large_image',
-    images: [`${siteMetadata.siteUrl}/og`],
+    images: [`${siteMetadata.siteUrl}/og/default.png`],
   },
 }
 
@@ -102,8 +100,6 @@ export default async function RootLayout({
             <SearchProvider searchConfig={searchConfig}>
               <Header locale={locale as Locale} />
               <main className="flex-1">{children}</main>
-              <NextAnalytics />
-              <SpeedInsights />
             </SearchProvider>
             <Footer />
           </SectionContainer>

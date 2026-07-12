@@ -1,0 +1,4 @@
+# Cloudflare Workers 정적 자산은 파일당 25MiB 제한 — 초과 파일은 업로드에서 제외 (배포 자체가 막힘)
+# ponytail: 제외된 영상은 프로덕션에서 404. 서빙이 필요해지면 R2 등 외부 호스팅으로 이전할 것
+images/debutsplan/after-midnight-flow.mov
+talks/enterthon-2025/assets/**/*.mov

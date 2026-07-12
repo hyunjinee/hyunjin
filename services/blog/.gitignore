@@ -18,12 +18,19 @@
 public/sitemap.xml
 .vercel
 
+# opennext / cloudflare
+/.open-next/
+/.wrangler/
+
 # production
 /build
 *.xml
 
 # rss feed
 /public/feed.xml
+
+# og images (build-time generated)
+/public/og/
 
 # search
 /public/search.json
