@@ -1,5 +1,4 @@
 /
-/_not-found
 /2025
 /2026
 /404
@@ -41,21 +40,9 @@
 /static/reports/2026-03-04_2026-04-05
 /static/reports/2026-05-20_2026-06-08
 /tags
-/tags/agent
 /tags/ai
-/tags/architecture
-/tags/aws
-/tags/claude-code
-/tags/cloudfront
-/tags/geo
-/tags/git
-/tags/infra
-/tags/memory
-/tags/nextjs
 /tags/react
 /tags/react-query
-/tags/seo
-/tags/ssr
 /tags/web
 /tags/회고
 /talks
