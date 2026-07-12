@@ -18,9 +18,22 @@ function readHtml(rootDir, slugPath) {
   return readFileSync(found, 'utf-8')
 }
 
+// Next(react-dom/server)는 속성값의 작은따옴표까지 개체참조로 이스케이프하지만(&#x27;), Astro는 HTML 사양대로
+// 큰따옴표 속성 안의 작은따옴표는 이스케이프하지 않는다(services/blog/src/pages/debutsplan.astro의 "Debut's Plan"
+// og:title에서 실측: dist는 리터럴 ', out은 &#x27;) — 렌더링 결과는 동일한 텍스트인데 직렬화 바이트만 다르다.
+// 비교 전 디코드해 이 직렬화 차이를 오탐에서 제외한다.
+function decodeEntities(str) {
+  return str
+    .replace(/&#x27;|&#39;|&apos;/gi, "'")
+    .replace(/&quot;/g, '"')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&amp;/g, '&')
+}
+
 function attr(tag, name) {
   const m = tag.match(new RegExp(`${name}="([^"]*)"`, 'i'))
-  return m ? m[1] : undefined
+  return m ? decodeEntities(m[1]) : undefined
 }
 
 function extractFields(html) {
