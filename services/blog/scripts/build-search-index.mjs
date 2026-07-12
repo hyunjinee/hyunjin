@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // contentlayer.config.ts:96-124 (toSearchText + createSearchIndex) 이식.
 // Task 1의 lib(astro:content 기반)는 astro 런타임 밖에서 import할 수 없으므로,
-// scripts/lib/collect-posts.mjs(공유 node 파서, Task 5에서 추출)로 data/blog를 읽는다.
+// scripts/shared/collect-posts.mjs(공유 node 파서, Task 5에서 추출)로 data/blog를 읽는다.
 import { writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
