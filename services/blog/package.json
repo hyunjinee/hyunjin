@@ -22,7 +22,9 @@
     "format": "biome format --write .",
     "check": "biome check --write .",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "astro:dev": "astro dev",
+    "astro:build": "astro build"
   },
   "dependencies": {
     "@chenglou/pretext": "^0.0.3",
@@ -79,6 +81,8 @@
     "zod": "4.2.1"
   },
   "devDependencies": {
+    "@astrojs/mdx": "^7.0.2",
+    "@astrojs/react": "^6.0.1",
     "@biomejs/biome": "2.3.12",
     "@chromatic-com/storybook": "3.2.4",
     "@resvg/resvg-js": "^2.6.2",
@@ -90,12 +94,14 @@
     "@storybook/react": "8.5.3",
     "@storybook/test": "8.5.3",
     "@svgr/webpack": "8.0.1",
+    "@tailwindcss/vite": "^4.3.2",
     "@types/mdx": "2.0.12",
     "@types/negotiator": "^0.6.4",
     "@types/react": "19.2.7",
     "@types/react-dom": "19.2.3",
     "@typescript-eslint/eslint-plugin": "6.1.0",
     "@typescript-eslint/parser": "6.1.0",
+    "astro": "^7.0.7",
     "babel-plugin-react-compiler": "19.0.0-beta-ebf51a3-20250411",
     "baseline-browser-mapping": "2.9.11",
     "concurrently": "9.1.2",

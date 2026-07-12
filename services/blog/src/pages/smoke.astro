@@ -1,0 +1,22 @@
+---
+// 임시 검증 페이지 — scripts/smoke-collections.mjs가 build 산출물을 파싱해 slug 계약을 확인한다
+// 파일명에 '_' 접두사를 쓰지 않는 이유: Astro는 pages/ 하위 '_'로 시작하는 경로를 라우트에서 제외한다
+// (node_modules/astro/dist/core/util.js isPublicRoute)
+import { getCollection } from 'astro:content'
+import { entryLocale, entrySlug, postsForLocale } from '../lib/posts'
+
+const rawEntries = await getCollection('blog')
+const koRaw = rawEntries.filter((entry) => entryLocale(entry) === 'ko').length
+const enRaw = rawEntries.filter((entry) => entryLocale(entry) === 'en').length
+
+const koPosts = await postsForLocale('ko')
+const enPosts = await postsForLocale('en')
+
+// biome-ignore lint/correctness/noUnusedVariables: 아래 astro 템플릿(frontmatter 밖)에서 사용 — biome은 .astro 템플릿을 보지 않는다
+const data = {
+  ko: { raw: koRaw, slugs: koPosts.map(entrySlug) },
+  en: { raw: enRaw, slugs: enPosts.map(entrySlug) },
+}
+---
+
+<pre id="smoke-data">{JSON.stringify(data)}</pre>

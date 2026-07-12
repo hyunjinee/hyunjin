@@ -53,4 +53,8 @@ yarn-error.log*
 # Contentlayer
 .contentlayer
 
+# Astro
+/dist/
+.astro/
+
 *storybook.log
