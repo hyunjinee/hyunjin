@@ -1,10 +1,12 @@
 /**
- * i18n middleware for locale routing.
- * ADR-0003: Next 16에서 deprecated지만 @opennextjs/cloudflare 호환을 위해 middleware 규약 사용
+ * i18n middleware for locale routing — 이제 `next dev` 전용.
+ * 프로덕션(output: 'export')에선 실행되지 않는다: 무프리픽스 ko는 postexport.mjs의 트리 병합,
+ * /ko 정규화·legacy 301은 _redirects가 대신한다. Accept-Language 첫 방문 감지는 export에서 미지원(보류).
  */
-import { type NextRequest, NextResponse } from 'next/server'
+
 import { match } from '@formatjs/intl-localematcher'
 import Negotiator from 'negotiator'
+import { type NextRequest, NextResponse } from 'next/server'
 
 const LOCALES = ['ko', 'en']
 const DEFAULT_LOCALE = 'ko'

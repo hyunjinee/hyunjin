@@ -23,9 +23,7 @@ export default function ReportViewer({ report }: { report: Report }) {
       <div className="flex-shrink-0 px-4 py-3 bg-gray-100 border-b border-gray-200 dark:bg-gray-900 dark:border-gray-700">
         <div className="flex justify-between items-center mx-auto max-w-7xl">
           <div className="flex-1 min-w-0">
-            <h1 className="text-xl font-bold text-gray-900 truncate dark:text-gray-100">
-              {report.title}
-            </h1>
+            <h1 className="text-xl font-bold text-gray-900 truncate dark:text-gray-100">{report.title}</h1>
             <div className="flex items-center gap-2 mt-0.5 text-sm">
               <p className="text-gray-600 dark:text-gray-400">
                 {report.period.from} ~ {report.period.to}
@@ -46,7 +44,7 @@ export default function ReportViewer({ report }: { report: Report }) {
       </div>
       <div className="overflow-hidden flex-1">
         <iframe
-          src={`/reports/${report.slug}.html`}
+          src={`/static/reports/${report.slug}.html`}
           className="w-full h-full border-0"
           title={report.title}
           allow="fullscreen"

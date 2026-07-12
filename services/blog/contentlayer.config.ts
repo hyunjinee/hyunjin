@@ -1,29 +1,29 @@
-import { defineDocumentType, ComputedFields, makeSource } from 'contentlayer2/source-files'
+import { type ComputedFields, defineDocumentType, makeSource } from 'contentlayer2/source-files'
 import { writeFileSync } from 'fs'
-import readingTime from 'reading-time'
 import { slug } from 'github-slugger'
-import path from 'path'
 import { fromHtmlIsomorphic } from 'hast-util-from-html-isomorphic'
-// Remark packages
-import remarkGfm from 'remark-gfm'
-import remarkMath from 'remark-math'
-import { remarkAlert } from 'remark-github-blockquote-alert'
-import remarkCjkFriendly from 'remark-cjk-friendly'
+import path from 'path'
 import {
-  remarkExtractFrontmatter,
-  remarkCodeTitles,
-  remarkImgToJsx,
   extractTocHeadings,
+  remarkCodeTitles,
+  remarkExtractFrontmatter,
+  remarkImgToJsx,
 } from 'pliny/mdx-plugins/index.js'
+import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer.js'
+import readingTime from 'reading-time'
+import rehypeAutolinkHeadings from 'rehype-autolink-headings'
+import rehypeCitation from 'rehype-citation'
+import rehypeKatex from 'rehype-katex'
+import rehypePresetMinify from 'rehype-preset-minify'
+import rehypePrismPlus from 'rehype-prism-plus'
 // Rehype packages
 import rehypeSlug from 'rehype-slug'
-import rehypeAutolinkHeadings from 'rehype-autolink-headings'
-import rehypeKatex from 'rehype-katex'
-import rehypeCitation from 'rehype-citation'
-import rehypePrismPlus from 'rehype-prism-plus'
-import rehypePresetMinify from 'rehype-preset-minify'
+import remarkCjkFriendly from 'remark-cjk-friendly'
+// Remark packages
+import remarkGfm from 'remark-gfm'
+import { remarkAlert } from 'remark-github-blockquote-alert'
+import remarkMath from 'remark-math'
 import siteMetadata from './data/siteMetadata'
-import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer.js'
 
 const root = process.cwd()
 const isProduction = process.env.NODE_ENV === 'production'
@@ -98,7 +98,7 @@ function toSearchText(raw) {
   return raw
     .replace(/^(import|export)\s.*$/gm, '')
     .replace(/```[\s\S]*?```/g, ' ')
-    .replace(/[#>*`_~|\-]+/g, ' ')
+    .replace(/[#>*`_~|-]+/g, ' ')
     .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
     .replace(/\s+/g, ' ')
     .trim()
@@ -107,7 +107,8 @@ function toSearchText(raw) {
 function createSearchIndex(allBlogs) {
   if (siteMetadata?.search?.provider === 'kbar' && siteMetadata.search.kbarConfig.searchDocumentsPath) {
     for (const loc of LOCALES) {
-      const localeBlogs = allBlogs.filter((b) => resolveDocLocale(b) === loc)
+      // draft는 검색 인덱스에서도 제외 — search.json은 공개 배포되므로 제목·본문이 새면 안 된다
+      const localeBlogs = allBlogs.filter((b) => resolveDocLocale(b) === loc && b.draft !== true)
       const documents = allCoreContent(sortPosts(localeBlogs)).map((doc) => {
         const full = localeBlogs.find((b) => b.slug === doc.slug)
         const body = toSearchText(full?.body?.raw)
@@ -188,7 +189,15 @@ export default makeSource({
   documentTypes: [Blog, Authors],
   mdx: {
     cwd: process.cwd(),
-    remarkPlugins: [remarkExtractFrontmatter, remarkGfm, remarkCjkFriendly, remarkCodeTitles, remarkMath, remarkImgToJsx, remarkAlert],
+    remarkPlugins: [
+      remarkExtractFrontmatter,
+      remarkGfm,
+      remarkCjkFriendly,
+      remarkCodeTitles,
+      remarkMath,
+      remarkImgToJsx,
+      remarkAlert,
+    ],
     rehypePlugins: [
       rehypeSlug,
       [

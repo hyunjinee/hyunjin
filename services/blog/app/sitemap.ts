@@ -2,6 +2,9 @@ import { LOCALES, localePath, originalOf, postsForLocale, postUrl, translationFo
 import type { MetadataRoute } from 'next'
 import siteMetadata from '@/data/siteMetadata'
 
+// output: 'export'는 route handler가 정적임을 명시해야 빌드됨
+export const dynamic = 'force-static'
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const siteUrl = siteMetadata.siteUrl
   const abs = (p: string) => `${siteUrl}${p}`

@@ -1,0 +1,15 @@
+# Cloudflare Workers Static Assets가 파싱하는 헤더 규칙 (자산으로 서빙되지 않음)
+# next.config.ts의 securityHeaders와 동일한 값 — 둘 다 고칠 것
+
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' giscus.app analytics.umami.is cloud.umami.is unpkg.com; style-src 'self' 'unsafe-inline'; img-src * blob: data:; media-src 'self' *.s3.amazonaws.com; connect-src *; font-src 'self'; frame-src 'self' giscus.app codesandbox.io *.codesandbox.io www.youtube-nocookie.com www.youtube.com www.google.com maps.google.com; worker-src 'self' blob:;
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: SAMEORIGIN
+  X-Content-Type-Options: nosniff
+  X-DNS-Prefetch-Control: on
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+
+# /talks/* 전용 제한 CSP(구 vercel.json)는 이식하지 않는다: URL 글롭이 정적 덱(/talks/x/)뿐 아니라
+# Next 뷰어 페이지(/talks/x)까지 덮어 YouTube 임베드·umami가 차단됨. 현 프로덕션도 전역 CSP만 적용 중.
+# 덱만 조이고 싶으면 reports처럼 public/static/talks/로 옮긴 뒤 /static/talks/*에 걸 것.
