@@ -52,6 +52,7 @@ export function allEntries() {
       draft: Boolean(data.draft),
       title: data.title,
       date: new Date(data.date),
+      lastmod: data.lastmod ? new Date(data.lastmod) : undefined, // validate-i18n.mjs stale 경고용
       tags: data.tags ?? [],
       summary: data.summary || undefined, // contentlayer가 남기던 summary:null 버그(RSS에 리터럴 "null" 출력)를 옮기지 않음
       translationOf: data.translationOf,
