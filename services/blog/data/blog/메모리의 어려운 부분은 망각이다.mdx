@@ -1,0 +1,232 @@
+---
+title: 메모리의 어려운 부분은 망각이다
+slug: forgetting-is-the-hard-part-of-memory
+date: '2026-06-20'
+tags: ['ai', 'claude-code', 'agent', 'memory']
+layout: PostSimple
+summary: '내 ~/.claude 디렉터리에는 Claude가 나에 대해 적어둔 메모리 파일이 쌓여 있다. 더 많이 기억할수록 똑똑해질 거라 믿었는데, Anthropic 공식 문서는 정반대를 말한다 — "더 많은 컨텍스트가 자동으로 더 낫지는 않다." 소비자 Claude.ai, Claude Code, 개발자 API 세 표면을 전부 뜯어보니 진짜 난제는 회상이 아니라 망각이었다. 그리고 세 표면은 결국 "누가 버릴 권한을 갖는가"라는 한 질문을 서로 다르게 풀고 있었다.'
+---
+
+내 `~/.claude` 디렉터리에는 Claude가 나에 대해 적어둔 메모리 파일이 쌓여 있다. 내가 쓴 게 아니다. Claude가 세션을 거치며 스스로 적은 노트다.
+
+`feedback_scope_control.md`를 열면 frontmatter에 `type: feedback`이 박혀 있고, 본문은 딱 한 가지 사실만 말한다.
+
+```markdown
+커밋 시 staged 파일만 커밋할 것. 추가 파일 staging이나 push는 명시적 요청 없이 절대 금지.
+
+**Why:** 여러 세션에서 Claude가 요청하지 않은 파일을 staging하거나,
+commit+push를 한번에 실행하여 git reset이 필요했음.
+
+**How to apply:** git 작업 시 항상 사용자가 명시한 파일/동작만 수행.
+```
+
+한 파일에 한 사실. 그 위에는 `MEMORY.md`라는 인덱스가 있어서, 각 파일을 한 줄짜리 hook으로 가리킨다. 세션이 시작될 때는 이 인덱스만 먼저 로드된다.
+
+어느 순간 나는 이 파일들이 늘어나는 걸 보며 불안해졌다. 더 많이 기억할수록 더 똑똑해질 거라고 믿었기 때문이다. 그런데 Anthropic 공식 문서는 정반대를 말한다.
+
+> "more context isn't automatically better. As token count grows, accuracy and recall degrade, a phenomenon known as context rot."
+
+더 많은 컨텍스트가 자동으로 더 낫지는 않다. 토큰이 늘수록 정확도와 리콜이 떨어진다. 이름까지 붙어 있다 — context rot.
+
+소비자 Claude.ai의 메모리도, Claude Code의 메모리도, 개발자 API의 memory tool도 전부 뜯어봤다. 셋은 생긴 게 전혀 달랐다. 그런데 같은 곳에서 막혀 있었다. 기억하는 건 쉬웠다. 어려운 건 잊는 거였다.
+
+이 글은 그 깨달음의 기록이다. 메모리의 어려운 부분은 회상이 아니라 망각이고, Claude의 세 표면은 결국 "누가 버릴 권한을 갖는가"라는 한 질문을 서로 다르게 풀고 있다는 이야기다.
+
+---
+
+## 1. 컨텍스트는 메모리가 아니다
+
+먼저 흔한 혼동 하나를 떼어내야 한다. 컨텍스트 윈도우와 메모리는 다른 것이다.
+
+Anthropic은 컨텍스트 윈도우를 이렇게 정의한다. 모델이 응답을 생성할 때 참조할 수 있는 모든 텍스트. 그리고 한 단어를 덧붙인다.
+
+> "...instead represents a working memory for the model."
+
+working memory. 작업 기억. 단어가 이미 답을 말하고 있다. 책상 위에 펼쳐둔 종이는 지금 이 작업을 위한 것이지, 서랍에 보관하는 기록이 아니다. Claude Code는 매 세션을 비어 있는 컨텍스트 윈도우로 시작한다. 어제의 대화는 창 안에 없다.
+
+그러면 창을 키우면 되지 않나? 1M 토큰 컨텍스트가 GA가 됐는데, 다 집어넣으면 그게 메모리 아닌가?
+
+아니다. 두 가지 이유가 있다.
+
+첫째, 컨텍스트는 유한 자원이다. Anthropic의 컨텍스트 엔지니어링 문서는 못을 박는다.
+
+> "Context, therefore, must be treated as a finite resource with diminishing marginal returns."
+
+한계효용이 체감하는 유한 자원. 트랜스포머는 모든 토큰이 다른 모든 토큰에 attend하므로, n개 토큰에 n² 쌍관계가 생긴다. 토큰이 늘수록 모델의 "attention budget"이 토큰마다 얇게 발린다. 목표는 컨텍스트를 채우는 게 아니라 "the smallest possible set of high-signal tokens" — 원하는 결과를 끌어낼 가장 작은 고신호 토큰 집합을 찾는 것이다.
+
+둘째, 이건 직관이 아니라 측정된 사실이다. Chroma Research는 2025년 7월, 18개 프런티어 모델을 약 194,480회 호출하며 실험했다. 난이도를 고정하고 입력 길이만 늘렸더니, 모든 모델에서 성능이 일관되게, 그리고 비균일하게 무너졌다. 더 흥미로운 건 반직관적인 발견이다 — 건초더미(haystack)를 뒤섞어 국소적 일관성을 없앴더니 오히려 성능이 좋아졌다. 모델은 긴 컨텍스트를 균일하게 쓰지 못한다.
+
+```mermaid
+flowchart LR
+  M[외부 메모리] -- 필요할 때만 불러옴 --> C[컨텍스트 윈도우]
+  C -- 무엇을 남길지 큐레이션 --> M
+  C -- 오래된 것 비움 --> X[폐기]
+```
+
+그래서 메모리는 컨텍스트 윈도우 *바깥*에 있어야 한다. 큰 책상이 아니라 서랍을 만들어야 한다. 그리고 서랍을 만드는 순간, 새로운 문제가 따라온다. 서랍은 무한하지 않고, 무엇을 넣을지보다 무엇을 버릴지가 어렵다.
+
+이 발상 자체는 새롭지 않다. 파일을 OS처럼 계층적으로 관리하는 아이디어는 [MemGPT](https://arxiv.org/abs/2310.08560), 컨텍스트를 요약으로 압축해 장기 기억을 만드는 아이디어는 [Recursive Summarization](https://arxiv.org/abs/2308.15022), 필요할 때만 외부에서 끌어오는 아이디어는 [RAG 원논문](https://arxiv.org/abs/2005.11401)까지 거슬러 올라간다. Claude의 메모리는 이 계보를 제품으로 접어 넣은 것이다. 다만 Anthropic은 이걸 episodic/semantic 같은 인지과학 용어가 아니라 "just-in-time context retrieval"이라는 엔지니어링 언어로 부른다.
+
+---
+
+## 2. 버리지 않으면 무너진다
+
+메모리가 망가지는 방식은 두 가지다. 그리고 둘은 정반대 방향이다.
+
+**하나, 너무 많이 기억해서 무너진다.** Anthropic의 Dreams 문서는 이 실패를 솔직하게 인정한다.
+
+> "over many sessions a memory store accumulates duplicates, contradictions, and stale entries."
+
+세션이 쌓이면 메모리에는 중복, 모순, 낡은 항목이 축적된다. 그래서 Anthropic은 "dreaming"이라는 연구 프리뷰 기능을 따로 만들었다. 모델이 유휴 시간에 자기 메모리를 정리하며 중복을 병합하고 낡거나 모순된 항목을 최신값으로 교체한다. 기억을 늘리는 기능이 아니라, *기억을 버리는* 기능이다.
+
+**둘, 기억은 하는데 적용을 못 해서 무너진다.** 2026년 3월, 한 사용자가 GitHub에 이슈 #37314를 올렸다. 메모리 시스템이 피드백과 규칙을 정확히 저장은 하는데, 모델이 그걸 일관되게 적용하지 못한다는 것이다. 사용자는 이걸 "Alzheimer problem"이라 불렀다. 저장됐지만 회상되지 않는 기억. (이슈는 결국 *not planned*로 닫혔다.)
+
+진짜 thesis는 이 두 실패 사이에 산다. 다 기억해도 무너지고, 안 버려도 무너진다. 그러니 좋은 메모리는 더 많이 기억하는 게 아니라 *맞는 것까지도 버릴 줄 아는* 메모리다. 큐레이션은 공짜가 아니라 비용이고, 그 비용을 누가 치르느냐가 설계의 핵심이다.
+
+Claude의 세 표면은 이 비용을 각각 다른 주체에게 위임한다. 소비자 표면은 사용자에게, Code 표면은 개발자에게, API 표면은 시스템에게.
+
+---
+
+## 3. 소비자 표면 — 버릴 권한을 사용자에게
+
+Claude.ai의 메모리는 한 번에 출시되지 않았다. 약 8개월에 걸친 단계적 롤아웃이었고, 순서가 의미심장하다.
+
+- **2025-08-11** — 과거 대화 검색·참조(Search and reference past chats). Max·Team·Enterprise만. 명시적으로 요청해야만 과거 대화를 불러오고, 백그라운드 프로필은 만들지 않는다.
+- **2025-09** — 프로젝트 기반 Memory를 Team·Enterprise에 출시. 동시에 전체 사용자에게 Incognito 챗 제공. (공식 블로그는 9/11에 두 플랜을 묶었지만, 릴리즈 노트는 Enterprise를 9/18로 따로 기재한다.)
+- **2025-10-23** — Pro·Max로 확대.
+- **2026-03-02** — 무료 플랜 포함 전체 사용자로 확대.
+
+유료가 먼저, 무료가 마지막. 그리고 출시 당시의 철학에서 한 번 방향이 틀어졌다. 처음의 "과거 대화 검색"은 요청할 때만 동작하는 blank-slate 방식이었다. 지금의 Memory는 대화를 자동으로 요약해 synthesis를 만들고, 이걸 24시간마다 갱신해 새 대화마다 컨텍스트로 주입한다. 자동 큐레이션 쪽으로 ChatGPT를 닮아간 것이다.
+
+그래서 비판도 따라왔다. 한 평론가는 이렇게 정리했다 — 지금의 AI 메모리는 사실 학습이 아니라 설정(configuration) 시스템에 가깝다고. 모델이 당신을 배우는 게 아니라, 당신이 다듬는 프로필을 모델이 읽는 것이다.
+
+핵심은 통제권이 사용자에게 있다는 점이다. 메모리는 기본 비활성(opt-in)이고, Settings에서 요약을 직접 보고 편집할 수 있으며, 프로젝트마다 별도 공간으로 격리된다. 그리고 버리는 수단이 명확하게 둘로 나뉜다.
+
+- **Pause** — 기존 메모리는 유지하되 새 메모리 생성을 멈춘다.
+- **Reset** — 프로젝트 메모리까지 전부 영구 삭제한다. 문서의 표현 그대로 "this cannot be undone."
+
+여기에 Incognito가 더해진다. 저장되지 않고, 기존 메모리를 쓰지도 않고, 미래 요약에 반영되지도 않으며, 일반 대화로 전환할 수도 없다. 망각을 위한 UI다. 소비자 표면에서 "무엇을 버릴지"의 마지막 결정권은 사용자의 손가락에 있다.
+
+---
+
+## 4. Code 표면 — 버릴 권한을 개발자에게
+
+Claude Code의 메모리는 두 갈래다. 사람이 쓰는 `CLAUDE.md`와, Claude가 스스로 적는 auto memory.
+
+`CLAUDE.md`에 대한 공식 베스트프랙티스의 첫 문장은 기억이 아니라 망각에 대한 것이다.
+
+> "Keep it concise. For each line, ask: 'Would removing this cause Claude to make mistakes?' If not, cut it. Bloated CLAUDE.md files cause Claude to ignore your actual instructions!"
+
+각 줄마다 물어라 — 이걸 빼면 Claude가 실수하나? 아니면 잘라내라. 비대한 `CLAUDE.md`는 *당신의 진짜 지시를 무시하게 만든다.* 안 버리면 기억이 늘어나는 게 아니라, 진짜 중요한 게 묻힌다.
+
+여기에 잘 드러나지 않는 비대칭이 하나 있다. `CLAUDE.md`는 길이와 무관하게 *전체*가 매 세션 로드된다. 반면 auto memory의 `MEMORY.md`는 그렇지 않다.
+
+> "The first 200 lines of MEMORY.md, or the first 25KB, whichever comes first, are loaded at the start of every conversation."
+
+첫 200줄 또는 25KB까지만. 그래서 auto memory는 구조적으로 인덱스가 강제된다. 다 못 싣기 때문에 한 줄짜리 포인터로 묶고, 토픽 파일은 필요할 때만 읽는다. 내 `MEMORY.md`가 정확히 이 모양인 이유다. (auto memory는 Claude Code v2.1.59부터 들어온 공식 내장 기능이다. 다만 한 파일 한 사실, `type: user|feedback|project|reference` 같은 frontmatter 같은 *세부 구조*는 공식 docs엔 없고, 내 머신의 메모리 디렉터리와 추출된 시스템 프롬프트에서 관찰되는 컨벤션이다.)
+
+그런데 가장 중요한 사실은 따로 있다. `CLAUDE.md`는 강제 설정이 아니다.
+
+> "CLAUDE.md content is delivered as a user message after the system prompt, not as part of the system prompt itself ... there's no guarantee of strict compliance."
+
+시스템 프롬프트의 일부가 아니라, 그 뒤에 붙는 user 메시지로 전달된다. 엄격한 준수가 보장되지 않는다. 그리고 계층(managed / user / project / local)은 override가 아니라 concatenation이다 — "all discovered files are concatenated into context rather than overriding each other." 규칙이 충돌하면 "Claude may pick one arbitrarily." "가장 구체적인 규칙이 이긴다"는 통념을 공식 문서가 정면으로 반박한다.
+
+이 사실이 망각의 규율을 더 절실하게 만든다. 메모리는 명령이 아니라 컨텍스트다. 컨텍스트는 길어질수록 묽어진다. 그러니 개발자가 직접 솎아내지 않으면 메모리는 점점 무게 없는 텍스트 더미가 된다. 반드시 지켜져야 하는 동작이라면 메모리에 적을 게 아니라 PreToolUse hook으로 강제해야 한다.
+
+흥미롭게도 auto memory의 시스템 프롬프트는 이 망각의 규율을 스스로에게 부과한다. 틀린 것으로 드러난 메모리는 삭제하라, 상대 날짜는 절대 날짜로 바꿔라, 이미 같은 내용을 다루는 파일이 있으면 새로 만들지 말고 갱신하라. 기억하는 규칙이 아니라 버리고 고치는 규칙이다.
+
+마지막으로, compaction(컨텍스트가 한계에 다다랐을 때의 자동 압축)은 무엇이 살아남는지를 명시한다. 프로젝트 루트 `CLAUDE.md`와 unscoped 규칙, auto memory는 디스크에서 다시 주입된다("re-injected from disk"). 반면 path-scoped 규칙과 중첩된 `CLAUDE.md`는 "lost until a matching file is read again" — 다시 읽힐 때까지 잊힌다. 무엇을 디스크에 두느냐가 곧 무엇을 망각으로부터 지키느냐다.
+
+---
+
+## 5. API 표면 — 버릴 권한을 시스템에
+
+개발자 API에서는 망각이 가장 명시적이고, 측정 가능한 인프라가 된다.
+
+memory tool은 클라이언트 측 도구다. 타입은 `memory_20250818`, 모델은 `/memories` 디렉터리 안에서 6개 명령(`view`·`create`·`str_replace`·`insert`·`delete`·`rename`)으로 파일을 다룬다. 공식 문서는 그 본질을 한 문장으로 요약한다.
+
+> "the key primitive for just-in-time context retrieval: rather than loading all relevant information upfront, agents store what they learn in memory and pull it back on demand."
+
+다 미리 올리지 않고, 배운 걸 저장해뒀다가 필요할 때 끌어온다. 컨텍스트 *바깥*에 두는 것이다.
+
+여기에 짝을 이루는 게 context editing이다. 전략 `clear_tool_uses_20250919`는 컨텍스트가 임계값을 넘으면(기본 input tokens 100,000) 가장 오래된 도구 결과부터 placeholder로 치환하고, 최근 3개만 남긴다. 자동 망각이 API 파라미터가 된 셈이다.
+
+효과는 숫자로 나와 있다. **단, 이건 Anthropic 내부 평가지 공개·독립 벤치마크가 아니다.** context editing 단독으로 +29%, memory tool과 결합하면 +39%(내부 agentic search 평가셋), 별도의 100턴 웹검색 평가에서는 토큰 소비가 84% 줄었다. 셋은 서로 다른 평가이고, 84%는 정확도가 아니라 토큰 절감이다. 그래도 방향은 분명하다. 잘 버리는 게 곧 성능이다.
+
+그리고 망각의 책임은 구현자에게로 넘어온다. 공식 문서는 파일 크기 상한을 두고, 오래 접근하지 않은 메모리 파일을 주기적으로 비우라(memory expiration)고 권한다. 망각이 운영 규범이 된다.
+
+한 가지 흔한 오해를 짚어두자. memory tool은 2025년 9월 29일 베타로 나왔지만, **2026년 2월 17일 GA가 됐다.** 지금은 베타 헤더 없이 쓴다. 많은 2차 자료가 아직 "beta"라고 적고 있으니 주의.
+
+참고로 영속과 메모리는 또 구분해야 한다. prompt caching은 메모리가 아니라 전송 최적화다(기본 5분 TTL). Files API는 정적 문서를 file_id로 재사용하는 것이다. memory tool만이 세션을 가로질러 *진화하는* 지식을 모델이 직접 CRUD하는 메모리다.
+
+---
+
+## 6. 세 표면 비교 — 누가 버리는가
+
+세 표면을 한 장에 놓으면 차이가 선명해진다. 저장하는 것도, 망각하는 방식도, 그걸 결정하는 주체도 다르다.
+
+| | 소비자 Claude.ai | Claude Code | 개발자 API |
+| --- | --- | --- | --- |
+| 무엇을 저장 | 대화 요약(synthesis) | 평문 markdown(`CLAUDE.md`·`MEMORY.md`) | `/memories` 파일 |
+| 어떻게 망각 | Reset·Incognito·요약 편집 | prune 규율·파일 삭제 | `clear_tool_uses`·expiration |
+| 누가 큐레이션 | 사용자 | 개발자 | 시스템 + 구현자 |
+| 주입 방식 | 24h synthesis 자동 주입 | 세션 시작 시 로드(전체 / 첫 200줄) | JIT 회수 |
+| 1차 통제 수단 | 설정 토글·Pause/Reset | `CLAUDE.md`·hook | API 파라미터 |
+
+생긴 건 다르지만 셋이 공유하는 한 문장이 있다. *컨텍스트 밖 평문에 저장하고, 인덱스나 디렉터리로 조직하고, 필요할 때만 끌어오고, 잊을 수단을 반드시 갖춘다.*
+
+그리고 한 방향의 흐름이 보인다. 소비자 메모리는 blank-slate에서 자동 synthesis 주입으로 옮겨갔고, dreaming은 정리를 자동화하려 한다. Anthropic이 컨텍스트 엔지니어링 문서에서 밝힌 방향과 같다.
+
+> "As model capabilities improve, agentic design will trend towards letting intelligent models act intelligently, with progressively less human curation."
+
+모델이 똑똑해질수록 인간의 큐레이션을 점점 줄이는 쪽으로. 버릴 권한이 사용자·개발자에서 시스템 쪽으로 천천히 이동하고 있다.
+
+---
+
+## 7. 망각은 안전이기도 하다
+
+여기까지는 성능 이야기였다. 그런데 closed loop가 그랬듯, 같은 구조가 두 얼굴을 갖는다. 망각은 안전 메커니즘이기도 하다.
+
+2026년 4월, Cisco가 Claude Code의 지속형 메모리 오염(persistent memory poisoning) PoC를 공개했다. 핵심은 `MEMORY.md`의 첫 200줄이 시스템 프롬프트로 로드된다는 점을 악용한 것이었다. 한 번 심어둔 악성 지시가 세션을 가로질러 살아남는다. 메모리는 prompt injection의 *영속* 표적이 된다.
+
+완화책은 결국 망각이었다. Anthropic은 Claude Code v2.1.50에서 user memory를 시스템 프롬프트에서 제거했다. Anthropic 자신의 보안 문서("How we contain Claude across products", 2026-05-25)도 "Persistent memory poisoning"을 신흥 위협으로 한 절을 할애해 다룬다. API의 memory tool은 더 직설적이다.
+
+> "Your implementation MUST validate all paths to prevent directory traversal attacks."
+
+경로 검증은 구현자의 의무다. 실제로 Anthropic 자사 SDK의 memory tool 구현에서도 경로 탈출·권한 관련 CVE가 여러 건 공개·수정됐다. 무엇을 기억할지 통제하지 못하면, 무엇을 *주입당할지*도 통제하지 못한다.
+
+그래서 "누가 버릴 권한을 갖는가"는 성능 질문이자 신뢰 질문이다. 잘 잊는 시스템이 더 빨리 수렴하고, 동시에 더 안전하다. 두 얼굴이 같은 동전이다.
+
+---
+
+## 8. 다시 내 화면으로
+
+리서치를 끝내고 `~/.claude` 디렉터리를 다시 열었다. 처음엔 파일이 늘어나는 게 불안했는데, 이제는 다르게 보인다.
+
+좋은 메모리는 큰 컨텍스트가 아니다. 잘 큐레이션된 작은 파일들이다. 한 파일에 한 사실, 인덱스가 그것들을 가리키고, 틀린 건 지우고, 낡은 날짜는 고친다. `MEMORY.md`가 200줄을 넘기면 무언가를 잘라내야 한다는 뜻이다.
+
+어떤 메모리 시스템을 다루든 나는 이제 네 가지를 묻는다.
+
+1. **무엇을 저장하는가. 한 사실인가, 대화 전체인가.**
+2. **무엇을 버리는가. 버리는 수단이 명시적인가.**
+3. **누가 큐레이션하는가. 사용자인가, 개발자인가, 시스템인가.**
+4. **잊지 못하면 무엇이 새는가 — 진짜 지시인가, 비밀인가.**
+
+기억하게 만드는 건 쉬웠다. 어려운 건 잊게 만드는 것이었다. 그리고 내 메모리 파일을 지우는 손가락이, 결국 큐레이션의 마지막 권한이다.
+
+---
+
+## 참고
+
+- Anthropic, [_Context windows_](https://platform.claude.com/docs/en/build-with-claude/context-windows) — "working memory", context rot
+- Anthropic, [_Effective context engineering for AI agents_](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents) (2025.9.29) — finite resource, attention budget, less human curation
+- Anthropic, [_Bringing memory to Claude_](https://claude.com/blog/memory)
+- Anthropic, [_Memory and context management_](https://claude.com/blog/context-management) (2025.9.29) — +29% / +39% / −84% (internal eval)
+- Anthropic, [_Memory tool_](https://platform.claude.com/docs/en/agents-and-tools/tool-use/memory-tool) / [_Context editing_](https://platform.claude.com/docs/en/build-with-claude/context-editing) — `memory_20250818`, `clear_tool_uses_20250919`
+- Anthropic, [_Claude Code: Manage Claude's memory_](https://code.claude.com/docs/en/memory) / [_Best practices_](https://code.claude.com/docs/en/best-practices) / [_Context window_](https://code.claude.com/docs/en/context-window)
+- Anthropic, [_Dreams_](https://platform.claude.com/docs/en/managed-agents/dreams) — duplicates, contradictions, stale entries
+- Anthropic, [_How we contain Claude across products_](https://www.anthropic.com/engineering/how-we-contain-claude) (2026.5.25) — persistent memory poisoning
+- Cisco, [_Identifying and remediating a persistent memory compromise in Claude Code_](https://blogs.cisco.com/ai/identifying-and-remediating-a-persistent-memory-compromise-in-claude-code) (2026.4.1)
+- GitHub, [anthropics/claude-code Issue #37314](https://github.com/anthropics/claude-code/issues/37314) (2026.3) — "Alzheimer problem"
+- Chroma Research, [_Context Rot_](https://research.trychroma.com/context-rot) (2025.7.14) — 18 models, ~194,480 calls
+- 계보: Packer et al., [_MemGPT_](https://arxiv.org/abs/2310.08560) · Wang et al., [_Recursive Summarization_](https://arxiv.org/abs/2308.15022) · Lewis et al., [_RAG_](https://arxiv.org/abs/2005.11401) · Park et al., [_Generative Agents_](https://arxiv.org/abs/2304.03442) · Sumers et al., [_CoALA_](https://arxiv.org/abs/2309.02427)
