@@ -1,0 +1,5 @@
+User-Agent: *
+Allow: /
+
+Host: https://hyunjinlee.com
+Sitemap: https://hyunjinlee.com/sitemap.xml
