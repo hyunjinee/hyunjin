@@ -20,7 +20,7 @@ pre code {
   background-color: transparent;
   padding: 0;
   font-size: 0.875rem;
-  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-family: "Consolas", "Monaco", "Courier New", monospace;
   line-height: 1.6;
 }
 
@@ -97,4 +97,29 @@ pre code {
 
 .dark .sh__sign {
   color: #c9d1d9; /* 기호: 밝은 회색 */
+}
+
+/* 코드 복사 버튼 — src/lib/rehypeCopyButton.ts가 주입한 마크업, Base.astro 위임 스크립트가 토글 */
+.copy-code-button .copy-icon-check {
+  display: none;
+}
+.copy-code-button[data-copied] {
+  opacity: 1;
+  color: #4ade80; /* text-green-400 */
+  border-color: #4ade80;
+  background-color: rgb(34 197 94 / 0.2); /* bg-green-500/20 */
+}
+.dark .copy-code-button[data-copied] {
+  background-color: rgb(34 197 94 / 0.1); /* dark:bg-green-500/10 */
+}
+.copy-code-button[data-copied] .copy-icon-copy {
+  display: none;
+}
+.copy-code-button[data-copied] .copy-icon-check {
+  display: block;
+}
+
+/* 라이트박스(src/components/mdx/Lightbox.tsx)의 클릭-확대 대상임을 힌트로 표시 */
+.prose img {
+  cursor: zoom-in;
 }

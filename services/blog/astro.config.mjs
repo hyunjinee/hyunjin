@@ -10,6 +10,8 @@ import rehypePrismPlus from 'rehype-prism-plus'
 import rehypeSlug from 'rehype-slug'
 import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
+import { rehypeCopyButton } from './src/lib/rehypeCopyButton.ts'
+import { rehypeMermaidPlaceholder } from './src/lib/rehypeMermaidPlaceholder.ts'
 
 // heroicon mini link — contentlayer.config.ts의 rehypeAutolinkHeadings content와 동일
 const icon = fromHtmlIsomorphic(
@@ -54,6 +56,9 @@ export default defineConfig({
       remarkPlugins: [remarkGfm, remarkMath],
       rehypePlugins: [
         rehypeStripLayoutFrontmatter,
+        // mermaid 펜스 → data-mermaid-code 플레이스홀더 치환. rehypePrismPlus가 code 텍스트를
+        // <span>들로 쪼개기 전에 원문을 뽑아야 하므로 반드시 먼저 온다.
+        rehypeMermaidPlaceholder,
         rehypeSlug,
         [
           rehypeAutolinkHeadings,
@@ -67,6 +72,8 @@ export default defineConfig({
         ],
         rehypeKatex,
         [rehypePrismPlus, { defaultLanguage: 'js', ignoreMissing: true }],
+        // 코드 블록 복사 버튼 마크업 주입. prism이 pre에 language-* 클래스를 붙인 뒤에 와야 한다.
+        rehypeCopyButton,
       ],
     }),
   },

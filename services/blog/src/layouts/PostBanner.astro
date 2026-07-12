@@ -1,0 +1,95 @@
+---
+// layouts/PostBanner.tsx 이식. React 19 ViewTransition → CSS view-transition-name.
+// ponytail: 실제 크로스페이지 애니메이션은 astro:transitions ClientRouter(또는 브라우저 네이티브
+// @view-transition MPA opt-in)가 있어야 동작한다 — 이 태스크 범위는 훅만 남겨두는 것.
+// biome-ignore-all lint/correctness/noUnusedImports: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+// biome-ignore-all lint/correctness/noUnusedVariables: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+import Link from '../components/Link.astro'
+import Lightbox from '../components/mdx/Lightbox'
+import Mermaid from '../components/mdx/Mermaid'
+import PageTitle from '../components/PageTitle.astro'
+import ScrollTop from '../components/ScrollTop'
+import SectionContainer from '../components/SectionContainer.astro'
+import type { PostPageData } from '../lib/blogPost'
+import { postUrl } from '../lib/locale'
+
+interface Props {
+  data: PostPageData
+}
+
+const { data } = Astro.props
+const { entry, prev, next, altLocale, locale, slug, ogImage } = data
+const { title, bannerFit: rawBannerFit } = entry.data
+// contentlayer 원본 default: 'contain' (contentlayer.config.ts의 enum default)
+const bannerFit = rawBannerFit === 'cover' ? 'cover' : 'contain'
+---
+
+<SectionContainer>
+  <ScrollTop client:load />
+  <Lightbox client:visible />
+  <Mermaid client:visible />
+  <article>
+    <div class="mx-auto max-w-[700px]">
+      <div class="pb-10 space-y-1 text-center dark:border-gray-700">
+        <div class="w-full">
+          <div
+            class={`relative aspect-video w-full overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 ${bannerFit === 'contain' ? 'bg-gray-50 dark:bg-gray-800/40' : ''}`}
+          >
+            <img
+              src={ogImage}
+              alt={title}
+              class={`absolute inset-0 h-full w-full ${bannerFit === 'cover' ? 'object-cover' : 'object-contain'}`}
+            />
+          </div>
+        </div>
+        <div class="relative pt-8">
+          <PageTitle>
+            <span style={`view-transition-name: title-${slug}`}>{title}</span>
+          </PageTitle>
+        </div>
+        {
+          altLocale && (
+            <div class="pt-2">
+              <Link href={altLocale.href} class="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
+                {altLocale.label}
+              </Link>
+            </div>
+          )
+        }
+      </div>
+      <div class="py-4 max-w-none prose dark:prose-invert">
+        <slot />
+      </div>
+      <footer>
+        <div class="flex flex-col text-sm font-medium sm:flex-row sm:justify-between sm:text-base">
+          {
+            prev && (
+              <div class="pt-4 xl:pt-8">
+                <Link
+                  href={postUrl(locale, prev.slug)}
+                  class="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+                  aria-label={`Previous post: ${prev.title}`}
+                >
+                  &larr; {prev.title}
+                </Link>
+              </div>
+            )
+          }
+          {
+            next && (
+              <div class="pt-4 xl:pt-8">
+                <Link
+                  href={postUrl(locale, next.slug)}
+                  class="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+                  aria-label={`Next post: ${next.title}`}
+                >
+                  {next.title} &rarr;
+                </Link>
+              </div>
+            )
+          }
+        </div>
+      </footer>
+    </div>
+  </article>
+</SectionContainer>

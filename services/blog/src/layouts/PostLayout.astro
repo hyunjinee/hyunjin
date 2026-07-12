@@ -1,0 +1,149 @@
+---
+// layouts/PostLayout.tsx 이식 — 기본 레이아웃(frontmatter layout 미지정 시)
+// biome-ignore-all lint/correctness/noUnusedImports: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+// biome-ignore-all lint/correctness/noUnusedVariables: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+import siteMetadata from '../../data/siteMetadata.js'
+import Link from '../components/Link.astro'
+import Lightbox from '../components/mdx/Lightbox'
+import Mermaid from '../components/mdx/Mermaid'
+import PageTitle from '../components/PageTitle.astro'
+import ScrollTop from '../components/ScrollTop'
+import SectionContainer from '../components/SectionContainer.astro'
+import Tag from '../components/Tag.astro'
+import type { PostPageData } from '../lib/blogPost'
+import { localePath, postUrl } from '../lib/locale'
+
+interface Props {
+  data: PostPageData
+}
+
+const { data } = Astro.props
+const { entry, authorDetails, prev, next, altLocale, locale, path, filePath } = data
+const { title, date, tags } = entry.data
+
+const editUrl = `${siteMetadata.siteRepo}/blob/main/data/${filePath}`
+const discussUrl = `https://mobile.twitter.com/search?q=${encodeURIComponent(`${siteMetadata.siteUrl}/${path}`)}`
+const dateOptions: Intl.DateTimeFormatOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
+---
+
+<SectionContainer>
+  <ScrollTop client:load />
+  {/* client:visible이 관찰할 요소를 최대한 일찍(글 진입 직후) 두어 늦게 트리거되지 않게 한다 */}
+  <Lightbox client:visible />
+  <Mermaid client:visible />
+  <article>
+    <div class="xl:divide-y xl:divide-gray-200 xl:dark:divide-gray-700">
+      <header class="pt-6 xl:pb-6">
+        <div class="space-y-1 text-center">
+          <dl class="space-y-10">
+            <div>
+              <dt class="sr-only">Published on</dt>
+              <dd class="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
+                <time datetime={date.toISOString()}>{date.toLocaleDateString(siteMetadata.locale, dateOptions)}</time>
+              </dd>
+            </div>
+          </dl>
+          {
+            altLocale && (
+              <div class="pt-2">
+                <Link href={altLocale.href} class="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
+                  {altLocale.label}
+                </Link>
+              </div>
+            )
+          }
+          <div>
+            <PageTitle>{title}</PageTitle>
+          </div>
+        </div>
+      </header>
+      <div
+        class="grid-rows-[auto_1fr] divide-y divide-gray-200 pb-8 dark:divide-gray-700 xl:grid xl:grid-cols-4 xl:gap-x-6 xl:divide-y-0"
+      >
+        <dl class="pt-6 pb-10 xl:border-b xl:border-gray-200 xl:pt-11 xl:dark:border-gray-700">
+          <dt class="sr-only">Authors</dt>
+          <dd>
+            <ul class="flex flex-wrap gap-4 justify-center sm:space-x-12 xl:block xl:space-x-0 xl:space-y-8">
+              {
+                authorDetails.map((author) => (
+                  <li class="flex items-center space-x-2">
+                    {author.avatar && <img src={author.avatar} width={38} height={38} alt="avatar" class="w-10 h-10 rounded-full" />}
+                    <dl class="text-sm font-medium leading-5 whitespace-nowrap">
+                      <dt class="sr-only">Name</dt>
+                      <dd class="text-gray-900 dark:text-gray-100">{author.name}</dd>
+                      <dt class="sr-only">Twitter</dt>
+                      <dd>
+                        {author.twitter && (
+                          <Link href={author.twitter} class="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
+                            {author.twitter.replace('https://twitter.com/', '@').replace('https://x.com/', '@')}
+                          </Link>
+                        )}
+                      </dd>
+                    </dl>
+                  </li>
+                ))
+              }
+            </ul>
+          </dd>
+        </dl>
+        <div class="divide-y divide-gray-200 dark:divide-gray-700 xl:col-span-3 xl:row-span-2 xl:pb-0">
+          <div class="pt-10 pb-8 max-w-none prose dark:prose-invert">
+            <slot />
+          </div>
+          <div class="pt-6 pb-6 text-sm text-gray-700 dark:text-gray-300">
+            <Link href={discussUrl} rel="nofollow">Discuss on Twitter</Link>
+            {` • `}
+            <Link href={editUrl}>View on GitHub</Link>
+          </div>
+        </div>
+        <footer>
+          <div class="text-sm font-medium leading-5 divide-gray-200 dark:divide-gray-700 xl:col-start-1 xl:row-start-2 xl:divide-y">
+            {
+              tags.length > 0 && (
+                <div class="py-4 xl:py-8">
+                  <h2 class="text-xs tracking-wide text-gray-500 uppercase dark:text-gray-400">Tags</h2>
+                  <div class="flex flex-wrap">
+                    {tags.map((tag) => (
+                      <Tag text={tag} locale={locale} />
+                    ))}
+                  </div>
+                </div>
+              )
+            }
+            {
+              (next || prev) && (
+                <div class="flex justify-between py-4 xl:block xl:space-y-8 xl:py-8">
+                  {prev && (
+                    <div>
+                      <h2 class="text-xs tracking-wide text-gray-500 uppercase dark:text-gray-400">Previous Article</h2>
+                      <div class="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
+                        <Link href={postUrl(locale, prev.slug)}>{prev.title}</Link>
+                      </div>
+                    </div>
+                  )}
+                  {next && (
+                    <div>
+                      <h2 class="text-xs tracking-wide text-gray-500 uppercase dark:text-gray-400">Next Article</h2>
+                      <div class="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
+                        <Link href={postUrl(locale, next.slug)}>{next.title}</Link>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )
+            }
+          </div>
+          <div class="pt-4 xl:pt-8">
+            <Link
+              href={localePath(locale, '/blog')}
+              class="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+              aria-label="Back to the blog"
+            >
+              &larr; Back to the blog
+            </Link>
+          </div>
+        </footer>
+      </div>
+    </div>
+  </article>
+</SectionContainer>

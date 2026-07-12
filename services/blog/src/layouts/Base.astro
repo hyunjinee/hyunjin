@@ -20,16 +20,23 @@ import type { Locale } from '../lib/locale'
 
 interface Props {
   title?: string
-  description?: string
+  // null: 이 페이지는 설명이 없다(사이트 기본값으로도 대체하지 않음) — blog/[...slug]가
+  // post.summary 없는 글에서 씀(원본 generateMetadata가 description 필드를 아예 안 낸 것과 동일 효과).
+  // undefined: prop을 안 준 것 — 기존처럼 siteMetadata.description으로 대체.
+  description?: string | null
   canonical?: string
   hreflang?: { ko?: string; en?: string; xDefault?: string }
   ogImage?: string
   locale: Locale
+  // 블로그 글 상세(Task 3)가 app/[locale]/blog/[...slug]/page.tsx의 openGraph.type: 'article'을
+  // 재현하는 데 쓴다. 미지정 시 기존 동작(website) 그대로 — 기존 소비자 무파손.
+  ogType?: 'website' | 'article'
 }
 
 const DEFAULT_TITLE = '이현진 (Hyunjin Lee) — Software Engineer'
 
-const { title, description = siteMetadata.description, canonical, hreflang, ogImage, locale } = Astro.props
+const { title, description: descriptionProp, canonical, hreflang, ogImage, locale, ogType = 'website' } = Astro.props
+const description = descriptionProp === null ? undefined : (descriptionProp ?? siteMetadata.description)
 
 const pageTitle = title ? `${title} | ${siteMetadata.title}` : DEFAULT_TITLE
 const resolvedOgImage = ogImage ?? `${siteMetadata.siteUrl}/og/default.png`
@@ -42,7 +49,7 @@ const feedPath = locale === 'en' ? '/en/feed.xml' : '/feed.xml'
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{pageTitle}</title>
-    <meta name="description" content={description} />
+    {description && <meta name="description" content={description} />}
 
     {canonical && <link rel="canonical" href={canonical} />}
     {hreflang?.ko && <link rel="alternate" hreflang="ko" href={hreflang.ko} />}
@@ -53,14 +60,16 @@ const feedPath = locale === 'en' ? '/en/feed.xml' : '/feed.xml'
     <meta name="googlebot" content="index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1" />
 
     <meta property="og:title" content={title ?? DEFAULT_TITLE} />
-    <meta property="og:description" content={description} />
+    {description && <meta property="og:description" content={description} />}
     <meta property="og:site_name" content={siteMetadata.title} />
     <meta property="og:image" content={resolvedOgImage} />
-    <meta property="og:locale" content="ko_KR" />
-    <meta property="og:type" content="website" />
+    {canonical && <meta property="og:url" content={canonical} />}
+    <meta property="og:locale" content={locale === 'en' ? 'en_US' : 'ko_KR'} />
+    <meta property="og:type" content={ogType} />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title ?? DEFAULT_TITLE} />
+    {description && <meta name="twitter:description" content={description} />}
     <meta name="twitter:image" content={resolvedOgImage} />
 
     <link rel="apple-touch-icon" sizes="76x76" href="/static/favicons/apple-touch-icon.png" />
@@ -90,6 +99,9 @@ const feedPath = locale === 'en' ? '/en/feed.xml' : '/feed.xml'
         <script defer src="https://analytics.umami.is/script.js" data-website-id={import.meta.env.PUBLIC_UMAMI_ID} />
       )
     }
+
+    {/* 페이지별 추가 head 태그(og:article:*, JSON-LD 등) 확장 지점 — Base 자체는 그 의미를 모른다 */}
+    <slot name="head" />
   </head>
   <body class="bg-white pl-[calc(100vw-100%)] text-black antialiased dark:bg-gray-950 dark:text-white h-full">
     <SectionContainer>
@@ -99,5 +111,21 @@ const feedPath = locale === 'en' ? '/en/feed.xml' : '/feed.xml'
       </main>
       <Footer />
     </SectionContainer>
+
+    <script is:inline>
+      // components/Pre.tsx의 복사 버튼 클릭 처리를 문서 전체에 위임 하나로 대체한다
+      // (src/lib/rehypeCopyButton.ts가 코드 블록마다 주입한 [data-copy-button] 마크업 소비).
+      document.addEventListener('click', (event) => {
+        const button = event.target instanceof Element ? event.target.closest('[data-copy-button]') : null
+        if (!button) return
+        const pre = button.nextElementSibling
+        const text = pre instanceof HTMLElement ? pre.textContent || '' : ''
+        navigator.clipboard?.writeText(text)
+        button.setAttribute('data-copied', '')
+        window.clearTimeout(Number(button.dataset.copyTimeout))
+        const timeout = window.setTimeout(() => button.removeAttribute('data-copied'), 2000)
+        button.dataset.copyTimeout = String(timeout)
+      })
+    </script>
   </body>
 </html>
