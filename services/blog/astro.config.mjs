@@ -1,3 +1,4 @@
+import { unified } from '@astrojs/markdown-remark'
 import mdx from '@astrojs/mdx'
 import react from '@astrojs/react'
 import tailwindcss from '@tailwindcss/vite'
@@ -49,22 +50,24 @@ export default defineConfig({
   },
   markdown: {
     syntaxHighlight: false,
-    remarkPlugins: [remarkGfm, remarkMath],
-    rehypePlugins: [
-      rehypeStripLayoutFrontmatter,
-      rehypeSlug,
-      [
-        rehypeAutolinkHeadings,
-        {
-          behavior: 'prepend',
-          headingProperties: {
-            className: ['content-header'],
+    processor: unified({
+      remarkPlugins: [remarkGfm, remarkMath],
+      rehypePlugins: [
+        rehypeStripLayoutFrontmatter,
+        rehypeSlug,
+        [
+          rehypeAutolinkHeadings,
+          {
+            behavior: 'prepend',
+            headingProperties: {
+              className: ['content-header'],
+            },
+            content: icon,
           },
-          content: icon,
-        },
+        ],
+        rehypeKatex,
+        [rehypePrismPlus, { defaultLanguage: 'js', ignoreMissing: true }],
       ],
-      rehypeKatex,
-      [rehypePrismPlus, { defaultLanguage: 'js', ignoreMissing: true }],
-    ],
+    }),
   },
 })

@@ -42,7 +42,16 @@ assert(
   `slug 집합 불일치\n  expected: ${expectedSlugs.join(', ')}\n  actual:   ${actualSlugs.join(', ')}`,
 )
 
+// draft가 findBySlug/translationFor/originalOf 체인에서 새지 않는지 (en/closed-loop.mdx는 draft: true)
+assert(data.draftFilterHolds, 'findBySlug가 draft 엔트리를 반환함 (en/closed-loop는 draft여야 함)')
+
+// markdown 파이프라인이 실제로 살아있는지 — smoke.astro가 렌더한 공개 글 1편의 출력 HTML에서 확인
+assert(/class="token/.test(smokeHtml), 'rehype-prism-plus 토큰 클래스가 없음')
+assert(/<h[1-6][^>]*\bid="/.test(smokeHtml), 'rehype-slug 헤딩 id가 없음')
+assert(smokeHtml.includes('content-header-link'), 'rehype-autolink-headings 앵커가 없음')
+
 console.log(
   `OK ko: raw=${data.ko.raw} filtered=${data.ko.slugs.length}, en: raw=${data.en.raw} filtered=${data.en.slugs.length}`,
 )
 console.log(`slug 집합 일치 (${expectedSlugs.length}개): ${expectedSlugs.join(', ')}`)
+console.log('draft 필터·렌더 마커(prism/slug/autolink) 확인 완료')

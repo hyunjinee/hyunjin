@@ -27,8 +27,10 @@ export async function postsForLocale(locale: Locale): Promise<Entry[]> {
   return entries.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
 }
 
+// draft는 모든 표면에서 존재하지 않는 것으로 취급 — findBySlug 하나에서 걸러내면
+// originalOf(findBySlug 재사용)도 함께 적용된다.
 export async function findBySlug(locale: Locale, slug: string): Promise<Entry | undefined> {
-  const entries = await getCollection('blog', (entry) => entryLocale(entry) === locale)
+  const entries = await getCollection('blog', (entry) => !entry.data.draft && entryLocale(entry) === locale)
   return entries.find((entry) => entrySlug(entry) === slug)
 }
 
@@ -39,7 +41,7 @@ export async function originalOf(post: Entry): Promise<Entry | undefined> {
 
 export async function translationFor(post: Entry): Promise<Entry | undefined> {
   if (entryLocale(post) !== 'ko') return undefined
-  const enEntries = await getCollection('blog', (entry) => entryLocale(entry) === 'en')
+  const enEntries = await getCollection('blog', (entry) => !entry.data.draft && entryLocale(entry) === 'en')
   return enEntries.find((entry) => entry.data.translationOf === entrySlug(post))
 }
 
