@@ -559,7 +559,7 @@ export default function CalendarView({ events }: { events: CalendarEvent[] }) {
                   <a
                     href={selected.url}
                     {...(isExternalHref(selected.url) ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                    className="inline-flex items-center text-sm font-medium text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 break-words"
+                    className="inline-flex items-center text-sm font-medium text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
                   >
                     자세히 보기 &rarr;
                   </a>
