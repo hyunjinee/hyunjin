@@ -1,0 +1,25 @@
+---
+// app/[locale]/(ko-only)/reports/[slug]/page.tsx 이식. public/reports/는 Task 6에서 이미
+// public/static/reports/로 옮겨져(ReportViewer의 iframe src도 그 경로) 이 라우트와 충돌하지 않는다.
+// biome-ignore-all lint/correctness/noUnusedImports: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+// biome-ignore-all lint/correctness/noUnusedVariables: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+import { reports } from '../../../data/reportsData'
+import siteMetadata from '../../../data/siteMetadata.js'
+import ReportViewer from '../../components/islands/ReportViewer'
+import Base from '../../layouts/Base.astro'
+
+export function getStaticPaths() {
+  return reports.map((r) => ({ params: { slug: r.slug } }))
+}
+
+const { slug } = Astro.params as { slug: string }
+const report = reports.find((r) => r.slug === slug)
+if (!report) throw new Error(`report not found for slug: ${slug}`)
+
+const title = `${report.title} (${report.period.from} ~ ${report.period.to})`
+const description = `${report.sessions} sessions, ${report.messages} messages`
+---
+
+<Base title={title} ogTitle={`${title} | ${siteMetadata.title}`} description={description} ogImage={`${siteMetadata.siteUrl}${siteMetadata.socialBanner}`} locale="ko">
+  <ReportViewer client:load report={report} />
+</Base>

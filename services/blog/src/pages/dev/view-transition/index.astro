@@ -1,0 +1,11 @@
+---
+// app/[locale]/(ko-only)/dev/view-transition/page.tsx 이식 — 원본에 metadata export 없음(dev/mcp.astro
+// 선례와 동일하게 Base 기본 타이틀 그대로). 페이지 전체가 React 실험 API 의존이라 client:only="react".
+// biome-ignore-all lint/correctness/noUnusedImports: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+import ViewTransitionDemo from '../../../components/islands/ViewTransitionDemo'
+import Base from '../../../layouts/Base.astro'
+---
+
+<Base locale="ko">
+  <ViewTransitionDemo client:only="react" />
+</Base>

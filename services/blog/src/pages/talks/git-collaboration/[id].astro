@@ -1,0 +1,57 @@
+---
+// app/[locale]/(ko-only)/talks/git-collaboration/[id]/page.tsx 이식.
+// 원본은 process.cwd() 기준 readFile로 레코드 JSON을 읽었다(Node 서버 런타임 전제) — 정적 빌드 전용인
+// Astro에서는 그 전제가 없으므로 Vite의 import.meta.glob(eager)으로 대체(빌드 타임에 전부 인라인).
+// biome-ignore-all lint/correctness/noUnusedImports: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+// biome-ignore-all lint/correctness/noUnusedVariables: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+import type { ExtendedRecordMap } from 'notion-types'
+import siteMetadata from '../../../../data/siteMetadata.js'
+import NotionPage from '../../../components/islands/NotionPage'
+import Link from '../../../components/Link.astro'
+import Base from '../../../layouts/Base.astro'
+import { materials } from '../../../lib/talks/materials'
+
+export function getStaticPaths() {
+  return materials.map((m) => ({ params: { id: m.id } }))
+}
+
+const { id } = Astro.params as { id: string }
+const index = materials.findIndex((m) => m.id === id)
+if (index === -1) throw new Error(`git-collaboration material not found for id: ${id}`)
+const material = materials[index]
+const prev = materials[index - 1]
+const next = materials[index + 1]
+
+const records = import.meta.glob<{ default: ExtendedRecordMap }>('../../../lib/talks/records/*.json', {
+  eager: true,
+})
+const recordMap = records[`../../../lib/talks/records/${material.id}.json`]?.default
+if (!recordMap) throw new Error(`notion record snapshot not found for id: ${material.id}`)
+---
+
+<Base title={material.title} ogTitle={`${material.title} | ${siteMetadata.title}`} description={material.description} ogImage={`${siteMetadata.siteUrl}${siteMetadata.socialBanner}`} locale="ko">
+  <div class="container py-8 md:py-10">
+    <Link href="/talks/git-collaboration" class="inline-block mb-6 text-sm text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
+      ← Git을 활용한 협업
+    </Link>
+    <NotionPage client:load recordMap={recordMap} />
+    <nav class="flex justify-between pt-6 mt-10 text-sm border-t border-gray-200 dark:border-gray-700">
+      {
+        prev ? (
+          <Link href={`/talks/git-collaboration/${prev.id}`} class="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
+            ← {prev.title}
+          </Link>
+        ) : (
+          <span />
+        )
+      }
+      {
+        next && (
+          <Link href={`/talks/git-collaboration/${next.id}`} class="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
+            {next.title} →
+          </Link>
+        )
+      }
+    </nav>
+  </div>
+</Base>

@@ -1,0 +1,112 @@
+---
+// app/[locale]/(ko-only)/talks/page.tsx 이식
+// biome-ignore-all lint/correctness/noUnusedImports: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+// biome-ignore-all lint/correctness/noUnusedVariables: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+import siteMetadata from '../../../data/siteMetadata.js'
+import { talks } from '../../../data/talksData'
+import Link from '../../components/Link.astro'
+import Base from '../../layouts/Base.astro'
+
+function formatDate(dateString: string) {
+  const [year, month, day] = dateString.split('-')
+  return day ? `${year}년 ${parseInt(month, 10)}월 ${parseInt(day, 10)}일` : `${year}년 ${parseInt(month, 10)}월`
+}
+
+// 날짜순 정렬(최신순) + 카드 렌더에 필요한 파생 필드를 미리 계산
+const sortedTalks = [...talks]
+  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+  .map((talk) => ({
+    ...talk,
+    formattedDate: formatDate(talk.date),
+    isExternalLink: Boolean(talk.href) && !talk.href?.startsWith('/'),
+    isInternalDetail: talk.href?.startsWith('/talks/') ?? false,
+  }))
+---
+
+<Base title="Talks" ogTitle={`Talks | ${siteMetadata.title}`} canonical={`${siteMetadata.siteUrl}/talks`} ogImage={`${siteMetadata.siteUrl}${siteMetadata.socialBanner}`} locale="ko">
+  <div class="divide-y divide-gray-200 dark:divide-gray-700">
+    <div class="pt-4 pb-4 space-y-2">
+      <h1 class="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-gray-100 md:text-4xl">Talks</h1>
+      <p class="text-lg text-gray-500 dark:text-gray-400">발표, 워크샵, 강의 등 다양한 활동들을 기록합니다.</p>
+    </div>
+    <div class="container pt-2 pb-8">
+      <div class="divide-y divide-gray-200 dark:divide-gray-700">
+        {
+          sortedTalks.length === 0 ? (
+            <p class="text-gray-500 dark:text-gray-400">아직 등록된 발표가 없습니다.</p>
+          ) : (
+            sortedTalks.map((talk) => (
+              <div class="py-4">
+                <article>
+                  <div class="space-y-2">
+                    <div>
+                      <h3 class="text-2xl font-bold tracking-tight leading-8">
+                        {talk.href ? (
+                          <Link
+                            href={talk.href}
+                            class="text-gray-900 dark:text-gray-100 hover:text-primary-500 dark:hover:text-primary-400"
+                          >
+                            {talk.title}
+                            {talk.isExternalLink && <span class="ml-1 text-sm align-super">↗</span>}
+                          </Link>
+                        ) : (
+                          <span class="text-gray-900 dark:text-gray-100">{talk.title}</span>
+                        )}
+                      </h3>
+                      <div class="flex flex-wrap gap-2 mt-1">
+                        <time class="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
+                          {talk.formattedDate}
+                        </time>
+                        {talk.event && (
+                          <>
+                            <span class="text-gray-500 dark:text-gray-400">·</span>
+                            <span class="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
+                              {talk.event}
+                            </span>
+                          </>
+                        )}
+                        {talk.type && (
+                          <>
+                            <span class="text-gray-500 dark:text-gray-400">·</span>
+                            <span class="inline-flex items-center px-2 py-1 text-xs font-medium text-gray-600 bg-gray-50 rounded-md ring-1 ring-inset dark:bg-gray-800 dark:text-gray-300 ring-gray-500/10 dark:ring-gray-500/20">
+                              {talk.type}
+                            </span>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                    {talk.description && (
+                      <div class="max-w-none text-gray-500 prose dark:text-gray-400">{talk.description}</div>
+                    )}
+                    {(talk.slides || (talk.video && !talk.isInternalDetail)) && (
+                      <div class="flex gap-4 text-base font-medium leading-6">
+                        {talk.slides && (
+                          <Link
+                            href={talk.slides}
+                            class="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+                            aria-label={`${talk.title}의 슬라이드 보기`}
+                          >
+                            슬라이드 &rarr;
+                          </Link>
+                        )}
+                        {talk.video && !talk.isInternalDetail && (
+                          <Link
+                            href={talk.video}
+                            class="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+                            aria-label={`${talk.title}의 영상 보기`}
+                          >
+                            영상 &rarr;
+                          </Link>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </article>
+              </div>
+            ))
+          )
+        }
+      </div>
+    </div>
+  </div>
+</Base>

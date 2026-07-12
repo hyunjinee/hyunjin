@@ -1,0 +1,68 @@
+---
+// app/[locale]/(ko-only)/talks/[slug]/page.tsx + TalkPresentation.tsx 이식.
+// pdfUrl·video(유튜브) 두 갈래만 이 파일이 다룬다 — pdfUrl·video가 모두 없는 나머지(HTML 데크 iframe) 갈래는
+// public/talks/<slug>/index.html(정적 데크)과 동일 dist 경로(talks/<slug>/index.html)를 두고 충돌해
+// Astro가 페이지 빌드를 자동 스킵한다(실측 확인: "Skipping ... because a file with the same name exists in
+// the public folder"). 과거 Next 정적 export는 talks/<slug>.html(페이지) vs talks/<slug>/index.html(데크)로
+// 파일명이 갈려 공존했다(out/ 실측 확인) — Astro의 output 포맷은 라우트당 전역(build.format)이라 .astro로는
+// 그 파일-형식 출력을 재현할 수 없다. [slug].html.ts(엔드포인트, 파일명 자체에 .html 포함)가 그 갈래를 맡는다.
+// git-collaboration도 정적 라우트(talks/git-collaboration/*)와 충돌해 명시 제외.
+// biome-ignore-all lint/correctness/noUnusedImports: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+// biome-ignore-all lint/correctness/noUnusedVariables: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+import siteMetadata from '../../../data/siteMetadata.js'
+import { talks } from '../../../data/talksData'
+import PDFPresentation from '../../components/islands/PDFPresentation'
+import Base from '../../layouts/Base.astro'
+
+export function getStaticPaths() {
+  return talks
+    .filter((t) => t.href?.startsWith('/talks/') && t.href !== '/talks/git-collaboration' && (t.pdfUrl || t.video))
+    .map((t) => ({ params: { slug: t.href?.replace('/talks/', '') } }))
+}
+
+const { slug } = Astro.params as { slug: string }
+const talk = talks.find((t) => t.href === `/talks/${slug}`)
+if (!talk) throw new Error(`talk not found for slug: ${slug}`)
+
+function getYouTubeId(url?: string) {
+  if (!url) return null
+  const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([\w-]{11})/)
+  return match ? match[1] : null
+}
+
+const youTubeId = talk.pdfUrl ? null : getYouTubeId(talk.video)
+---
+
+<Base title={talk.title} ogTitle={`${talk.title} | ${siteMetadata.title}`} description={talk.description} ogImage={`${siteMetadata.siteUrl}${siteMetadata.socialBanner}`} locale="ko">
+  {
+    talk.pdfUrl ? (
+      <PDFPresentation client:only="react" pdfUrl={talk.pdfUrl} title={talk.title} />
+    ) : (
+      <div class="container py-8 md:py-10">
+        <a href="/talks" class="inline-block mb-6 text-sm text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
+          ← Talks
+        </a>
+        <h1 class="text-2xl font-bold text-gray-900 md:text-3xl dark:text-gray-100">{talk.title}</h1>
+        <div class="flex flex-wrap gap-2 mt-2 text-sm text-gray-500 dark:text-gray-400">
+          <span>{talk.date}</span>
+          {talk.event && (
+            <>
+              <span>·</span>
+              <span>{talk.event}</span>
+            </>
+          )}
+        </div>
+        {talk.description && <p class="mt-3 text-gray-600 dark:text-gray-400">{talk.description}</p>}
+        <div class="overflow-hidden mt-6 w-full bg-black rounded-xl aspect-video">
+          <iframe
+            class="w-full h-full"
+            src={`https://www.youtube-nocookie.com/embed/${youTubeId}`}
+            title={talk.title}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+          />
+        </div>
+      </div>
+    )
+  }
+</Base>

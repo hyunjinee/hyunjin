@@ -1,0 +1,43 @@
+---
+// app/[locale]/(ko-only)/reports/page.tsx 이식
+// biome-ignore-all lint/correctness/noUnusedImports: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+// biome-ignore-all lint/correctness/noUnusedVariables: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+import { reports } from '../../../data/reportsData'
+import siteMetadata from '../../../data/siteMetadata.js'
+import VibeTip from '../../components/islands/VibeTip'
+import Link from '../../components/Link.astro'
+import Base from '../../layouts/Base.astro'
+---
+
+<Base title="Reports" ogTitle={`Reports | ${siteMetadata.title}`} canonical={`${siteMetadata.siteUrl}/reports`} ogImage={`${siteMetadata.siteUrl}${siteMetadata.socialBanner}`} locale="ko">
+  <div class="divide-y divide-gray-200 dark:divide-gray-700">
+    <VibeTip client:load />
+    <div class="pt-6 pb-8 space-y-2 md:space-y-5">
+      <h1 class="text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:leading-14">
+        Reports
+      </h1>
+      <p class="text-lg leading-7 text-gray-500 dark:text-gray-400">Claude Code Insights 리포트 모음</p>
+    </div>
+    <div class="container py-12">
+      <div class="grid gap-4 sm:grid-cols-2">
+        {
+          reports.map((report) => (
+            <Link
+              href={`/reports/${report.slug}`}
+              class="block p-6 transition-shadow border border-gray-200 rounded-xl hover:shadow-lg dark:border-gray-700"
+            >
+              <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100">{report.title}</h2>
+              <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                {report.period.from} ~ {report.period.to}
+              </p>
+              <div class="flex gap-4 mt-3 text-sm text-gray-600 dark:text-gray-300">
+                <span>{report.sessions} sessions</span>
+                <span>{report.messages.toLocaleString()} messages</span>
+              </div>
+            </Link>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</Base>

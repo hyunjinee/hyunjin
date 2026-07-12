@@ -1,0 +1,78 @@
+---
+// app/[locale]/(ko-only)/talks/git-collaboration/page.tsx 이식
+// biome-ignore-all lint/correctness/noUnusedImports: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+// biome-ignore-all lint/correctness/noUnusedVariables: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+import siteMetadata from '../../../../data/siteMetadata.js'
+import Link from '../../../components/Link.astro'
+import Base from '../../../layouts/Base.astro'
+import { materials } from '../../../lib/talks/materials'
+
+const videos = [
+  { id: 'VadEWpLVnGU', title: '브랜치(Branch)' },
+  { id: 'elDrj5mauJU', title: '머지(Merge)' },
+]
+---
+
+<Base title="Git을 활용한 협업" ogTitle={`Git을 활용한 협업 | ${siteMetadata.title}`} description="CNU SW Academy TA로 진행한 Git 협업 실습 자료 시리즈" ogImage={`${siteMetadata.siteUrl}${siteMetadata.socialBanner}`} locale="ko">
+  <div class="container py-8 md:py-10">
+    <Link href="/talks" class="inline-block mb-6 text-sm text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
+      ← Talks
+    </Link>
+
+    <header class="pb-8 mb-10 border-b border-gray-200 dark:border-gray-700">
+      <h1 class="mb-4 text-3xl font-bold text-gray-900 md:text-4xl dark:text-gray-100">Git을 활용한 협업</h1>
+      <p class="text-sm leading-7 text-gray-700 break-keep md:text-base dark:text-gray-300">
+        충남대학교 구성원 대상 소프트웨어 교육 <strong>CNU SW Academy</strong>에서 TA로 Git·알고리즘 실습을
+        진행했습니다.
+        <br />
+        버전 관리의 개념부터 브랜치·머지·Pull Request·커밋 컨벤션까지, 협업에 필요한 Git을 5회차 실습으로 정리한
+        자료입니다.
+      </p>
+    </header>
+
+    <section class="mb-12">
+      <h2 class="pb-2 mb-8 text-2xl font-bold text-gray-900 border-b-2 border-gray-200 md:text-3xl dark:text-gray-100 dark:border-gray-700">
+        실습 자료
+      </h2>
+      <div class="space-y-6">
+        {
+          materials.map((m, i) => (
+            <div class="group">
+              <div class="flex gap-3 items-baseline">
+                <span class="text-sm font-mono text-gray-400 dark:text-gray-600">{String(i + 1).padStart(2, '0')}</span>
+                <div class="flex-1">
+                  <Link
+                    href={`/talks/git-collaboration/${m.id}`}
+                    class="text-lg font-semibold text-gray-900 transition-colors md:text-xl dark:text-gray-100 hover:text-primary-500 dark:hover:text-primary-400"
+                  >
+                    {m.title}
+                  </Link>
+                  <p class="mt-1 text-sm text-gray-600 break-keep md:text-base dark:text-gray-400">{m.description}</p>
+                </div>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+      <div class="grid gap-6 mt-10 sm:grid-cols-2">
+        {
+          videos.map((v) => (
+            <figure>
+              <div class="overflow-hidden border border-gray-200 rounded-lg aspect-video dark:border-gray-700">
+                <iframe
+                  src={`https://www.youtube-nocookie.com/embed/${v.id}`}
+                  title={v.title}
+                  loading="lazy"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowfullscreen
+                  class="w-full h-full"
+                />
+              </div>
+              <figcaption class="mt-2 text-sm text-gray-500 break-keep dark:text-gray-500">{v.title}</figcaption>
+            </figure>
+          ))
+        }
+      </div>
+    </section>
+  </div>
+</Base>

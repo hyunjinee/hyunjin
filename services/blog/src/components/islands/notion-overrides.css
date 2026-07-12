@@ -1,0 +1,11 @@
+/* 노션 기본 배경(#2f3437 등)을 걷어내고 사이트 배경을 그대로 사용 */
+.notion-app,
+.notion-page {
+  background: transparent;
+}
+
+/* 검정 GitHub 로고가 다크 배경에 묻히지 않게 반전 — 컬러 아이콘(충남대 엠블럼 등)은 제외 */
+.dark-mode .notion-page-icon-hero img.notion-page-icon[src*="icon-7e30efa2dfba"],
+.dark-mode .notion-page-icon-hero img.notion-page-icon[src*="icon-508e141b48bf"] {
+  filter: invert(1);
+}
