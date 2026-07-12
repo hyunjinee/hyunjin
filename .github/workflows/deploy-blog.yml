@@ -1,0 +1,37 @@
+name: Deploy blog to Cloudflare Workers
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'services/blog/**'
+      - '.github/workflows/deploy-blog.yml'
+  workflow_dispatch: {}
+
+concurrency:
+  group: deploy-blog
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4 # 버전은 루트 package.json의 packageManager 필드를 따름
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build and deploy
+        working-directory: services/blog
+        run: pnpm deploy:cf
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          NEXT_UMAMI_ID: ${{ vars.NEXT_UMAMI_ID }}
