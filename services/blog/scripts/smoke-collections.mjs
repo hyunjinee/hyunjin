@@ -55,3 +55,40 @@ console.log(
 )
 console.log(`slug 집합 일치 (${expectedSlugs.length}개): ${expectedSlugs.join(', ')}`)
 console.log('draft 필터·렌더 마커(prism/slug/autolink) 확인 완료')
+
+// --- Task 2: 전역 셸(Base.astro/Header/404) 검증 ---
+
+// (a) FOUC 방지 테마 인라인 스크립트 — Base.astro를 통하는 모든 페이지에 있어야 함
+assert(smokeHtml.includes("localStorage.getItem('theme')"), 'FOUC 테마 인라인 스크립트가 없음 — Base.astro 확인')
+
+// (b) Header nav 링크
+for (const href of ['/blog', '/projects', '/talks', '/reports', '/calendar']) {
+  assert(smokeHtml.includes(`href="${href}"`), `Header nav 링크 누락: ${href}`)
+}
+
+// (c) 404 페이지 마크업·테마 스크립트
+const notFoundHtml = readFileSync(path.join(root, 'dist/404.html'), 'utf-8')
+assert(notFoundHtml.includes('페이지를 찾을 수 없습니다'), '404.astro 마크업 누락')
+assert(notFoundHtml.includes("localStorage.getItem('theme')"), '404 페이지에 테마 스크립트 없음')
+
+console.log('전역 셸(테마 스크립트·헤더 nav·404) 확인 완료')
+
+// 검색 인덱스: draft 제외 — build-search-index.mjs는 astro 컬렉션이 아니라 data/blog MDX를 직접 파싱하므로
+// 위에서 구한 draft 필터링 결과(entrySlug 집합)와 문서 수·slug가 정확히 일치해야 draft가 새지 않은 것
+execSync('node scripts/build-search-index.mjs', { cwd: root, stdio: 'inherit' })
+const koIndex = JSON.parse(readFileSync(path.join(root, 'public/search.json'), 'utf-8'))
+const enIndex = JSON.parse(readFileSync(path.join(root, 'public/search-en.json'), 'utf-8'))
+assert(
+  koIndex.length === data.ko.slugs.length,
+  `search.json draft 누출 의심: 문서 ${koIndex.length}개 !== 공개 slug ${data.ko.slugs.length}개`,
+)
+assert(
+  enIndex.length === data.en.slugs.length,
+  `search-en.json draft 누출 의심: 문서 ${enIndex.length}개 !== 공개 slug ${data.en.slugs.length}개`,
+)
+assert(
+  koIndex.every((doc) => data.ko.slugs.includes(doc.path.replace(/^blog\//, ''))),
+  'search.json의 path가 draft 필터링된 slug 집합과 불일치',
+)
+
+console.log(`search index: ko=${koIndex.length} en=${enIndex.length} (draft 0건 확인됨)`)

@@ -1,0 +1,16 @@
+---
+// components/SearchButton.tsx 이식. kbar는 버튼·모달·컨텍스트가 하나의 React 트리를 공유해야 하므로
+// 이 셋을 한 island(Search.tsx)로 묶고, 이 파일은 그 마운트 지점 역할만 한다.
+// biome-ignore-all lint/correctness/noUnusedImports: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+// biome-ignore-all lint/correctness/noUnusedVariables: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+import type { Locale } from '../lib/locale'
+import Search from './islands/Search'
+
+interface Props {
+  locale?: Locale
+}
+
+const { locale = 'ko' } = Astro.props
+---
+
+<Search client:idle locale={locale} />

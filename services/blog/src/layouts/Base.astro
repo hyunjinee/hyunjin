@@ -1,0 +1,103 @@
+---
+// app/[locale]/layout.tsx 이식 — head 구성·전역 css·다크모드 FOUC 방지·전역 셸(Header/Footer) 담당.
+// pliny의 SearchProvider가 트리 전체를 감싸던 구조는 없앴다: 검색은 Header 안 SearchButton island 하나로 완결된다.
+// biome-ignore-all lint/correctness/noUnusedImports: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+// biome-ignore-all lint/correctness/noUnusedVariables: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+import '../../css/tailwind-astro.css'
+import '../../css/pretendard-dynamic-subset.css'
+import '../../css/view-transition.css'
+import 'remark-github-blockquote-alert/alert.css'
+import '../../css/code-highlight.css'
+// 원본의 6번째 import였던 pliny/search/algolia.css는 제외했다: pliny의 Algolia/KBar 검색 컴포넌트
+// 전용 스타일(--docsearch-* 변수)인데 이 프로젝트는 kbar 직접 의존 island로 대체해 더 쓰지 않고,
+// theme(colors.primary.600) 같은 Tailwind CSS 함수가 Astro의 Vite 처리 컨텍스트에서 해석되지 않아 빌드가 깨진다.
+
+import siteMetadata from '../../data/siteMetadata.js'
+import Footer from '../components/Footer.astro'
+import Header from '../components/Header.astro'
+import SectionContainer from '../components/SectionContainer.astro'
+import type { Locale } from '../lib/locale'
+
+interface Props {
+  title?: string
+  description?: string
+  canonical?: string
+  hreflang?: { ko?: string; en?: string; xDefault?: string }
+  ogImage?: string
+  locale: Locale
+}
+
+const DEFAULT_TITLE = '이현진 (Hyunjin Lee) — Software Engineer'
+
+const { title, description = siteMetadata.description, canonical, hreflang, ogImage, locale } = Astro.props
+
+const pageTitle = title ? `${title} | ${siteMetadata.title}` : DEFAULT_TITLE
+const resolvedOgImage = ogImage ?? `${siteMetadata.siteUrl}/og/default.png`
+const htmlLang = locale === 'en' ? 'en-US' : siteMetadata.language
+const feedPath = locale === 'en' ? '/en/feed.xml' : '/feed.xml'
+---
+
+<html lang={htmlLang} class="scroll-smooth">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+
+    {canonical && <link rel="canonical" href={canonical} />}
+    {hreflang?.ko && <link rel="alternate" hreflang="ko" href={hreflang.ko} />}
+    {hreflang?.en && <link rel="alternate" hreflang="en" href={hreflang.en} />}
+    {hreflang?.xDefault && <link rel="alternate" hreflang="x-default" href={hreflang.xDefault} />}
+
+    <meta name="robots" content="index, follow" />
+    <meta name="googlebot" content="index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1" />
+
+    <meta property="og:title" content={title ?? DEFAULT_TITLE} />
+    <meta property="og:description" content={description} />
+    <meta property="og:site_name" content={siteMetadata.title} />
+    <meta property="og:image" content={resolvedOgImage} />
+    <meta property="og:locale" content="ko_KR" />
+    <meta property="og:type" content="website" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title ?? DEFAULT_TITLE} />
+    <meta name="twitter:image" content={resolvedOgImage} />
+
+    <link rel="apple-touch-icon" sizes="76x76" href="/static/favicons/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/favicons/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/favicons/favicon-16x16.png" />
+    <link rel="manifest" href="/static/favicons/site.webmanifest" />
+    <link rel="mask-icon" href="/static/favicons/safari-pinned-tab.svg" color="#5bbad5" />
+    <meta name="msapplication-TileColor" content="#000000" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fff" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000" />
+    <link rel="alternate" type="application/rss+xml" href={feedPath} />
+
+    <script is:inline>
+      // FOUC 방지: 페인트 전에 html.dark를 확정한다.
+      // localStorage 'theme' 키·값('light'|'dark'|'system')은 next-themes와 호환 유지 (ThemeSwitch island가 갱신).
+      ;(function () {
+        try {
+          var theme = localStorage.getItem('theme') || 'dark'
+          var isDark = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+          document.documentElement.classList.toggle('dark', isDark)
+        } catch (e) {}
+      })()
+    </script>
+
+    {
+      import.meta.env.PUBLIC_UMAMI_ID && (
+        <script defer src="https://analytics.umami.is/script.js" data-website-id={import.meta.env.PUBLIC_UMAMI_ID} />
+      )
+    }
+  </head>
+  <body class="bg-white pl-[calc(100vw-100%)] text-black antialiased dark:bg-gray-950 dark:text-white h-full">
+    <SectionContainer>
+      <Header locale={locale} />
+      <main class="flex-1">
+        <slot />
+      </main>
+      <Footer />
+    </SectionContainer>
+  </body>
+</html>

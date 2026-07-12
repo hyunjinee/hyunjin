@@ -1,0 +1,27 @@
+---
+// components/LocaleSwitcher.tsx 이식. 원본은 usePathname(클라이언트)으로 현재 경로를 읽었지만,
+// 정적 프리렌더에서는 Astro.url.pathname이 빌드 시점에 이미 실제 렌더 경로와 정확히 일치한다.
+// biome-ignore-all lint/correctness/noUnusedVariables: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+import { type Locale, localePath, stripLocalePrefix } from '../lib/locale'
+
+// localized 표면에서만 무프리픽스 경로를 그대로 전환한다 (그 외 ko-only 표면에서 EN은 홈으로)
+const isLocalizedSurface = (path: string) =>
+  path === '/' || path === '/blog' || path.startsWith('/blog/') || path === '/tags' || path.startsWith('/tags/')
+
+const { locale, path } = stripLocalePrefix(Astro.url.pathname)
+const target: Locale = locale === 'en' ? 'ko' : 'en'
+const href = target === 'ko' ? localePath('ko', path) : isLocalizedSurface(path) ? localePath('en', path) : '/en'
+const label = target === 'ko' ? '한국어' : 'EN'
+const ariaLabel = target === 'ko' ? '한국어로 전환' : 'Switch to English'
+---
+
+{/* NEXT_LOCALE 쿠키: 정적 배포라 이걸 읽는 서버는 없지만, 클라이언트/프록시가 참조할 수 있는
+    기존 계약(원본 LocaleSwitcher.tsx)을 그대로 보존하기 위해 계속 굽는다. */}
+<a
+  href={href}
+  aria-label={ariaLabel}
+  class="font-medium text-gray-900 hover:text-primary-500 dark:text-gray-100 dark:hover:text-primary-400"
+  onclick={`document.cookie='NEXT_LOCALE=${target}; path=/; max-age=31536000'`}
+>
+  {label}
+</a>

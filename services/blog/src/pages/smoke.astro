@@ -3,6 +3,8 @@
 // 파일명에 '_' 접두사를 쓰지 않는 이유: Astro는 pages/ 하위 '_'로 시작하는 경로를 라우트에서 제외한다
 // (node_modules/astro/dist/core/util.js isPublicRoute)
 import { getCollection, render } from 'astro:content'
+// biome-ignore lint/correctness/noUnusedImports: 아래 astro 템플릿(frontmatter 밖)에서 사용 — biome은 .astro 템플릿을 보지 않는다
+import Base from '../layouts/Base.astro'
 import { entryLocale, entrySlug, findBySlug, postsForLocale } from '../lib/posts'
 
 const rawEntries = await getCollection('blog')
@@ -29,9 +31,11 @@ const renderTarget = await findBySlug('ko', 'understanding-react-rendering')
 const { Content } = renderTarget ? await render(renderTarget) : { Content: null }
 ---
 
-<pre id="smoke-data">{JSON.stringify(data)}</pre>
-{Content && (
-  <div id="smoke-render">
-    <Content />
-  </div>
-)}
+<Base locale="ko" title="Smoke">
+  <pre id="smoke-data">{JSON.stringify(data)}</pre>
+  {Content && (
+    <div id="smoke-render">
+      <Content />
+    </div>
+  )}
+</Base>
