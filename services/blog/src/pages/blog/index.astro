@@ -1,0 +1,27 @@
+---
+// app/[locale]/blog/page.tsx 이식 (ko, 무프리픽스). en판은 src/pages/en/blog/index.astro.
+// biome-ignore-all lint/correctness/noUnusedImports: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+// biome-ignore-all lint/correctness/noUnusedVariables: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+import siteMetadata from '../../../data/siteMetadata.js'
+import PostList from '../../components/PostList.astro'
+import Base from '../../layouts/Base.astro'
+import { postsForLocale } from '../../lib/posts'
+
+const posts = await postsForLocale('ko')
+const canonical = `${siteMetadata.siteUrl}/blog`
+// app/seo.tsx genPageMetadata: openGraph.title/twitter.title은 `${title} | ${siteName}`로 템플릿된다
+// (blog/[...slug] 글 상세의 무템플릿 og:title과는 다른 함수 — Base.astro의 ogTitle prop으로 재현).
+const ogTitle = `Blog | ${siteMetadata.title}`
+---
+
+<Base
+  title="Blog"
+  ogTitle={ogTitle}
+  canonical={canonical}
+  hreflang={{ ko: canonical, en: `${siteMetadata.siteUrl}/en/blog`, xDefault: `${siteMetadata.siteUrl}/en/blog` }}
+  ogImage={`${siteMetadata.siteUrl}${siteMetadata.socialBanner}`}
+  ogUrl={false}
+  locale="ko"
+>
+  <PostList posts={posts} />
+</Base>

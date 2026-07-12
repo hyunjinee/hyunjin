@@ -1,0 +1,45 @@
+---
+// app/[locale]/tags/[tag]/page.tsx 이식 (ko 전용 — en 공개 글이 0편이라 브리프 계약대로 en/tags/[tag]
+// 라우트 파일 자체를 만들지 않는다: generateStaticParams가 LOCALES.flatMap으로 두 locale을 다 돌던 원본과
+// 달리, 이 파일은 tagCounts('ko')만 순회해 en 태그 상세 경로가 항상 0개로 유지되도록 구조적으로 보장한다.
+// 파라미터는 디코딩된 원문을 그대로 반환 — encodeURI 금지(static export 시절 /tags/회고 404 회귀의 원인).
+// biome-ignore-all lint/correctness/noUnusedImports: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+// biome-ignore-all lint/correctness/noUnusedVariables: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+import { slug as githubSlug } from 'github-slugger'
+import siteMetadata from '../../../data/siteMetadata.js'
+import Base from '../../layouts/Base.astro'
+import ListWithTags from '../../layouts/ListWithTags.astro'
+import { localePath } from '../../lib/locale'
+import { postsForLocale } from '../../lib/posts'
+import { tagCounts } from '../../lib/tags'
+
+export async function getStaticPaths() {
+  const counts = await tagCounts('ko')
+  return Object.keys(counts).map((tag) => ({ params: { tag } }))
+}
+
+const { tag } = Astro.params as { tag: string }
+// tags/[tag]/page.tsx:45 `tag[0].toUpperCase() + tag.split(' ').join('-').slice(1)` 대응
+const heading = tag[0].toUpperCase() + tag.split(' ').join('-').slice(1)
+const posts = await postsForLocale('ko')
+const filteredPosts = posts.filter((post) => post.data.tags.some((t) => githubSlug(t) === tag))
+
+const canonical = `${siteMetadata.siteUrl}${localePath('ko', `/tags/${tag}`)}`
+const ogTitle = `${tag} | ${siteMetadata.title}`
+const feedUrl = `${siteMetadata.siteUrl}${localePath('ko', `/tags/${tag}/feed.xml`)}`
+---
+
+<Base
+  title={tag}
+  ogTitle={ogTitle}
+  description={`${siteMetadata.title} ${tag} tagged content`}
+  canonical={canonical}
+  ogImage={`${siteMetadata.siteUrl}${siteMetadata.socialBanner}`}
+  ogUrl={false}
+  locale="ko"
+>
+  <Fragment slot="head">
+    <link rel="alternate" type="application/rss+xml" href={feedUrl} />
+  </Fragment>
+  <ListWithTags posts={filteredPosts} title={heading} locale="ko" activeTag={tag} />
+</Base>

@@ -19,7 +19,7 @@ function readHtml(rootDir, slugPath) {
 }
 
 function attr(tag, name) {
-  const m = tag.match(new RegExp(`${name}="([^"]*)"`))
+  const m = tag.match(new RegExp(`${name}="([^"]*)"`, 'i'))
   return m ? m[1] : undefined
 }
 
@@ -29,7 +29,9 @@ function extractFields(html) {
   const canonicalTag = html.match(/<link rel="canonical"[^>]*>/)
   if (canonicalTag) fields.canonical = attr(canonicalTag[0], 'href')
 
-  for (const tag of html.match(/<link rel="alternate" hreflang[^>]*>/g) ?? []) {
+  // Next의 Metadata API는 이 태그를 hrefLang(대문자 L)으로 직렬화한다 — 'i' 없이는 out/의 홈·블로그
+  // 목록 페이지(hreflang이 있는 페이지)에서 이 태그를 아예 못 찾아 항상 diff로 오탐한다.
+  for (const tag of html.match(/<link rel="alternate" hreflang[^>]*>/gi) ?? []) {
     const lang = attr(tag, 'hreflang')
     fields.hreflang[lang] = attr(tag, 'href')
   }

@@ -1,0 +1,45 @@
+---
+// app/[locale]/tags/page.tsx 이식 (en). ko판은 src/pages/tags/index.astro.
+// biome-ignore-all lint/correctness/noUnusedImports: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+// biome-ignore-all lint/correctness/noUnusedVariables: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+import siteMetadata from '../../../../data/siteMetadata.js'
+import Link from '../../../components/Link.astro'
+import Tag from '../../../components/Tag.astro'
+import Base from '../../../layouts/Base.astro'
+import { localePath } from '../../../lib/locale'
+import { tagCounts } from '../../../lib/tags'
+
+const counts = await tagCounts('en')
+const tagKeys = Object.keys(counts)
+const sortedTags = tagKeys.sort((a, b) => counts[b] - counts[a])
+const ogTitle = `Tags | ${siteMetadata.title}`
+---
+
+<Base
+  title="Tags"
+  ogTitle={ogTitle}
+  description="Things I blog about"
+  ogImage={`${siteMetadata.siteUrl}${siteMetadata.socialBanner}`}
+  locale="en"
+>
+  <div class="flex flex-col items-start justify-start divide-y divide-gray-200 dark:divide-gray-700 md:mt-24 md:flex-row md:items-center md:justify-center md:space-x-6 md:divide-y-0">
+    <div class="space-x-2 pb-8 pt-6 md:space-y-5">
+      <h1 class="text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:border-r-2 md:px-6 md:text-6xl md:leading-14">
+        Tags
+      </h1>
+    </div>
+    <div class="flex max-w-lg flex-wrap">
+      {tagKeys.length === 0 && 'No tags found.'}
+      {
+        sortedTags.map((t) => (
+          <div class="mb-2 mr-5 mt-2">
+            <Tag text={t} locale="en" />
+            <Link href={localePath('en', `/tags/${t}`)} class="-ml-2 text-sm font-semibold uppercase text-gray-600 dark:text-gray-300" aria-label={`View posts tagged ${t}`}>
+              {` (${counts[t]})`}
+            </Link>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</Base>

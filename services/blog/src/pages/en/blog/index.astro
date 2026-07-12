@@ -1,0 +1,25 @@
+---
+// app/[locale]/blog/page.tsx 이식 (en). ko판은 src/pages/blog/index.astro.
+// biome-ignore-all lint/correctness/noUnusedImports: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+// biome-ignore-all lint/correctness/noUnusedVariables: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+import siteMetadata from '../../../../data/siteMetadata.js'
+import PostList from '../../../components/PostList.astro'
+import Base from '../../../layouts/Base.astro'
+import { postsForLocale } from '../../../lib/posts'
+
+const posts = await postsForLocale('en')
+const canonical = `${siteMetadata.siteUrl}/en/blog`
+const ogTitle = `Blog | ${siteMetadata.title}`
+---
+
+<Base
+  title="Blog"
+  ogTitle={ogTitle}
+  canonical={canonical}
+  hreflang={{ ko: `${siteMetadata.siteUrl}/blog`, en: canonical, xDefault: canonical }}
+  ogImage={`${siteMetadata.siteUrl}${siteMetadata.socialBanner}`}
+  ogUrl={false}
+  locale="en"
+>
+  <PostList posts={posts} />
+</Base>

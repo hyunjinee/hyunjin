@@ -31,14 +31,41 @@ interface Props {
   // 블로그 글 상세(Task 3)가 app/[locale]/blog/[...slug]/page.tsx의 openGraph.type: 'article'을
   // 재현하는 데 쓴다. 미지정 시 기존 동작(website) 그대로 — 기존 소비자 무파손.
   ogType?: 'website' | 'article'
+  // Task 4: app/seo.tsx의 genPageMetadata는 og:title/twitter:title을 `${title} | ${siteName}`로
+  // 템플릿하지만(blog/tags 목록), blog/[...slug]/page.tsx의 인라인 metadata는 title을 그대로 쓴다(글 상세).
+  // 미지정 시 기존 동작(title ?? DEFAULT_TITLE, 무템플릿) 그대로 — 기존 소비자(Task 3 글 상세) 무파손.
+  ogTitle?: string
+  // Task 4: genPageMetadata 기반 목록 페이지(blog/tags)는 canonical은 있어도 openGraph.url을 지정한
+  // 적이 없어 og:url이 원본에 없다. 기본값 true로 기존 동작(canonical 있으면 og:url 표시) 유지 —
+  // 기존 소비자(Task 3 글 상세) 무파손. 목록 페이지만 false로 명시 억제.
+  ogUrl?: boolean
+  // Task 4: app/[locale]/page.tsx의 en 분기는 top-level description('Posts in English')만 주고
+  // openGraph를 자체 지정하지 않아, og:description/twitter:description은 루트 layout.tsx의 정적
+  // openGraph.description(한국어 기본값)을 그대로 물려받는다(<meta name="description">과는 다른 값) —
+  // en 홈 하나만 이 분기를 타므로 og/twitter description을 description과 독립적으로 override한다.
+  // 미지정 시 기존 동작(description과 동일 값) 그대로 — 기존 소비자 무파손.
+  ogDescription?: string
 }
 
 const DEFAULT_TITLE = '이현진 (Hyunjin Lee) — Software Engineer'
 
-const { title, description: descriptionProp, canonical, hreflang, ogImage, locale, ogType = 'website' } = Astro.props
+const {
+  title,
+  description: descriptionProp,
+  canonical,
+  hreflang,
+  ogImage,
+  locale,
+  ogType = 'website',
+  ogTitle,
+  ogUrl = true,
+  ogDescription,
+} = Astro.props
 const description = descriptionProp === null ? undefined : (descriptionProp ?? siteMetadata.description)
+const resolvedOgDescription = ogDescription ?? description
 
 const pageTitle = title ? `${title} | ${siteMetadata.title}` : DEFAULT_TITLE
+const resolvedOgTitle = ogTitle ?? title ?? DEFAULT_TITLE
 const resolvedOgImage = ogImage ?? `${siteMetadata.siteUrl}/og/default.png`
 const htmlLang = locale === 'en' ? 'en-US' : siteMetadata.language
 const feedPath = locale === 'en' ? '/en/feed.xml' : '/feed.xml'
@@ -59,17 +86,17 @@ const feedPath = locale === 'en' ? '/en/feed.xml' : '/feed.xml'
     <meta name="robots" content="index, follow" />
     <meta name="googlebot" content="index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1" />
 
-    <meta property="og:title" content={title ?? DEFAULT_TITLE} />
-    {description && <meta property="og:description" content={description} />}
+    <meta property="og:title" content={resolvedOgTitle} />
+    {resolvedOgDescription && <meta property="og:description" content={resolvedOgDescription} />}
     <meta property="og:site_name" content={siteMetadata.title} />
     <meta property="og:image" content={resolvedOgImage} />
-    {canonical && <meta property="og:url" content={canonical} />}
+    {canonical && ogUrl && <meta property="og:url" content={canonical} />}
     <meta property="og:locale" content={locale === 'en' ? 'en_US' : 'ko_KR'} />
     <meta property="og:type" content={ogType} />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={title ?? DEFAULT_TITLE} />
-    {description && <meta name="twitter:description" content={description} />}
+    <meta name="twitter:title" content={resolvedOgTitle} />
+    {resolvedOgDescription && <meta name="twitter:description" content={resolvedOgDescription} />}
     <meta name="twitter:image" content={resolvedOgImage} />
 
     <link rel="apple-touch-icon" sizes="76x76" href="/static/favicons/apple-touch-icon.png" />
