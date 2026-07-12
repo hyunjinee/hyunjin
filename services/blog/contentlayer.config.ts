@@ -28,6 +28,14 @@ import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer.js'
 const root = process.cwd()
 const isProduction = process.env.NODE_ENV === 'production'
 
+const LOCALES = ['ko', 'en']
+
+// data/blog/en/* → 'en', 그 외 전부 'ko' (frontmatter 아닌 경로가 단일 진실)
+const resolveDocLocale = (doc) => {
+  const segs = doc._raw.flattenedPath.split('/')
+  return segs[0] === 'blog' && segs[1] === 'en' ? 'en' : 'ko'
+}
+
 // heroicon mini link
 const icon = fromHtmlIsomorphic(
   `
@@ -41,8 +49,13 @@ const icon = fromHtmlIsomorphic(
   { fragment: true },
 )
 
-// frontmatter의 slug가 있으면 우선, 없으면 파일명을 소문자 kebab-case로 정규화
-const resolveSlug = (doc) => doc.slug ?? slug(doc._raw.flattenedPath.replace(/^.+?(\/)/, ''))
+// frontmatter slug 우선. 없으면 첫 세그먼트(blog/authors)와 locale 세그먼트(en)를 벗긴 파일명을 kebab-case로
+const resolveSlug = (doc) => {
+  if (doc.slug) return doc.slug
+  const segs = doc._raw.flattenedPath.split('/').slice(1)
+  const rest = segs[0] === 'en' ? segs.slice(1) : segs
+  return slug(rest.join('/'))
+}
 
 const computedFields: ComputedFields = {
   readingTime: { type: 'json', resolve: (doc) => readingTime(doc.body.raw) },
@@ -59,22 +72,20 @@ const computedFields: ComputedFields = {
     resolve: (doc) => doc._raw.sourceFilePath,
   },
   toc: { type: 'json', resolve: (doc) => extractTocHeadings(doc.body.raw) },
+  locale: { type: 'string', resolve: resolveDocLocale },
 }
 
 /**
  * Count the occurrences of all tags across blog posts and write to json file
  */
 function createTagCount(allBlogs) {
-  const tagCount: Record<string, number> = {}
+  const tagCount = { ko: {}, en: {} }
   allBlogs.forEach((file) => {
     if (file.tags && (!isProduction || file.draft !== true)) {
+      const loc = resolveDocLocale(file)
       file.tags.forEach((tag) => {
         const formattedTag = slug(tag)
-        if (formattedTag in tagCount) {
-          tagCount[formattedTag] += 1
-        } else {
-          tagCount[formattedTag] = 1
-        }
+        tagCount[loc][formattedTag] = (tagCount[loc][formattedTag] || 0) + 1
       })
     }
   })
@@ -95,16 +106,18 @@ function toSearchText(raw) {
 
 function createSearchIndex(allBlogs) {
   if (siteMetadata?.search?.provider === 'kbar' && siteMetadata.search.kbarConfig.searchDocumentsPath) {
-    // pliny kbar는 keywords(=summary)로만 매칭하므로, 본문 평문을 keywords에 합쳐 본문 검색을 가능하게 함
-    const documents = allCoreContent(sortPosts(allBlogs)).map((doc) => {
-      const full = allBlogs.find((b) => b.slug === doc.slug)
-      const body = toSearchText(full?.body?.raw)
-      return { ...doc, summary: [doc.summary, body].filter(Boolean).join(' ') }
-    })
-    writeFileSync(
-      `public/${path.basename(siteMetadata.search.kbarConfig.searchDocumentsPath)}`,
-      JSON.stringify(documents),
-    )
+    for (const loc of LOCALES) {
+      const localeBlogs = allBlogs.filter((b) => resolveDocLocale(b) === loc)
+      const documents = allCoreContent(sortPosts(localeBlogs)).map((doc) => {
+        const full = localeBlogs.find((b) => b.slug === doc.slug)
+        const body = toSearchText(full?.body?.raw)
+        // kbar는 '/'+path로 이동한다. en 문서의 path는 blog/<slug>라 무프리픽스 ko 글로 새므로 en 프리픽스를 강제
+        const path = loc === 'en' ? `en/blog/${doc.slug}` : doc.path
+        return { ...doc, path, summary: [doc.summary, body].filter(Boolean).join(' ') }
+      })
+      const filename = loc === 'ko' ? 'search.json' : 'search-en.json'
+      writeFileSync(`public/${filename}`, JSON.stringify(documents))
+    }
     console.log('Local search index generated...')
   }
 }
@@ -127,6 +140,7 @@ export const Blog = defineDocumentType(() => ({
     bannerFit: { type: 'enum', options: ['cover', 'contain'], default: 'contain' },
     bibliography: { type: 'string' },
     canonicalUrl: { type: 'string' },
+    translationOf: { type: 'string' }, // 번역 글에만: 원문(ko)의 slug
   },
   computedFields: {
     ...computedFields,
@@ -140,7 +154,11 @@ export const Blog = defineDocumentType(() => ({
         dateModified: doc.lastmod || doc.date,
         description: doc.summary,
         image: doc.images ? doc.images[0] : siteMetadata.socialBanner,
-        url: `${siteMetadata.siteUrl}/${doc._raw.flattenedPath.split('/')[0]}/${resolveSlug(doc)}`,
+        url:
+          resolveDocLocale(doc) === 'en'
+            ? `${siteMetadata.siteUrl}/en/blog/${resolveSlug(doc)}`
+            : `${siteMetadata.siteUrl}/blog/${resolveSlug(doc)}`,
+        inLanguage: resolveDocLocale(doc) === 'en' ? 'en' : 'ko',
       }),
     },
   },

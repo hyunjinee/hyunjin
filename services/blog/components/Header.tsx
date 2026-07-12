@@ -1,12 +1,14 @@
 import siteMetadata from '@/data/siteMetadata'
 import headerNavLinks from '@/data/headerNavLinks'
 import Logo from '@/data/logo.svg'
+import { localePath, type Locale } from 'lib/locale'
 import Link from './Link'
+import LocaleSwitcher from './LocaleSwitcher'
 import MobileNav from './MobileNav'
 import ThemeSwitch from './ThemeSwitch'
 import SearchButton from './SearchButton'
 
-const Header = () => {
+const Header = ({ locale = 'ko' }: { locale?: Locale }) => {
   let headerClass = 'flex items-center w-full bg-white dark:bg-gray-950 justify-between py-6'
   if (siteMetadata.stickyNav) {
     headerClass += ' sticky top-0 z-50'
@@ -14,7 +16,7 @@ const Header = () => {
 
   return (
     <header className={headerClass}>
-      <Link href="/" aria-label={siteMetadata.headerTitle}>
+      <Link href={localePath(locale, '/')} aria-label={siteMetadata.headerTitle}>
         <div className="flex justify-between items-center">
           <div className="mr-3">{/* <Logo /> */}</div>
           {typeof siteMetadata.headerTitle === 'string' ? (
@@ -28,10 +30,11 @@ const Header = () => {
         <div className="hidden items-center space-x-4 sm:flex sm:space-x-6">
           {headerNavLinks
             .filter((link) => link.href !== '/')
+            .filter((link) => locale === 'ko' || link.localized)
             .map((link) => (
               <Link
                 key={link.title}
-                href={link.href}
+                href={link.localized ? localePath(locale, link.href) : link.href}
                 className="block font-medium text-gray-900 hover:text-primary-500 dark:text-gray-100 dark:hover:text-primary-400"
               >
                 {link.title}
@@ -39,8 +42,9 @@ const Header = () => {
             ))}
         </div>
         <SearchButton />
+        <LocaleSwitcher />
         <ThemeSwitch />
-        <MobileNav />
+        <MobileNav locale={locale} />
       </div>
     </header>
   )

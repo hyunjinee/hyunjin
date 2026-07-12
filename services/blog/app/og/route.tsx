@@ -49,6 +49,11 @@ export async function GET(req: Request) {
         { name: 'Noto', data: bold, weight: 700, style: 'normal' },
         { name: 'Noto', data: regular, weight: 400, style: 'normal' },
       ],
+      headers: {
+        // 같은 URL의 OG 이미지는 불변 — CDN(s-maxage)이 재요청을 흡수해 함수 재호출을 막는다.
+        // 캐시 없이는 크롤러 트래픽이 호출당 ~1초 CPU를 태워 Fluid Active CPU 한도를 고갈시켰음(2026-07 계정 pause 원인)
+        'Cache-Control': 'public, max-age=86400, s-maxage=31536000, immutable',
+      },
     },
   )
 }

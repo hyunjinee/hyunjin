@@ -10,6 +10,7 @@ import Link from '@/components/Link'
 import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
 import tagData from 'app/tag-data.json'
+import { stripLocalePrefix } from 'lib/locale'
 
 interface PaginationProps {
   totalPages: number
@@ -23,8 +24,9 @@ interface ListLayoutProps {
 }
 
 function Pagination({ totalPages, currentPage }: PaginationProps) {
-  const pathname = usePathname()
-  const basePath = pathname.split('/')[1]
+  const { locale, path } = stripLocalePrefix(usePathname() ?? '/')
+  const prefix = locale === 'en' ? '/en' : ''
+  const basePath = path.split('/')[1]
   const prevPage = currentPage - 1 > 0
   const nextPage = currentPage + 1 <= totalPages
 
@@ -37,7 +39,10 @@ function Pagination({ totalPages, currentPage }: PaginationProps) {
           </button>
         )}
         {prevPage && (
-          <Link href={currentPage - 1 === 1 ? `/${basePath}/` : `/${basePath}/page/${currentPage - 1}`} rel="prev">
+          <Link
+            href={currentPage - 1 === 1 ? `${prefix}/${basePath}/` : `${prefix}/${basePath}/page/${currentPage - 1}`}
+            rel="prev"
+          >
             Previous
           </Link>
         )}
@@ -50,7 +55,7 @@ function Pagination({ totalPages, currentPage }: PaginationProps) {
           </button>
         )}
         {nextPage && (
-          <Link href={`/${basePath}/page/${currentPage + 1}`} rel="next">
+          <Link href={`${prefix}/${basePath}/page/${currentPage + 1}`} rel="next">
             Next
           </Link>
         )}
@@ -60,8 +65,11 @@ function Pagination({ totalPages, currentPage }: PaginationProps) {
 }
 
 export default function ListLayoutWithTags({ posts, title, initialDisplayPosts = [], pagination }: ListLayoutProps) {
-  const pathname = usePathname()
-  const tagCounts = tagData as Record<string, number>
+  const pathname = usePathname() ?? '/'
+  const { locale, path } = stripLocalePrefix(pathname)
+  const prefix = locale === 'en' ? '/en' : ''
+  const localPathname = path
+  const tagCounts = (tagData as Record<string, Record<string, number>>)[locale]
   const tagKeys = Object.keys(tagCounts)
   const sortedTags = tagKeys.sort((a, b) => tagCounts[b] - tagCounts[a])
 
@@ -78,11 +86,11 @@ export default function ListLayoutWithTags({ posts, title, initialDisplayPosts =
         <div className="flex sm:space-x-24">
           <div className="hidden h-full max-h-screen min-w-[280px] max-w-[280px] flex-wrap overflow-auto rounded bg-gray-50 pt-5 shadow-md dark:bg-gray-900/70 dark:shadow-gray-800/40 sm:flex">
             <div className="px-6 py-4">
-              {pathname.startsWith('/blog') ? (
+              {localPathname.startsWith('/blog') ? (
                 <h3 className="font-bold uppercase text-primary-500">All Posts</h3>
               ) : (
                 <Link
-                  href={`/blog`}
+                  href={`${prefix}/blog`}
                   className="font-bold text-gray-700 uppercase hover:text-primary-500 dark:text-gray-300 dark:hover:text-primary-500"
                 >
                   All Posts
@@ -98,7 +106,7 @@ export default function ListLayoutWithTags({ posts, title, initialDisplayPosts =
                         </h3>
                       ) : (
                         <Link
-                          href={`/tags/${slug(t)}`}
+                          href={`${prefix}/tags/${slug(t)}`}
                           className="px-3 py-2 text-sm font-medium text-gray-500 uppercase hover:text-primary-500 dark:text-gray-300 dark:hover:text-primary-500"
                           aria-label={`View posts tagged ${t}`}
                         >
@@ -129,7 +137,7 @@ export default function ListLayoutWithTags({ posts, title, initialDisplayPosts =
                       <div className="space-y-3">
                         <div>
                           <h2 className="text-2xl font-bold leading-8 tracking-tight">
-                            <Link href={`/${path}`} className="text-gray-900 dark:text-gray-100">
+                            <Link href={`${prefix}/${path}`} className="text-gray-900 dark:text-gray-100">
                               {title}
                             </Link>
                           </h2>
