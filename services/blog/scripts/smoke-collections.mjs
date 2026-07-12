@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // data/blog Content Collections이 기존 Next 빌드 산출물(out/blog/*.html)과 slug 계약을 지키는지 확인한다.
-// pnpm astro:build로 만든 dist/smoke/index.html에서 postsForLocale/entrySlug 결과를 읽어 검증.
+// pnpm astro:build로 만든 dist/smoke.html(astro.config.mjs build.format:'file')에서
+// postsForLocale/entrySlug 결과를 읽어 검증.
 import { execSync } from 'node:child_process'
 import { readdirSync, readFileSync } from 'node:fs'
 import path from 'node:path'
@@ -17,7 +18,7 @@ function assert(cond, msg) {
 
 execSync('pnpm exec astro build', { cwd: root, stdio: 'inherit' })
 
-const smokeHtml = readFileSync(path.join(root, 'dist/smoke/index.html'), 'utf-8')
+const smokeHtml = readFileSync(path.join(root, 'dist/smoke.html'), 'utf-8')
 const match = smokeHtml.match(/<pre id="smoke-data">([\s\S]*?)<\/pre>/)
 assert(match, 'smoke-data를 찾을 수 없음 — src/pages/smoke.astro 출력 확인')
 const data = JSON.parse(match[1].replace(/&quot;/g, '"').replace(/&amp;/g, '&'))

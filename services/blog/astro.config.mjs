@@ -41,6 +41,12 @@ export default defineConfig({
   site: 'https://hyunjinlee.com',
   output: 'static',
   trailingSlash: 'never',
+  // out/(구 Next 정적 export)과 동일하게 페이지를 <route>.html 파일로 낸다(디렉터리+index.html 아님).
+  // 배포 계층(Cloudflare Workers Static Assets)의 html_handling 기본값(auto-trailing-slash)이
+  // 디렉터리 형식(x/index.html)에는 /x → /x/ 307을 붙이는데, canonical·sitemap·내부 링크가 전부
+  // 무슬래시라 이 형식으로는 전 페이지가 리다이렉트를 거친다 — trailingSlash:'never'와 짝을 이루는
+  // 공식 권장 조합.
+  build: { format: 'file' },
   i18n: {
     defaultLocale: 'ko',
     locales: ['ko', 'en'],

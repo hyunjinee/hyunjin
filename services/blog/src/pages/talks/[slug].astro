@@ -1,12 +1,9 @@
 ---
-// app/[locale]/(ko-only)/talks/[slug]/page.tsx + TalkPresentation.tsx 이식.
-// pdfUrl·video(유튜브) 두 갈래만 이 파일이 다룬다 — pdfUrl·video가 모두 없는 나머지(HTML 데크 iframe) 갈래는
-// public/talks/<slug>/index.html(정적 데크)과 동일 dist 경로(talks/<slug>/index.html)를 두고 충돌해
-// Astro가 페이지 빌드를 자동 스킵한다(실측 확인: "Skipping ... because a file with the same name exists in
-// the public folder"). 과거 Next 정적 export는 talks/<slug>.html(페이지) vs talks/<slug>/index.html(데크)로
-// 파일명이 갈려 공존했다(out/ 실측 확인) — Astro의 output 포맷은 라우트당 전역(build.format)이라 .astro로는
-// 그 파일-형식 출력을 재현할 수 없다. [slug].html.ts(엔드포인트, 파일명 자체에 .html 포함)가 그 갈래를 맡는다.
-// git-collaboration도 정적 라우트(talks/git-collaboration/*)와 충돌해 명시 제외.
+// app/[locale]/(ko-only)/talks/[slug]/page.tsx + TalkPresentation.tsx 이식 (pdfUrl·video·HTML 데크 iframe
+// 세 갈래 전부). astro.config.mjs의 build.format:'file' 덕에 이 페이지는 talks/<slug>.html(파일)로 나가
+// public/talks/<slug>/index.html(정적 데크, 나머지 갈래가 iframe으로 참조)과 자연히 공존한다(out/의 과거
+// Next 정적 export와 동일 물리 구조) — git-collaboration은 정적 라우트(talks/git-collaboration/*)와
+// 충돌해 명시 제외.
 // biome-ignore-all lint/correctness/noUnusedImports: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
 // biome-ignore-all lint/correctness/noUnusedVariables: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
 import siteMetadata from '../../../data/siteMetadata.js'
@@ -16,7 +13,7 @@ import Base from '../../layouts/Base.astro'
 
 export function getStaticPaths() {
   return talks
-    .filter((t) => t.href?.startsWith('/talks/') && t.href !== '/talks/git-collaboration' && (t.pdfUrl || t.video))
+    .filter((t) => t.href?.startsWith('/talks/') && t.href !== '/talks/git-collaboration')
     .map((t) => ({ params: { slug: t.href?.replace('/talks/', '') } }))
 }
 
@@ -31,13 +28,14 @@ function getYouTubeId(url?: string) {
 }
 
 const youTubeId = talk.pdfUrl ? null : getYouTubeId(talk.video)
+const htmlPath = `/talks/${slug}/index.html`
 ---
 
 <Base title={talk.title} ogTitle={`${talk.title} | ${siteMetadata.title}`} description={talk.description} ogImage={`${siteMetadata.siteUrl}${siteMetadata.socialBanner}`} locale="ko">
   {
     talk.pdfUrl ? (
       <PDFPresentation client:only="react" pdfUrl={talk.pdfUrl} title={talk.title} />
-    ) : (
+    ) : youTubeId ? (
       <div class="container py-8 md:py-10">
         <a href="/talks" class="inline-block mb-6 text-sm text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
           ← Talks
@@ -62,6 +60,34 @@ const youTubeId = talk.pdfUrl ? null : getYouTubeId(talk.video)
             allowfullscreen
           />
         </div>
+      </div>
+    ) : (
+      <div class="flex fixed inset-0 flex-col bg-white dark:bg-gray-950">
+        <div class="flex-shrink-0 px-4 py-3 bg-gray-100 border-b border-gray-200 dark:bg-gray-900 dark:border-gray-700">
+          <div class="flex justify-between items-center mx-auto max-w-7xl">
+            <div class="flex-1 min-w-0">
+              <h1 class="text-xl font-bold text-gray-900 truncate dark:text-gray-100">{talk.title}</h1>
+              <div class="flex items-center gap-2 mt-0.5 text-sm">
+                {talk.description && <p class="text-gray-600 truncate dark:text-gray-400">{talk.description}</p>}
+                {talk.event && (
+                  <>
+                    <span class="text-gray-400">·</span>
+                    <p class="text-gray-500 truncate dark:text-gray-500">{talk.event}</p>
+                  </>
+                )}
+              </div>
+            </div>
+            <a href="/talks" class="ml-4 text-sm whitespace-nowrap text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
+              ← Talks
+            </a>
+          </div>
+        </div>
+        <div class="overflow-hidden flex-1">
+          <iframe src={htmlPath} class="w-full h-full border-0" title={talk.title} allow="fullscreen" />
+        </div>
+        <script is:inline>
+          document.body.style.overflow = 'hidden'
+        </script>
       </div>
     )
   }
