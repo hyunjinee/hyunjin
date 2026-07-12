@@ -118,15 +118,18 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
     //    나중에 번역이 생기면 목적지가 바뀌므로 308(영구, 브라우저 캐시)이 아니라 307(redirect)을 쓴다
     const other: Locale = locale === 'ko' ? 'en' : 'ko';
     const crossPost = findBySlug(other, slug);
-    if (crossPost) {
+    if (crossPost && crossPost.draft !== true) {
       const pair = pairOf(crossPost);
       const target = pair ? pair[locale] : crossPost;
       redirect(postUrl(target.locale as Locale, target.slug as string));
     }
     // 2) 기존 legacy 슬러그 301 로직: 전체 목록 대신 postsForLocale('ko')로 교체해 유지
+    //    draft 제외 필수: 프로덕션 목록엔 없는 draft가 여기서 걸리면 자기 자신으로 308 루프가 된다
     const requested = slugify(slug);
     const legacy = postsForLocale('ko').find(
-      (p) => p.slug === requested || slugify(p._raw.flattenedPath.replace(/^.+?(\/)/, '')) === requested,
+      (p) =>
+        p.draft !== true &&
+        (p.slug === requested || slugify(p._raw.flattenedPath.replace(/^.+?(\/)/, '')) === requested),
     );
     if (legacy) permanentRedirect(`/blog/${legacy.slug}`);
     return notFound();
