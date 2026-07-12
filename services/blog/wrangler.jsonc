@@ -21,5 +21,7 @@
       "!/search-en.json"
     ]
   },
-  "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "hyunjin-blog" }]
+  "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "hyunjin-blog" }],
+  // hyunjinlee.com zone이 이 계정에서 Active여야 연결됨. 기존 A 레코드(구 Vercel IP)가 남아 있으면 배포가 충돌 오류를 냄 — 그 경우 zone DNS에서 루트 A 삭제 후 재배포
+  "routes": [{ "pattern": "hyunjinlee.com", "custom_domain": true }]
 }
