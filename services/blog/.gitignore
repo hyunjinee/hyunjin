@@ -25,6 +25,9 @@ public/sitemap.xml
 # rss feed
 /public/feed.xml
 
+# og images (build-time generated)
+/public/og/
+
 # search
 /public/search.json
 

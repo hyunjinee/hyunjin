@@ -11,7 +11,7 @@
     "dev": "cross-env INIT_CWD=$PWD concurrently \"contentlayer2 dev\" \"next dev\"",
     "dev:no-turbo": "cross-env INIT_CWD=$PWD next dev --turbo=false",
     "validate": "node ./scripts/validate-i18n.mjs",
-    "build": "cross-env INIT_CWD=$PWD contentlayer2 build && node ./scripts/validate-i18n.mjs && cross-env INIT_CWD=$PWD next build && cross-env NODE_OPTIONS='--experimental-json-modules' node ./scripts/postbuild.mjs",
+    "build": "cross-env INIT_CWD=$PWD contentlayer2 build && node ./scripts/validate-i18n.mjs && node ./scripts/generate-og.mjs && cross-env INIT_CWD=$PWD next build && cross-env NODE_OPTIONS='--experimental-json-modules' node ./scripts/postbuild.mjs",
     "serve": "next start",
     "analyze": "cross-env ANALYZE=true next build",
     "lint": "next lint --fix --dir pages --dir app --dir components --dir lib --dir layouts --dir scripts",
@@ -80,6 +80,7 @@
   "devDependencies": {
     "@biomejs/biome": "2.3.12",
     "@chromatic-com/storybook": "3.2.4",
+    "@resvg/resvg-js": "^2.6.2",
     "@storybook/addon-essentials": "8.5.3",
     "@storybook/addon-interactions": "8.5.3",
     "@storybook/addon-onboarding": "8.5.3",
@@ -102,6 +103,7 @@
     "eslint-config-next": "16.1.1",
     "eslint-plugin-storybook": "0.11.2",
     "notion-client": "^7.10.0",
+    "satori": "^0.26.0",
     "storybook": "8.5.3",
     "typescript": "5.9.3"
   },

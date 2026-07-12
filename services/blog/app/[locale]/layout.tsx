@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     title: '이현진 (Hyunjin Lee) — Software Engineer',
     description: siteMetadata.description,
     siteName: siteMetadata.title,
-    images: [`${siteMetadata.siteUrl}/og`],
+    images: [`${siteMetadata.siteUrl}/og/default.png`],
     locale: 'ko_KR',
     type: 'website',
   },
@@ -59,7 +59,7 @@ export const metadata: Metadata = {
   twitter: {
     title: '이현진 (Hyunjin Lee) — Software Engineer',
     card: 'summary_large_image',
-    images: [`${siteMetadata.siteUrl}/og`],
+    images: [`${siteMetadata.siteUrl}/og/default.png`],
   },
 }
 
