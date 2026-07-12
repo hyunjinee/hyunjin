@@ -1,0 +1,15 @@
+---
+// app/[locale]/(ko-only)/source-of-truth/page.tsx 이식 — metadata export 없음, Base 기본 타이틀 그대로.
+// 원본의 죽은 주석 코드(allPosts.map 등, 참조 대상 자체가 이 프로젝트에 없음)는 이식하지 않는다.
+// biome-ignore-all lint/correctness/noUnusedImports: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+import Base from '../layouts/Base.astro'
+---
+
+<Base locale="ko">
+  <h1>Source Of Truth</h1>
+
+  <ul class="space-y-2 sm:space-y-3">
+    <li>1</li>
+    <li>2</li>
+  </ul>
+</Base>
