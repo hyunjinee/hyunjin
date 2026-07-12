@@ -10,7 +10,9 @@ interface Props {
 
 const { href, class: className, ...rest } = Astro.props
 const isExternal = !href.startsWith('/') && !href.startsWith('#')
-const cls = ['break-words', className].filter(Boolean).join(' ')
+// 원본은 `<Link className="break-words" {...rest} />` — rest.className이 있으면 JSX 스프레드 순서상
+// break-words를 완전히 대체한다(병합 아님). className ?? 'break-words'로 그 override 의미론을 재현.
+const cls = className ?? 'break-words'
 ---
 
 {
