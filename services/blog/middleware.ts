@@ -1,3 +1,7 @@
+/**
+ * i18n middleware for locale routing.
+ * ADR-0003: Next 16에서 deprecated지만 @opennextjs/cloudflare 호환을 위해 middleware 규약 사용
+ */
 import { type NextRequest, NextResponse } from 'next/server'
 import { match } from '@formatjs/intl-localematcher'
 import Negotiator from 'negotiator'
@@ -16,7 +20,7 @@ function preferredLocale(request: NextRequest): string {
   }
 }
 
-export function proxy(request: NextRequest) {
+export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   // 기본 언어(ko)는 무프리픽스가 정규 URL: /ko/* 접근은 벗겨서 308
