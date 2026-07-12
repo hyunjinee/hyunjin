@@ -13,6 +13,8 @@
     "validate": "node ./scripts/validate-i18n.mjs",
     "build": "cross-env INIT_CWD=$PWD contentlayer2 build && node ./scripts/validate-i18n.mjs && node ./scripts/generate-og.mjs && cross-env INIT_CWD=$PWD next build && cross-env NODE_OPTIONS='--experimental-json-modules' node ./scripts/postbuild.mjs",
     "serve": "next start",
+    "preview:cf": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "deploy:cf": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
     "analyze": "cross-env ANALYZE=true next build",
     "lint": "next lint --fix --dir pages --dir app --dir components --dir lib --dir layouts --dir scripts",
     "lint:biome": "biome lint .",
@@ -29,11 +31,10 @@
     "@mdx-js/loader": "3.1.1",
     "@next/bundle-analyzer": "16.1.1",
     "@next/mdx": "16.1.1",
+    "@opennextjs/cloudflare": "^1.20.1",
     "@tailwindcss/forms": "0.5.7",
     "@tailwindcss/postcss": "4.1.1",
     "@tailwindcss/typography": "0.5.19",
-    "@vercel/analytics": "1.4.1",
-    "@vercel/speed-insights": "1.1.0",
     "body-scroll-lock": "4.0.0-beta.0",
     "contentlayer2": "0.5.3",
     "esbuild": "0.27.2",
@@ -105,7 +106,8 @@
     "notion-client": "^7.10.0",
     "satori": "^0.26.0",
     "storybook": "8.5.3",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "wrangler": "^4.110.0"
   },
   "lint-staged": {
     "*.+(js|jsx|ts|tsx|json|css|md|mdx)": [

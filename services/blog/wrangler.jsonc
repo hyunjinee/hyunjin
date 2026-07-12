@@ -1,0 +1,25 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "hyunjin-blog",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-06-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS",
+    // HTML 라우트는 middleware(locale rewrite)를 위해 Worker 우선, 순수 정적 자산은 무과금 직접 서빙
+    // 주의: "!/tags/*"는 태그 HTML 페이지까지 제외해버리는 오탐 패턴 — 태그 피드(xml)만 제외해야 하므로 "!/tags/*/feed.xml"로 한정
+    "run_worker_first": [
+      "/*",
+      "!/_next/static/*",
+      "!/static/*",
+      "!/og/*",
+      "!/feed.xml",
+      "!/en/*.xml",
+      "!/tags/*/feed.xml",
+      "!/search.json",
+      "!/search-en.json"
+    ]
+  },
+  "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "hyunjin-blog" }]
+}

@@ -1,5 +1,6 @@
 import { withContentlayer } from 'next-contentlayer2'
 import { NextConfig } from 'next'
+import { initOpenNextCloudflareForDev } from '@opennextjs/cloudflare'
 import createMDX from '@next/mdx'
 import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
@@ -65,7 +66,6 @@ const securityHeaders = [
 
 const output = process.env.EXPORT ? 'export' : undefined
 const basePath = process.env.BASE_PATH || undefined
-const unoptimized = process.env.UNOPTIMIZED ? true : undefined
 
 const config: NextConfig = {
   output,
@@ -84,7 +84,8 @@ const config: NextConfig = {
         hostname: 'velog.velcdn.com',
       },
     ],
-    unoptimized,
+    // Cloudflare Workers엔 next/image 최적화 서버가 없음 — OpenNext Cloudflare 권장 설정
+    unoptimized: true,
   },
   async headers() {
     return [
@@ -139,5 +140,7 @@ const withMDX = createMDX({
         ],
       },
 })
+
+initOpenNextCloudflareForDev()
 
 export default withContentlayer(withBundleAnalyzer(withMDX(config)))

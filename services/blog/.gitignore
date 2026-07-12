@@ -18,6 +18,10 @@
 public/sitemap.xml
 .vercel
 
+# opennext / cloudflare
+/.open-next/
+/.wrangler/
+
 # production
 /build
 *.xml
