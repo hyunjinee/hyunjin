@@ -8,6 +8,7 @@ import rehypeAutolinkHeadings from 'rehype-autolink-headings'
 import rehypeKatex from 'rehype-katex'
 import rehypePrismPlus from 'rehype-prism-plus'
 import rehypeSlug from 'rehype-slug'
+import remarkCjkFriendly from 'remark-cjk-friendly'
 import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
 import { rehypeCopyButton } from './src/lib/rehypeCopyButton.ts'
@@ -58,8 +59,13 @@ export default defineConfig({
   },
   markdown: {
     syntaxHighlight: false,
+    // @astrojs/mdx가 markdownConfigDefaults.smartypants(기본 true)로 곧은따옴표를 curly quote로
+    // 바꾼다 — 구 Next/contentlayer2 산출물과의 본문 패리티를 위해 끈다(리뷰 확정, out은 straight quote).
+    smartypants: false,
     processor: unified({
-      remarkPlugins: [remarkGfm, remarkMath],
+      // remarkCjkFriendly: 한글 조사가 바로 붙는 강조(**단어**는)가 CommonMark flanking 규칙에 걸려
+      // 리터럴 **로 남는 CJK 문제 대응 — 원본 contentlayer.config.ts도 포함하던 플러그인(리뷰 확정).
+      remarkPlugins: [remarkGfm, remarkMath, remarkCjkFriendly],
       rehypePlugins: [
         rehypeStripLayoutFrontmatter,
         // mermaid 펜스 → data-mermaid-code 플레이스홀더 치환. rehypePrismPlus가 code 텍스트를

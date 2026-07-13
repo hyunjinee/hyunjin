@@ -3,7 +3,7 @@
 // 사용: node scripts/compare-meta.mjs <distDir> <outDir> <path> [<path> ...]
 //   예: node scripts/compare-meta.mjs dist out blog/understanding-react-rendering
 //
-// 비교 대상: canonical, hreflang(alternate), <meta property="og:*"|"article:*">,
+// 비교 대상: <title>, canonical, hreflang(alternate), <meta property="og:*"|"article:*">,
 //           <meta name="twitter:*">, JSON-LD(application/ld+json)
 // 허용 diff(비교 대상에서 의도적으로 제외): Next 전용 아티팩트 — RSC 페이로드(__next.*.txt류),
 //   next/script 청크, <meta name="next-*">. 이 스크립트는 위 다섯 카테고리만 파싱하므로
@@ -37,7 +37,12 @@ function attr(tag, name) {
 }
 
 function extractFields(html) {
-  const fields = { canonical: undefined, hreflang: {}, meta: {}, twitter: {}, jsonLd: undefined }
+  const fields = { title: undefined, canonical: undefined, hreflang: {}, meta: {}, twitter: {}, jsonLd: undefined }
+
+  // 첫 <title>만 — head의 문서 title은 항상 body보다 먼저 나오고, social-icons SVG 등이 접근성용
+  // <title> 하위 요소를 body에 쓸 수 있어(/en <title> 패리티 리뷰에서 확인) /g 없는 첫 매치로 한정한다.
+  const titleTag = html.match(/<title>([\s\S]*?)<\/title>/)
+  if (titleTag) fields.title = decodeEntities(titleTag[1])
 
   const canonicalTag = html.match(/<link rel="canonical"[^>]*>/)
   if (canonicalTag) fields.canonical = attr(canonicalTag[0], 'href')
@@ -94,6 +99,9 @@ function comparePath(distDir, outDir, slugPath) {
   const out = extractFields(outHtml)
 
   const diffs = []
+  if (dist.title !== out.title) {
+    diffs.push(`  title: dist=${JSON.stringify(dist.title)} out=${JSON.stringify(out.title)}`)
+  }
   if (dist.canonical !== out.canonical) {
     diffs.push(`  canonical: dist=${dist.canonical} out=${out.canonical}`)
   }

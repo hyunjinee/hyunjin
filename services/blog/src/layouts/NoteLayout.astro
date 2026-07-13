@@ -13,7 +13,7 @@
 // biome-ignore-all lint/correctness/noUnusedImports: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
 // biome-ignore-all lint/correctness/noUnusedVariables: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
 import siteMetadata from '../../data/siteMetadata.js'
-import Base from './Base.astro'
+import Base, { DEFAULT_TITLE } from './Base.astro'
 
 interface Props {
   title?: string
@@ -31,13 +31,9 @@ interface Props {
   ogUrl?: boolean
 }
 
-// ponytail: Base.astro의 비공개 DEFAULT_TITLE과 동일 값(export 안 되어 있어 미러링 — Task 6은
-// Base.astro를 consume-only로 다뤄야 해서 export 추가 대신 하드코딩; src/components/islands/ThemeSwitch.tsx의
-// DEFAULT_THEME 상수와 동일한 트레이드오프). 원본 5개 노트는 전부 genPageMetadata를 안 쓰는 순정
-// `export const metadata` 방식이라 openGraph.title을 스스로 설정한 적이 없고, 루트 layout.tsx의 정적
-// og:title(이 값)을 페이지 제목과 무관하게 그대로 물려받는다(out/n-1.html·out/test-mdx.html 실측 확인).
-const DEFAULT_TITLE = '이현진 (Hyunjin Lee) — Software Engineer'
-
+// 원본 5개 노트는 전부 genPageMetadata를 안 쓰는 순정 `export const metadata` 방식이라
+// openGraph.title을 스스로 설정한 적이 없고, 루트 layout.tsx의 정적 og:title(DEFAULT_TITLE)을
+// 페이지 제목과 무관하게 그대로 물려받는다(out/n-1.html·out/test-mdx.html 실측 확인).
 const { title, description, ogDescription, canonical: canonicalPath, ogUrl = true } = Astro.props
 const canonical = canonicalPath ? `${siteMetadata.siteUrl}${canonicalPath}` : undefined
 ---

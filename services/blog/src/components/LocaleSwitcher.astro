@@ -4,9 +4,11 @@
 // biome-ignore-all lint/correctness/noUnusedVariables: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
 import { type Locale, localePath, stripLocalePrefix } from '../lib/locale'
 
-// localized 표면에서만 무프리픽스 경로를 그대로 전환한다 (그 외 ko-only 표면에서 EN은 홈으로)
+// en 표면은 4개로 봉인돼 있다(verify-dist.mjs EN_SEALED: en.html·en/blog.html·en/blog/page/1.html·
+// en/tags.html) — 글 상세·페이지네이션 2쪽 이후·태그 상세는 en에 존재하지 않아 prefix 매치(startsWith)로
+// 넘기면 404가 난다(Task 10 리뷰 확정). 그 외 ko-only 표면·미봉인 하위 경로는 EN을 홈으로.
 const isLocalizedSurface = (path: string) =>
-  path === '/' || path === '/blog' || path.startsWith('/blog/') || path === '/tags' || path.startsWith('/tags/')
+  path === '/' || path === '/blog' || path === '/blog/page/1' || path === '/tags'
 
 const { locale, path } = stripLocalePrefix(Astro.url.pathname)
 const target: Locale = locale === 'en' ? 'ko' : 'en'

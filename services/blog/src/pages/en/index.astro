@@ -4,7 +4,7 @@
 // biome-ignore-all lint/correctness/noUnusedVariables: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
 import siteMetadata from '../../../data/siteMetadata.js'
 import PostList from '../../components/PostList.astro'
-import Base from '../../layouts/Base.astro'
+import Base, { DEFAULT_TITLE } from '../../layouts/Base.astro'
 import { postsForLocale } from '../../lib/posts'
 
 const posts = await postsForLocale('en')
@@ -12,11 +12,12 @@ const canonical = `${siteMetadata.siteUrl}/en`
 // page.tsx의 en 분기 metadata는 openGraph를 지정하지 않아 layout.tsx의 기본 og:title/og:description을
 // 그대로 물려받는다 — <title>·description(<meta name>)만 'Blog'/'Posts in English'로 바뀌고
 // og:*·twitter:*는 사이트 기본값 그대로인 원본의 실제 동작(out/en.html 확인)을 ogTitle/ogDescription으로 재현한다.
-const DEFAULT_TITLE = '이현진 (Hyunjin Lee) — Software Engineer'
+// titleTemplate={false}: <title>도 무템플릿 'Blog' 그대로(out/en.html 실측, Task 10 리뷰 확정).
 ---
 
 <Base
   title="Blog"
+  titleTemplate={false}
   ogTitle={DEFAULT_TITLE}
   description="Posts in English"
   ogDescription={siteMetadata.description}

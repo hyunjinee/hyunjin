@@ -45,9 +45,13 @@ interface Props {
   // en 홈 하나만 이 분기를 타므로 og/twitter description을 description과 독립적으로 override한다.
   // 미지정 시 기존 동작(description과 동일 값) 그대로 — 기존 소비자 무파손.
   ogDescription?: string
+  // Task 10 리뷰: en 홈(원본 app/[locale]/page.tsx en 분기)은 title을 ` | siteName` 템플릿 없이
+  // 그대로 낸다(out/en.html 실측: <title>Blog</title>). 기본값 true = 기존 동작(템플릿) 유지 —
+  // 기존 소비자 무파손, en/index.astro만 false로 명시 억제.
+  titleTemplate?: boolean
 }
 
-const DEFAULT_TITLE = '이현진 (Hyunjin Lee) — Software Engineer'
+export const DEFAULT_TITLE = '이현진 (Hyunjin Lee) — Software Engineer'
 
 const {
   title,
@@ -60,11 +64,12 @@ const {
   ogTitle,
   ogUrl = true,
   ogDescription,
+  titleTemplate = true,
 } = Astro.props
 const description = descriptionProp === null ? undefined : (descriptionProp ?? siteMetadata.description)
 const resolvedOgDescription = ogDescription ?? description
 
-const pageTitle = title ? `${title} | ${siteMetadata.title}` : DEFAULT_TITLE
+const pageTitle = title ? (titleTemplate ? `${title} | ${siteMetadata.title}` : title) : DEFAULT_TITLE
 const resolvedOgTitle = ogTitle ?? title ?? DEFAULT_TITLE
 const resolvedOgImage = ogImage ?? `${siteMetadata.siteUrl}/og/default.png`
 const htmlLang = locale === 'en' ? 'en-US' : siteMetadata.language

@@ -71,7 +71,7 @@ pnpm preview:cf              # pnpm build → wrangler dev (dist/ 자산 서빙)
 - **`data/siteMetadata.js`는 ESM**(`export default`) — `package.json`에 `"type": "module"` 추가. CJS로 되돌리면 `astro dev`가 Vite PostCSS 설정 탐색 단계에서 크래시한다(ADR-0005 발견 항목).
 - **css 진입점은 `css/tailwind.css` 하나** — 구 `css/tailwind-astro.css`(src 전용 `@source` 확장 파일)는 삭제하고 `@source "src/**/*.{astro,ts,tsx}"`를 본체에 합쳤다. `postcss.config.js`도 삭제(Tailwind는 `@tailwindcss/vite` 플러그인 경유).
 - **보안 헤더는 `public/_headers` 하나로 단일화** — `next.config.ts`(securityHeaders)가 사라지면서 두 곳을 맞추던 구 부채가 자연 소멸.
-- **타입 체크는 `astro check`(또는 `tsc --noEmit`)** — `tsconfig.json`이 `astro/tsconfigs/strict`를 상속하며 처음으로 `src/`·`scripts/`를 포함한다(구 tsconfig는 마이그레이션 기간 동안 `src`를 통째로 제외했었다). `.astro` import는 raw `tsc`가 해석하지 못하는 게 알려진 제약이라 `astro check`가 정본 도구.
+- **타입 체크는 `astro check`** — `tsconfig.json`이 `astro/tsconfigs/strict`를 상속하며 처음으로 `src/`·`scripts/`를 포함한다(구 tsconfig는 마이그레이션 기간 동안 `src`를 통째로 제외했었다). `.astro` import는 raw `tsc --noEmit`이 해석하지 못하는 게 알려진 제약이라(TS2307) `astro check`가 정본 도구 — `tsc --noEmit`을 대안으로 쓰지 말 것.
 - **draft 글 URL은 여전히 404가 정답**: `verify-dist.mjs`가 8종 게이트(URL 계약·draft 누출·grep needle·404·`_headers`/`_redirects`·feed 항목 수·sitemap ⊆ 계약·en 표면 봉인)로 빌드 실패를 강제한다.
 
 ### 해소된 부채 (2026-07-13 Astro 전환)

@@ -10,7 +10,7 @@ const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)))
 const DIST = path.join(root, 'dist')
 
 if (!existsSync(DIST)) {
-  console.error('✗ verify-dist: dist/ 가 없다 — pnpm astro:build && node scripts/rss.mjs 를 먼저 실행하라')
+  console.error('✗ verify-dist: dist/ 가 없다 — pnpm build 를 먼저 실행하라')
   process.exit(1)
 }
 
