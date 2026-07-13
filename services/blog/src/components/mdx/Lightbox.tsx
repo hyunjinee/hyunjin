@@ -18,7 +18,7 @@ export default function LightboxDelegate() {
   const [slide, setSlide] = useState<Slide | null>(null)
 
   useEffect(() => {
-    const container = document.querySelector('.prose')
+    const container = document.querySelector<HTMLElement>('.prose')
     if (!container) return
     const onClick = (event: MouseEvent) => {
       const img = event.target instanceof Element ? event.target.closest('img') : null

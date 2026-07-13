@@ -3,11 +3,11 @@
 // pliny의 SearchProvider가 트리 전체를 감싸던 구조는 없앴다: 검색은 Header 안 SearchButton island 하나로 완결된다.
 // biome-ignore-all lint/correctness/noUnusedImports: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
 // biome-ignore-all lint/correctness/noUnusedVariables: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
-import '../../css/tailwind-astro.css'
+import '../../css/tailwind.css'
 import '../../css/pretendard-dynamic-subset.css'
 import '../../css/view-transition.css'
 import 'remark-github-blockquote-alert/alert.css'
-import '../../css/code-highlight.css'
+import '../../css/prism.css'
 // 원본의 6번째 import였던 pliny/search/algolia.css는 제외했다: pliny의 Algolia/KBar 검색 컴포넌트
 // 전용 스타일(--docsearch-* 변수)인데 이 프로젝트는 kbar 직접 의존 island로 대체해 더 쓰지 않고,
 // theme(colors.primary.600) 같은 Tailwind CSS 함수가 Astro의 Vite 처리 컨텍스트에서 해석되지 않아 빌드가 깨진다.

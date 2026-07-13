@@ -6,7 +6,7 @@
   // Worker 스크립트 없는 정적 자산 전용 배포 — 요청 무과금·무제한, 번들 한도 없음.
   // 라우팅(무프리픽스 ko, legacy 301)은 postexport.mjs가 만드는 out/ 트리 + _redirects가 담당.
   "assets": {
-    "directory": "out",
+    "directory": "dist",
     "not_found_handling": "404-page"
   },
   // hyunjinlee.com zone이 이 계정에서 Active여야 연결됨. 기존 A 레코드(구 Vercel IP)가 남아 있으면 배포가 충돌 오류를 냄 — 그 경우 zone DNS에서 루트 A 삭제 후 재배포

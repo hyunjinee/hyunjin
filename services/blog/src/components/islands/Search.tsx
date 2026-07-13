@@ -51,8 +51,9 @@ function patchBtoa() {
 function SearchTrigger() {
   const { query } = useKBar()
   return (
-    <button aria-label="Search" onClick={() => query.toggle()}>
+    <button type="button" aria-label="Search" onClick={() => query.toggle()}>
       <svg
+        aria-hidden="true"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"

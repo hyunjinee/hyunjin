@@ -20,8 +20,8 @@ const err = (m) => {
   failed = true
 }
 
-// dist 전용 잉여로 허용하는 .html — Task 10에서 src/pages/smoke.astro를 지우면 이 배열도 비운다
-const ALLOWED_EXTRA_HTML = ['smoke.html']
+// dist 전용 잉여로 허용하는 .html — 현재 없음(src/pages/smoke.astro는 Task 10에서 삭제됨)
+const ALLOWED_EXTRA_HTML = []
 
 // 계약상 x/index.html 디렉터리 형식이 허용되는 talks 정적 덱(public/talks/*/index.html 유래, iframe 소스)
 const DIRECTORY_FORMAT_ALLOWLIST = [

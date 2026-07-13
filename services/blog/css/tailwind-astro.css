@@ -1,4 +1,0 @@
-/* tailwind.css는 Next 전용 @source 목록(app/**, components/** 등)만 스캔한다.
-   Next 파일은 건드리지 않기 위해 별도 진입점에서 src/**를 추가로 스캔한다. */
-@import "./tailwind.css";
-@source "../src/**/*.{astro,ts,tsx}";

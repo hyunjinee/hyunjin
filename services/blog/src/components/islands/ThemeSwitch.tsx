@@ -22,6 +22,7 @@ function applyTheme(pref: ThemePreference) {
 
 const Sun = () => (
   <svg
+    aria-hidden="true"
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 20 20"
     fill="currentColor"
@@ -36,6 +37,7 @@ const Sun = () => (
 )
 const Moon = () => (
   <svg
+    aria-hidden="true"
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 20 20"
     fill="currentColor"
@@ -46,6 +48,7 @@ const Moon = () => (
 )
 const Monitor = () => (
   <svg
+    aria-hidden="true"
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 20 20"
     fill="none"
@@ -114,6 +117,7 @@ const ThemeSwitch = () => {
                   <Menu.Item>
                     {({ active }) => (
                       <button
+                        type="button"
                         className={`${
                           active ? 'bg-primary-600 text-white' : ''
                         } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
@@ -130,6 +134,7 @@ const ThemeSwitch = () => {
                   <Menu.Item>
                     {({ active }) => (
                       <button
+                        type="button"
                         className={`${
                           active ? 'bg-primary-600 text-white' : ''
                         } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
@@ -146,6 +151,7 @@ const ThemeSwitch = () => {
                   <Menu.Item>
                     {({ active }) => (
                       <button
+                        type="button"
                         className={`${
                           active ? 'bg-primary-600 text-white' : ''
                         } group flex w-full items-center rounded-md px-2 py-2 text-sm`}

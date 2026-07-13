@@ -7,15 +7,17 @@ import { type Locale, localePath } from '../../lib/locale'
 const MobileNav = ({ locale = 'ko' }: { locale?: Locale }) => {
   const [navShow, setNavShow] = useState(false)
   const [mounted, setMounted] = useState(false)
-  const navRef = useRef(null)
+  const navRef = useRef<HTMLElement>(null)
 
   const onToggleNav = () => {
     setNavShow((status) => {
-      if (status) {
-        enableBodyScroll(navRef.current)
-      } else {
-        // Prevent scrolling
-        disableBodyScroll(navRef.current)
+      if (navRef.current) {
+        if (status) {
+          enableBodyScroll(navRef.current)
+        } else {
+          // Prevent scrolling
+          disableBodyScroll(navRef.current)
+        }
       }
       return !status
     })
@@ -28,8 +30,9 @@ const MobileNav = ({ locale = 'ko' }: { locale?: Locale }) => {
 
   return (
     <>
-      <button aria-label="Toggle Menu" onClick={onToggleNav} className="sm:hidden">
+      <button type="button" aria-label="Toggle Menu" onClick={onToggleNav} className="sm:hidden">
         <svg
+          aria-hidden="true"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 20 20"
           fill="currentColor"
@@ -88,11 +91,12 @@ const MobileNav = ({ locale = 'ko' }: { locale?: Locale }) => {
                 </nav>
 
                 <button
+                  type="button"
                   className="fixed right-4 top-7 p-4 w-16 h-16 text-gray-900 z-80 hover:text-primary-500 dark:text-gray-100 dark:hover:text-primary-400"
                   aria-label="Toggle Menu"
                   onClick={onToggleNav}
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                  <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                     <path
                       fillRule="evenodd"
                       d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
