@@ -1,0 +1,24 @@
+---
+// app/[locale]/(ko-only)/calendar/page.tsx 이식
+// CalendarView: 월/일 뷰 전환·모달 등 핵심 콘텐츠 인터랙션이라 client:load.
+// biome-ignore-all lint/correctness/noUnusedImports: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+// biome-ignore-all lint/correctness/noUnusedVariables: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+import { events } from '../../data/eventsData'
+import siteMetadata from '../../data/siteMetadata.js'
+import CalendarView from '../components/islands/CalendarView'
+import Base from '../layouts/Base.astro'
+---
+
+<Base title="Calendar" ogTitle={`Calendar | ${siteMetadata.title}`} canonical={`${siteMetadata.siteUrl}/calendar`} ogImage={`${siteMetadata.siteUrl}${siteMetadata.socialBanner}`} locale="ko">
+  <div class="divide-y divide-gray-200 dark:divide-gray-700">
+    <div class="pt-6 pb-8 space-y-2 md:space-y-5">
+      <h1 class="text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:leading-14">
+        Calendar
+      </h1>
+      <p class="text-lg leading-7 text-gray-500 dark:text-gray-400">일정 모음</p>
+    </div>
+    <div class="container py-8">
+      <CalendarView client:load events={events} />
+    </div>
+  </div>
+</Base>

@@ -1,0 +1,234 @@
+---
+// app/[locale]/(ko-only)/berriz/page.tsx 이식 — 사용자 워킹트리 WIP 반영판.
+// (최초 포트는 HEAD 커밋 버전 기준이었으나, 이후 사용자가 승인한 워킹트리 수정(불릿 전면 개편,
+// stats dl 블록 추가, 섹션 3개 신설)을 동일 파일에 반영했다. 원본 page.tsx는 사용자 소유라 수정하지 않음.)
+// biome-ignore-all lint/correctness/noUnusedImports: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+// biome-ignore-all lint/correctness/noUnusedVariables: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+import siteMetadata from '../../data/siteMetadata.js'
+import Link from '../components/Link.astro'
+import Base from '../layouts/Base.astro'
+
+type Section = {
+  title: string
+  bullets: string[]
+}
+
+const sections: Section[] = [
+  {
+    title: '계정 · 인증',
+    bullets: [
+      '멜론(Melon) 계정 양방향 연동을 구현했습니다. 인바운드와 아웃바운드 각각의 동의 플로우를 만들고, 연동 전 사전 체크로 중복 연동을 막았습니다.',
+      '연동 정보 화면이 시각을 KST로 고정해 보여주고 있어서, 해외 유저는 자기가 언제 연동했는지 잘못 알고 있었습니다. 기기 타임존 기준으로 고쳤습니다.',
+      '커뮤니티·커머스 앱에 흩어져 있던 계정 기능(로그인·회원가입·계정관리·본인인증·법정대리인 동의)을 accounts.berriz.in 전용 도메인으로 분리 이관했습니다. 6개 페이지를 별도 앱으로 옮기고, 도메인이 바뀔 때 화면이 깜빡이지 않도록 BerrizLink 컴포넌트로 같은 도메인은 SPA 전환, 다른 도메인은 하드 내비게이션으로 분기했습니다.',
+      '회원가입 OTP 인증부터 탈퇴 후 재로그인까지 계정 핵심 플로우를 Cypress E2E로 자동화해서, 이관 중 회귀를 막았습니다.',
+    ],
+  },
+  {
+    title: '하이브리드 앱 · 웹뷰 브릿지',
+    bullets: [
+      '원탭 웹뷰 구조는 뒤로가기 검은 화면, 스크롤·상태 미보존, 헤더 중복처럼 "웹뷰인 게 티 나는" 문제가 쌓입니다. 탭별 웹뷰 + 스택 웹뷰 하이브리드로 가는 구조 개편을 직접 발제하고, PHASE1~5 로드맵과 웹↔앱 브릿지 스펙을 설계했습니다.',
+      '리로드 없이 새로고침되는 Pull-to-Refresh 공통 컴포넌트를 만들었습니다. 6개 상태를 가진 상태머신으로 짜고, 빠르게 당길 때 새로고침이 누락되던 레이스 버그를 근본 수정했습니다. aria-live 상태 안내와 reduced-motion 대응 등 접근성도 설계했습니다.',
+      '앱과 웹이 통화나 국가 설정을 따로 들고 있으면 같은 화면이 다르게 보입니다. 두 값을 동기화하는 setAppValues 인터페이스로 어디서 열어도 같은 화면이 보이게 했습니다.',
+      'openScheme 기반 앱 내 네비게이션 분기와 Pull-to-Refresh 제어를 브릿지 규약으로 정의했습니다.',
+      '플로팅 디버그 패널을 만들어서, 웹뷰 문제를 앱 빌드 없이 웹에서 바로 재현하고 테스트합니다.',
+      '안드로이드 웹뷰가 닫힐 때 모달 상태가 같이 날아가는 문제를 고쳤습니다.',
+      '안드로이드 웹뷰가 백그라운드에서 포그라운드로 돌아올 때 화면이 검게 변하는 블랙스크린은 절전모드가 원인이었습니다. 원인 분석 과정을 트러블슈팅 문서로 남겼습니다.',
+    ],
+  },
+  {
+    title: '라이브 스트리밍 플레이어 (AWS IVS)',
+    bullets: [
+      '라이브 플레이어 SDK는 player-sdk(코어)와 player-ui(React) 두 패키지 모노레포입니다. PlayerBase 추상 클래스 위에 IvsPlayer를 구현해서, DRM 백엔드가 붙어도 재생 엔진만 갈아 끼우면 되는 구조입니다.',
+      '상태는 EventEmitter에서 zustand를 거쳐 React로 흐르는 단방향으로 잡았습니다.',
+      '버퍼링, 송출 종료, WASM 미지원, 재생 불가. 라이브에서 만나는 에러를 이 네 가지로 분류해 정의했습니다.',
+    ],
+  },
+  {
+    title: '딥링크 (link.berriz.in)',
+    bullets: [
+      'Universal Links와 App Links에 Custom Scheme 폴백을 더한 딥링크 시스템(link.berriz.in)을 설계했습니다. 카카오톡 인앱 브라우저처럼 유니버설 링크가 안 통하는 환경에서도 링크 하나로 앱 화면까지 이어집니다.',
+      'OG 태그는 Lambda로 가져오고 실패하면 기본 태그로 폴백해서, 공유된 링크의 미리보기가 비는 일이 없게 했습니다. 다국어도 지원합니다.',
+      '경로는 (web|app)/(main|shop)/* 구조로 잡고 CloudFront Functions로 라우팅합니다. qa, cbt, sandbox 환경을 따로 뒀습니다.',
+    ],
+  },
+  {
+    title: '오디션 · 실시간 투표 (Debut’s Plan)',
+    bullets: [
+      '입사 직후 오디션 웹 전체와 함께 커뮤니티 초기 기능인 아티스트 프로필·아카이브를 0부터 만들었습니다. 오디션은 종료 후 관련 코드 7,458줄을 걷어내며 기능 생명주기를 마감했고, 아티스트 프로필·아카이브는 커뮤니티 상시 기능으로 남았습니다.',
+      '티저에서 투표로 넘어가는 전환을 서버 캐싱 1초와 router.refresh 폴링으로 묶어, 투표 시작 시각에 1초 이내로 자동 전환되게 했습니다. 투표 페이지 SVG를 조건부 렌더링으로 바꿔 초기 HTML을 줄이고 TPS를 70 이상으로 올렸습니다.',
+      '해외 유저의 기기에서는 투표 마감이 다음날 00:00으로 계산되고 있었습니다. 마감 시각 계산이 기기 타임존을 따라갔기 때문입니다. dayjs timezone으로 계산을 KST에 고정해 다시 짰습니다.',
+      '뉴욕, 런던, 시드니 등 18개 타임존을 도는 Vitest 테스트를 붙여서, 같은 시간 경계 버그가 생기면 테스트가 먼저 잡습니다.',
+      'SSR과 미들웨어에 걸쳐 있던 인증 흐름을 정적 익스포트 + 클라이언트 리다이렉트 + 404 폴백 구조로 바꿔서, 서버 없이 정적 호스팅만으로 운영할 수 있게 했습니다.',
+      'Countdown 타이머 등 투표 화면의 렌더링도 최적화했습니다.',
+    ],
+  },
+  {
+    title: '커머스 · 파트너센터',
+    bullets: [
+      '커머스(샵)의 상품 상세, 주문, 장바구니와 VOD 연관 상품의 브라우저 웹뷰 결제 플로우를 구현했습니다.',
+      '파트너센터 예약(부킹)과 행사 도메인을 0부터 구축했습니다.',
+      '등록은 기본정보에서 이용설정까지 이어지는 4단계 퍼널이고, 폼 검증은 TanStack Form과 Zod로 처리했습니다.',
+      'TVOD 구매혜택은 리딤코드 사용 여부를 자동으로 판별하게 하고, 클레임 관리와 연동했습니다.',
+      'render props로 prop을 우회 전달하는 컨테이너가 26개 넘게 쌓여 있었습니다. 이 패턴을 걷어내는 리팩토링으로 prop drilling을 없앴습니다.',
+    ],
+  },
+  {
+    title: '팬클럽 · 문의',
+    bullets: [
+      '팬카드 뒷면 정보 수정 기능을 만들었습니다. 생일(MMDD)만 받던 피커를 생년월일(YYYYMMDD)까지 한 폼에서 처리하는 공유 DatePartsPicker로 일반화했습니다.',
+      '2월 29일을 입력하고 평년으로 바꾸면 dayjs가 조용히 3월 1일로 굴려 잘못된 값이 저장되던 버그가 있었습니다. 피커 내부 한 지점에서 값을 초기화하는 근본 수정으로 막았습니다(TDD).',
+      '1:1 문의에 이미지 첨부와 확대 보기가 없었습니다. 업로드·미리보기·삭제를 갖춘 Attachment 공통 컴포넌트를 신설하고 포토뷰어와 연동해, 다른 도메인에서도 재사용할 수 있게 했습니다.',
+    ],
+  },
+  {
+    title: '프론트엔드 스택 마이그레이션',
+    bullets: [
+      'Node 20, ESLint 8, React 18/Next 14 등 스택 전반이 지원 종료 경계에 있었고 보안 스캔에서 치명적 취약점도 나왔습니다. 4개 앱과 공유 패키지 모노레포의 핵심 스택을 최신 메이저로 릴레이하듯 순차적으로 올렸습니다. Node 24, React 19 + Next 15, Next 16 + next-intl 4, Storybook 10, ESLint 10, Vitest 4, Turbopack 전환까지 7건을 머지했습니다.',
+      '4개 앱이 전부 정적 export라 빌드 크래시가 곧 배포 블로커였습니다. 단계마다 원인을 단일 변수로 격리했습니다. Node 21+ 전역 navigator가 lottie-web의 SSG 크래시를 일으키는 걸 찾아 서버 빌드 한정 stub으로 막고, 사내 라이브러리가 react를 번들해 생기던 크래시는 라이브러리 수정으로 근본 해결했습니다.',
+      'react-query 마이너 업데이트는 PoC에서 flaky 회귀를 측정으로 입증하고 전량 원복하는 "출하하지 않을 판단"도 같이 했습니다. 전역 유틸(cn/tw/cx) 제거는 TS AST codemod로 약 650개 파일을 기계 변환하고 tsc green으로 누락 0을 증명했습니다. 프로덕션 회귀 0으로 마쳤습니다.',
+    ],
+  },
+  {
+    title: 'AI 개발 자동화',
+    bullets: [
+      'Jira에 티켓이 등록되면 코딩 에이전트가 자동으로 작업을 시작해 PR까지 만듭니다. 이 오케스트레이터는 GitHub Actions 위에 stateless로 설계해 별도 서버 없이 돌아갑니다.',
+      '에이전트가 낸 결과는 평가 하네스로 정량 추적합니다. AI를 얼마나 잘 쓰고 있는지 감이 아니라 숫자로 봅니다.',
+      '사람과 AI가 같이 쓰는 지식베이스 berriz-wiki를 단독으로 설계하고 구축했습니다. raw(원본), pages(LLM 컴파일), views(대시보드) 3계층으로 나눴습니다.',
+      'Confluence 첨부 이미지는 Python 파이프라인이 본문 트리를 순회하며 파일명까지 자동으로 지어서 가져옵니다.',
+    ],
+  },
+  {
+    title: '인프라 · DevOps / DX',
+    bullets: [
+      'CloudFront, Lambda, S3 설정을 콘솔에서 손으로 바꾸던 상태였습니다. Terraform 도입을 직접 제안하고 주도해서 이 설정을 코드로 옮겼고, 이제 인프라 변경이 코드 리뷰로 남습니다.',
+      'FE develop 환경의 Helm 배포를 Deployment, Service, Ingress로 구성하고 멀티환경 values를 작성했습니다.',
+      'GCE Ingress 하나에서 host와 정규식 path로 라우팅을 나눴습니다.',
+      'Express 서비스는 Cloud Armor WAF와 헬스체크를 붙여 새로 배포했습니다.',
+      'agent-browser와 Vitest로 E2E를 만들었습니다. CI에서는 병렬로 돌고, 환경이 없으면 실패 대신 건너뜁니다.',
+      'CloudFront Function의 URL rewrite에 라우팅이 의존하면서 CDN 설정이 앱 라우팅 지식에 묶이고 라우팅 버그의 온상이 됐습니다. dynamic route 기반 대체 방안을 R&D해 위키로 남기고, rewrite Function을 정비한 뒤 cbt 환경에 배포해 회귀를 추적하며 점진적으로 걷어냈습니다.',
+    ],
+  },
+  {
+    title: '코드 리뷰 · 문서화 · 협업',
+    bullets: [
+      '2년간 레포 전체 PR의 리뷰 허브 역할을 하며, 본인 PR을 제외하고 2,450건을 리뷰했습니다. 리뷰가 도메인 담당자에게 쏠리던 걸 T1(critical)~T4(skip) 티어로 트리아지하는 프로세스로 제안하고, diff 의미를 분석해 자동 분류하는 스킬로 도구화했습니다.',
+      '웹뷰 아키텍처 제안서, 딥링크·브릿지 스펙, 리서치 보고서 등 Confluence 기술 문서 66건을 작성하고, 팀 주간업무보고 체계를 직접 신설해 10인 팀에 정착시켰습니다.',
+      'QA 리오픈 때 BE 커밋이 직교함을 코드 레벨로 검증해 FE 수정의 정당성을 입증하는 식으로, 근본원인 분석형 크로스팀 커뮤니케이션을 이어갔습니다. 배포 자동화 플러그인을 사내 Tech Talk에서 발표했습니다.',
+    ],
+  },
+]
+
+const stats: { value: string; label: string }[] = [
+  { value: '약 23개월', label: '서비스 초기부터' },
+  { value: '758건', label: '머지 PR' },
+  { value: '2,450건', label: '코드 리뷰' },
+  { value: '66건', label: '기술 문서' },
+  { value: '7건', label: '스택 메이저 버전업' },
+]
+
+const techStack = [
+  'TypeScript',
+  'React',
+  'Next.js (App Router)',
+  'TanStack Query / Form',
+  'next-intl',
+  'Zod',
+  'TailwindCSS · Emotion',
+  'Turborepo (pnpm)',
+  'zustand',
+  'AWS IVS Player',
+  'AWS Lambda · CloudFront',
+  'Terraform',
+  'GKE · Helm · ArgoCD',
+  'Cloud Armor (WAF)',
+  'GitHub Actions',
+  'Sentry',
+  'Storybook',
+  'Vitest · Cypress · agent-browser',
+  'LangChain',
+  'Python',
+]
+---
+
+<Base title="Berriz" ogTitle={`Berriz | ${siteMetadata.title}`} ogImage={`${siteMetadata.siteUrl}${siteMetadata.socialBanner}`} locale="ko">
+  <div class="container md:mt-5">
+    {/* Hero */}
+    <header class="pb-8 mb-10 border-b border-gray-200 dark:border-gray-700">
+      <h1 class="sr-only">Berriz</h1>
+      <div class="flex gap-3 items-center mb-4">
+        <img src="/images/kakaoentertainment/berriz_logo.svg" alt="Berriz" width="96" height="32" class="h-[30px] w-auto" />
+        <span class="text-sm text-gray-400 dark:text-gray-600">·</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400">Kakao Entertainment · Frontend Engineer</span>
+      </div>
+      <p class="text-sm leading-7 text-gray-700 break-keep md:text-base dark:text-gray-300">
+        글로벌 팬 플랫폼 <strong>Berriz</strong>의 프론트엔드를 서비스 초기 구축 단계부터 개발했습니다. 서비스는
+        100만 유저를 넘는 규모로 글로벌 출시됐습니다. 계정 연동, 딥링크, 라이브 플레이어 등 한 일을 주제별로
+        정리했습니다.
+      </p>
+      <dl class="grid grid-cols-2 gap-x-6 gap-y-4 mt-6 sm:grid-cols-5">
+        {
+          stats.map((s) => (
+            <div>
+              <dt class="text-xl font-bold text-gray-900 md:text-2xl dark:text-gray-100">{s.value}</dt>
+              <dd class="mt-0.5 text-xs text-gray-500 md:text-sm dark:text-gray-400">{s.label}</dd>
+            </div>
+          ))
+        }
+      </dl>
+      <div class="flex flex-wrap gap-3 items-center mt-6 text-sm md:gap-4">
+        <a href="https://berriz.in/ko" target="_blank" rel="noopener noreferrer" class="transition-colors text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
+          berriz.in ↗
+        </a>
+        <span class="text-gray-400 dark:text-gray-600">·</span>
+        <Link href="/kakaoent" class="transition-colors text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
+          이력 요약
+        </Link>
+        <span class="text-gray-400 dark:text-gray-600">·</span>
+        <Link href="/blog/deeplink" class="transition-colors text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
+          딥링크 기술 글
+        </Link>
+      </div>
+    </header>
+
+    {/* Contribution sections */}
+    <section class="mb-12">
+      <h2 class="pb-2 mb-8 text-2xl font-bold text-gray-900 border-b-2 border-gray-200 md:text-3xl dark:text-gray-100 dark:border-gray-700">
+        기여 영역
+      </h2>
+      <div class="space-y-8">
+        {
+          sections.map((s) => (
+            <div class="group">
+              <div class="flex gap-3 items-baseline">
+                <h3 class="flex-1 text-lg font-semibold text-gray-900 md:text-xl dark:text-gray-100">{s.title}</h3>
+              </div>
+              <ul class="mt-3 ml-8 space-y-2">
+                {s.bullets.map((b) => (
+                  <li class="text-sm md:text-base text-gray-700 dark:text-gray-300 pl-5 relative before:content-['–'] before:absolute before:left-0 before:text-primary-500">
+                    {b}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    {/* Tech stack */}
+    <section class="mb-12">
+      <h2 class="pb-2 mb-8 text-2xl font-bold text-gray-900 border-b-2 border-gray-200 md:text-3xl dark:text-gray-100 dark:border-gray-700">
+        기술 스택
+      </h2>
+      <div class="flex flex-wrap gap-2">
+        {
+          techStack.map((t) => (
+            <span class="px-3 py-1 text-sm text-gray-700 rounded-full border border-gray-200 dark:text-gray-300 dark:border-gray-700">
+              {t}
+            </span>
+          ))
+        }
+      </div>
+    </section>
+  </div>
+</Base>

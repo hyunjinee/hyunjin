@@ -1,0 +1,25 @@
+---
+// app/[locale]/(ko-only)/projects/page.tsx 이식
+// biome-ignore-all lint/correctness/noUnusedImports: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+// biome-ignore-all lint/correctness/noUnusedVariables: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+import projectsData from '../../data/projectsData'
+import siteMetadata from '../../data/siteMetadata.js'
+import Card from '../components/Card.astro'
+import Base from '../layouts/Base.astro'
+---
+
+<Base title="Projects" ogTitle={`Projects | ${siteMetadata.title}`} canonical={`${siteMetadata.siteUrl}/projects`} ogImage={`${siteMetadata.siteUrl}${siteMetadata.socialBanner}`} locale="ko">
+  <div class="divide-y divide-gray-200 dark:divide-gray-700">
+    <div class="pt-6 pb-8 space-y-2 md:space-y-5">
+      <h1 class="text-3xl font-extrabold tracking-tight leading-9 text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:leading-14">
+        Projects
+      </h1>
+      <p class="text-lg leading-7 text-gray-500 dark:text-gray-400">직접 설계하고 만든 제품과 오픈소스 기여들입니다.</p>
+    </div>
+    <div class="container py-12">
+      <div class="flex flex-wrap -m-4">
+        {projectsData.map((d) => <Card title={d.title} description={d.description} imgSrc={d.imgSrc} href={d.href} />)}
+      </div>
+    </div>
+  </div>
+</Base>

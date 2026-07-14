@@ -2,27 +2,15 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "hyunjin-blog",
   "account_id": "9ea4eb3b431307686eb92e20e2fb3805",
-  "main": ".open-next/worker.js",
   "compatibility_date": "2026-06-01",
-  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  // versions upload 시 프로덕션 무영향 preview URL 발급 (workers.dev)
+  "preview_urls": true,
+  // Worker 스크립트 없는 정적 자산 전용 배포 — 요청 무과금·무제한, 번들 한도 없음.
+  // 라우팅(무프리픽스 ko, legacy 301)은 Astro 정적 빌드(dist/, build.format 'file') + public/_redirects가 담당.
   "assets": {
-    "directory": ".open-next/assets",
-    "binding": "ASSETS",
-    // HTML 라우트는 middleware(locale rewrite)를 위해 Worker 우선, 순수 정적 자산은 무과금 직접 서빙
-    // 주의: "!/tags/*"는 태그 HTML 페이지까지 제외해버리는 오탐 패턴 — 태그 피드(xml)만 제외해야 하므로 "!/tags/*/feed.xml"로 한정
-    "run_worker_first": [
-      "/*",
-      "!/_next/static/*",
-      "!/static/*",
-      "!/og/*",
-      "!/feed.xml",
-      "!/en/*.xml",
-      "!/tags/*/feed.xml",
-      "!/search.json",
-      "!/search-en.json"
-    ]
+    "directory": "dist",
+    "not_found_handling": "404-page"
   },
-  "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "hyunjin-blog" }],
   // hyunjinlee.com zone이 이 계정에서 Active여야 연결됨. 기존 A 레코드(구 Vercel IP)가 남아 있으면 배포가 충돌 오류를 냄 — 그 경우 zone DNS에서 루트 A 삭제 후 재배포
   "routes": [{ "pattern": "hyunjinlee.com", "custom_domain": true }]
 }

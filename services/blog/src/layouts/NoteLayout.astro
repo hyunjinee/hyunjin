@@ -1,0 +1,45 @@
+---
+// MDX 노트 5종(2025/2026/compiler/n/1/test-mdx) 공용 레이아웃 — Base + prose 래핑.
+//
+// frontmatter `layout:` 자동 래핑(Astro 표준 관례)은 쓰지 않는다 — astro.config.mjs의
+// rehypeStripLayoutFrontmatter가 모든 .mdx(콘텐츠 컬렉션 포함)에서 frontmatter.layout을 rehype 단계에
+// 지워버려(node_modules/@astrojs/mdx가 markdown.processor의 rehypePlugins를 그대로 승계하는 걸
+// node_modules/@astrojs/mdx/dist/index.js:66-70에서 확인) layout: 값이 Astro의 자동 임포트에 도달하기 전에
+// 사라진다. 대신 각 .mdx 파일이 이 컴포넌트를 직접 import해 본문을 JSX로 감싸는 방식을 쓴다.
+//
+// 원본은 app/[locale]/layout.tsx(mdx-components.tsx 전역 매핑, sugar-high 코드 하이라이트)가 처리했지만,
+// 코드 하이라이트를 prism으로 통일하는 스펙 결정(task-6-brief 7번)에 맞춰 다른 MDX 콘텐츠(블로그 글)와
+// 동일한 prose dark:prose-invert 트리트먼트로 합류시킨다 — src/layouts/PostLayout.astro:90과 동일 패턴.
+// biome-ignore-all lint/correctness/noUnusedImports: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+// biome-ignore-all lint/correctness/noUnusedVariables: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+import siteMetadata from '../../data/siteMetadata.js'
+import Base, { DEFAULT_TITLE } from './Base.astro'
+
+interface Props {
+  title?: string
+  description?: string | null
+  // og:description을 description과 별도로 지정 — test-mdx 원본(export const metadata, genPageMetadata
+  // 미사용)이 top-level description만 override하고 openGraph.description은 루트 기본값을 그대로
+  // 물려받는 Next 메타데이터 병합 특성을 재현한다(out/test-mdx.html 실측: description은 커스텀,
+  // og:description은 사이트 기본값). 미지정 시 Base 기본 동작(description과 동일 값) 그대로.
+  ogDescription?: string
+  // 사이트 루트 기준 상대 경로(예: '/n/1'). genPageMetadata의 path 인자와 동일 계약 — 지정한 곳만 canonical.
+  canonical?: string
+  // n/1은 alternates.canonical만 쓰고 openGraph.url은 지정한 적이 없어 canonical은 있어도 og:url이
+  // 없다(out/n/1.html 실측) — genPageMetadata 기반 about/projects(og:url 있음)와의 차이.
+  // Base.astro:38-41의 목록 페이지 사례와 동일 원칙: canonical 있는 페이지의 기본값은 true, 이 경우만 false로 억제.
+  ogUrl?: boolean
+}
+
+// 원본 5개 노트는 전부 genPageMetadata를 안 쓰는 순정 `export const metadata` 방식이라
+// openGraph.title을 스스로 설정한 적이 없고, 루트 layout.tsx의 정적 og:title(DEFAULT_TITLE)을
+// 페이지 제목과 무관하게 그대로 물려받는다(out/n-1.html·out/test-mdx.html 실측 확인).
+const { title, description, ogDescription, canonical: canonicalPath, ogUrl = true } = Astro.props
+const canonical = canonicalPath ? `${siteMetadata.siteUrl}${canonicalPath}` : undefined
+---
+
+<Base title={title} ogTitle={DEFAULT_TITLE} description={description} ogDescription={ogDescription} canonical={canonical} ogUrl={ogUrl} locale="ko">
+  <div class="pt-10 pb-8 max-w-none prose dark:prose-invert">
+    <slot />
+  </div>
+</Base>

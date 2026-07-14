@@ -1,6 +1,9 @@
-import { readFileSync, readdirSync, statSync } from 'fs'
-import path from 'path'
-import { allBlogs } from '../.contentlayer/generated/index.mjs'
+// contentlayer2(allBlogs) 의존 제거 — scripts/shared/collect-posts.mjs(공유 node 파서)로 교체.
+// 폐기 규칙(Next 전용, 이번에 제거): allBlogs 직접 import 금지 + 'use client' 파일의 lib/posts import 금지.
+//   Next app/layouts/components 트리에서 서버 전용 contentlayer 데이터가 클라이언트 번들로 새지 않게
+//   lib/posts.ts 경유를 강제하던 가드였다. Astro는 컴포넌트가 astro:content(src/content.config.ts)를
+//   직접 import하는 구조라 이 가드가 지키던 "반드시 한 헬퍼를 거쳐라" 경계 자체가 없다 — 이식할 대상이 없어 폐기.
+import { allEntries } from './shared/collect-posts.mjs'
 
 let failed = false
 const err = (m) => {
@@ -8,61 +11,45 @@ const err = (m) => {
   failed = true
 }
 
-const koPosts = allBlogs.filter((p) => p.locale === 'ko')
-const enPosts = allBlogs.filter((p) => p.locale === 'en')
-const koBySlug = new Map(koPosts.map((p) => [p.slug, p]))
+const entries = allEntries()
+const koEntries = entries.filter((e) => e.locale === 'ko')
+const enEntries = entries.filter((e) => e.locale === 'en')
+const koBySlug = new Map(koEntries.map((e) => [e.slug, e]))
 
-// locale 내 slug 유일성
-for (const [loc, posts] of [['ko', koPosts], ['en', enPosts]]) {
+// locale 내 slug 유일성(slug 충돌 검사)
+for (const [loc, list] of [
+  ['ko', koEntries],
+  ['en', enEntries],
+]) {
   const seen = new Set()
-  for (const p of posts) {
-    if (seen.has(p.slug)) err(`[${loc}] slug 중복: ${p.slug}`)
-    seen.add(p.slug)
+  for (const e of list) {
+    if (seen.has(e.slug)) err(`[${loc}] slug 중복: ${e.slug}`)
+    seen.add(e.slug)
   }
 }
 
-// 번역 쌍 무결성
+// 번역 쌍 무결성 (양방향: 원문 존재 + 원문당 번역 1개)
 const pairSeen = new Map()
-for (const post of enPosts) {
-  if (!post.translationOf) continue
-  const original = koBySlug.get(post.translationOf)
+for (const e of enEntries) {
+  if (!e.translationOf) continue
+  const original = koBySlug.get(e.translationOf)
   if (!original) {
-    err(`${post._raw.sourceFilePath}: translationOf '${post.translationOf}'에 해당하는 원문 없음`)
+    err(`${e.id}: translationOf '${e.translationOf}'에 해당하는 원문 없음`)
     continue
   }
-  if (pairSeen.has(post.translationOf)) {
-    err(`원문 '${post.translationOf}'에 번역이 2개: ${pairSeen.get(post.translationOf)}, ${post.slug}`)
+  if (pairSeen.has(e.translationOf)) {
+    err(`원문 '${e.translationOf}'에 번역이 2개: ${pairSeen.get(e.translationOf)}, ${e.slug}`)
   }
-  pairSeen.set(post.translationOf, post.slug)
-  if (!post.draft && original.draft) err(`${post.slug}: draft 원문의 번역이 공개 상태`)
-  const oMod = new Date(original.lastmod || original.date)
-  const tMod = new Date(post.lastmod || post.date)
-  if (oMod > tMod) console.warn(`⚠ stale: 원문 '${original.slug}'(${original.lastmod || original.date})이 번역 '${post.slug}'보다 최신`)
+  pairSeen.set(e.translationOf, e.slug)
+  if (!e.draft && original.draft) err(`${e.slug}: draft 원문의 번역이 공개 상태`)
+  const oMod = original.lastmod ?? original.date
+  const tMod = e.lastmod ?? e.date
+  if (oMod > tMod) console.warn(`⚠ stale: 원문 '${original.slug}'(${oMod.toISOString()})이 번역 '${e.slug}'보다 최신`)
 }
 
-for (const post of koPosts) {
-  if (post.translationOf) err(`${post.slug}: 한국어 원문에는 translationOf를 쓸 수 없음`)
-}
-
-// allBlogs 직접 import 금지 (lib/posts.ts 경유 강제)
-const ALLOWED = new Set(['lib/posts.ts'])
-const walk = (dir) =>
-  readdirSync(dir).flatMap((f) => {
-    const p = path.join(dir, f)
-    return statSync(p).isDirectory() ? walk(p) : /\.(ts|tsx)$/.test(f) ? [p] : []
-  })
-for (const dir of ['app', 'layouts', 'components']) {
-  for (const file of walk(dir)) {
-    const rel = file.split(path.sep).join('/')
-    if (ALLOWED.has(rel)) continue
-    const src = readFileSync(file, 'utf8')
-    if (/\ballBlogs\b/.test(src)) err(`${rel}: allBlogs 직접 사용 금지 — lib/posts.ts 헬퍼를 사용하세요`)
-    // 클라이언트 번들에 allBlogs(contentlayer)가 새지 않도록: 'use client' 파일은 lib/posts 대신 lib/locale만 import
-    const isClient = /^\s*['"]use client['"]/m.test(src)
-    if (isClient && /from\s+['"][^'"]*lib\/posts['"]/.test(src))
-      err(`${rel}: 'use client' 파일은 lib/posts import 금지 — lib/locale을 사용하세요`)
-  }
+for (const e of koEntries) {
+  if (e.translationOf) err(`${e.slug}: 한국어 원문에는 translationOf를 쓸 수 없음`)
 }
 
 if (failed) process.exit(1)
-console.log(`✓ i18n validation passed (ko ${koPosts.length}, en ${enPosts.length}, pairs ${pairSeen.size})`)
+console.log(`✓ i18n validation passed (ko ${koEntries.length}, en ${enEntries.length}, pairs ${pairSeen.size})`)

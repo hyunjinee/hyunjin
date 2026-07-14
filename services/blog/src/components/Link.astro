@@ -1,0 +1,28 @@
+---
+// components/Link.tsx 이식 — 정적 사이트라 next/link의 클라이언트 프리페치가 없을 뿐,
+// 내부(/)·앵커(#)·외부 링크 세 갈래의 렌더 결과(HTML)는 동일하다.
+// biome-ignore-all lint/correctness/noUnusedVariables: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+interface Props {
+  href: string
+  class?: string
+  [key: string]: unknown
+}
+
+const { href, class: className, ...rest } = Astro.props
+const isExternal = !href.startsWith('/') && !href.startsWith('#')
+// 원본은 `<Link className="break-words" {...rest} />` — rest.className이 있으면 JSX 스프레드 순서상
+// break-words를 완전히 대체한다(병합 아님). className ?? 'break-words'로 그 override 의미론을 재현.
+const cls = className ?? 'break-words'
+---
+
+{
+  isExternal ? (
+    <a class={cls} href={href} target="_blank" rel="noopener noreferrer" {...rest}>
+      <slot />
+    </a>
+  ) : (
+    <a class={cls} href={href} {...rest}>
+      <slot />
+    </a>
+  )
+}

@@ -1,0 +1,152 @@
+---
+// layouts/ListLayoutWithTags.tsx 이식. /blog/page/[n], /tags/[tag]가 소비한다.
+// 원본은 usePathname으로 locale/basePath/활성 태그를 클라이언트에서 추론했지만, Astro 정적 페이지는
+// 빌드 타임에 이미 알고 있으므로 locale/activeTag prop으로 받는다(Task 2가 Tag.astro에 적용한 것과 동일 원칙).
+// biome-ignore-all lint/correctness/noUnusedImports: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+// biome-ignore-all lint/correctness/noUnusedVariables: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+import siteMetadata from '../../data/siteMetadata.js'
+import Link from '../components/Link.astro'
+import Tag from '../components/Tag.astro'
+import { localePath, postUrl } from '../lib/locale'
+import type { Entry, Locale } from '../lib/posts'
+import { entrySlug } from '../lib/posts'
+import { tagCounts } from '../lib/tags'
+
+interface Pagination {
+  currentPage: number
+  totalPages: number
+}
+
+interface Props {
+  posts: Entry[]
+  title: string
+  locale: Locale
+  pagination?: Pagination
+  // 지정하면 태그 상세 페이지(사이드바 "All Posts"가 링크, 이 태그가 강조). 없으면 /blog/page/[n](전체 목록,
+  // 사이드바 "All Posts"가 강조 텍스트) — ListLayoutWithTags.tsx:89 localPathname.startsWith('/blog') 대응.
+  activeTag?: string
+}
+
+const { posts, title, locale, pagination, activeTag } = Astro.props
+const prefix = locale === 'en' ? '/en' : ''
+const dateOptions: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' }
+
+const counts = await tagCounts(locale)
+const sortedTags = Object.keys(counts).sort((a, b) => counts[b] - counts[a])
+
+const prevPage = pagination ? pagination.currentPage - 1 > 0 : false
+const nextPage = pagination ? pagination.currentPage + 1 <= pagination.totalPages : false
+// ListLayoutWithTags.tsx:43 `currentPage - 1 === 1 ? '/blog/' : '/blog/page/N'` — Next가 trailingSlash:false로
+// '/blog/'를 '/blog'로 정규화해 내보내던 것과 동일하게 슬래시 없이 맞춘다.
+const prevHref =
+  pagination && pagination.currentPage - 1 === 1
+    ? `${prefix}/blog`
+    : `${prefix}/blog/page/${(pagination?.currentPage ?? 1) - 1}`
+const nextHref = `${prefix}/blog/page/${(pagination?.currentPage ?? 0) + 1}`
+---
+
+<div>
+  <div class="pt-6 pb-6">
+    <h1 class="text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:hidden sm:text-4xl sm:leading-10 md:text-6xl md:leading-14">
+      {title}
+    </h1>
+  </div>
+  <div class="flex sm:space-x-24">
+    <div class="hidden h-full max-h-screen min-w-[280px] max-w-[280px] flex-wrap overflow-auto rounded bg-gray-50 pt-5 shadow-md dark:bg-gray-900/70 dark:shadow-gray-800/40 sm:flex">
+      <div class="px-6 py-4">
+        {
+          activeTag === undefined ? (
+            <h3 class="font-bold uppercase text-primary-500">All Posts</h3>
+          ) : (
+            <Link href={`${prefix}/blog`} class="font-bold text-gray-700 uppercase hover:text-primary-500 dark:text-gray-300 dark:hover:text-primary-500">
+              All Posts
+            </Link>
+          )
+        }
+        <ul>
+          {
+            sortedTags.map((t) => (
+              <li class="my-3">
+                {activeTag === t ? (
+                  <h3 class="inline px-3 py-2 text-sm font-bold uppercase text-primary-500">{`${t} (${counts[t]})`}</h3>
+                ) : (
+                  <Link
+                    href={`${prefix}/tags/${t}`}
+                    class="px-3 py-2 text-sm font-medium text-gray-500 uppercase hover:text-primary-500 dark:text-gray-300 dark:hover:text-primary-500"
+                    aria-label={`View posts tagged ${t}`}
+                  >
+                    {`${t} (${counts[t]})`}
+                  </Link>
+                )}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+    <div>
+      <ul>
+        {
+          posts.map((post) => {
+            const slug = entrySlug(post)
+            const { date, title: postTitle, summary, tags } = post.data
+            return (
+              <li class="py-5">
+                <article class="flex flex-col space-y-2 xl:space-y-0">
+                  <dl>
+                    <dt class="sr-only">Published on</dt>
+                    <dd class="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
+                      <time datetime={date.toISOString()}>{date.toLocaleDateString(siteMetadata.locale, dateOptions)}</time>
+                    </dd>
+                  </dl>
+                  <div class="space-y-3">
+                    <div>
+                      <h2 class="text-2xl font-bold leading-8 tracking-tight">
+                        <Link href={postUrl(locale, slug)} class="text-gray-900 dark:text-gray-100">
+                          {postTitle}
+                        </Link>
+                      </h2>
+                      <div class="flex flex-wrap">{tags.map((tag) => <Tag text={tag} locale={locale} />)}</div>
+                    </div>
+                    <div class="prose text-gray-500 max-w-none dark:text-gray-400">{summary}</div>
+                  </div>
+                </article>
+              </li>
+            )
+          })
+        }
+      </ul>
+      {
+        pagination && pagination.totalPages > 1 && (
+          <div class="pt-6 pb-8 space-y-2 md:space-y-5">
+            <nav class="flex justify-between">
+              {!prevPage && (
+                <button class="cursor-auto disabled:opacity-50" disabled>
+                  Previous
+                </button>
+              )}
+              {prevPage && (
+                <Link href={prevHref} rel="prev">
+                  Previous
+                </Link>
+              )}
+              <span>
+                {pagination.currentPage} of {pagination.totalPages}
+              </span>
+              {!nextPage && (
+                <button class="cursor-auto disabled:opacity-50" disabled>
+                  Next
+                </button>
+              )}
+              {nextPage && (
+                <Link href={nextHref} rel="next">
+                  Next
+                </Link>
+              )}
+            </nav>
+          </div>
+        )
+      }
+    </div>
+  </div>
+</div>

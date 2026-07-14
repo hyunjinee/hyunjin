@@ -1,0 +1,94 @@
+---
+// layouts/PostSimple.tsx 이식
+// biome-ignore-all lint/correctness/noUnusedImports: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+// biome-ignore-all lint/correctness/noUnusedVariables: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+import siteMetadata from '../../data/siteMetadata.js'
+import Link from '../components/Link.astro'
+import Lightbox from '../components/mdx/Lightbox'
+import Mermaid from '../components/mdx/Mermaid'
+import PageTitle from '../components/PageTitle.astro'
+import ScrollTop from '../components/ScrollTop'
+import SectionContainer from '../components/SectionContainer.astro'
+import type { PostPageData } from '../lib/blogPost'
+import { postUrl } from '../lib/locale'
+
+interface Props {
+  data: PostPageData
+}
+
+const { data } = Astro.props
+const { entry, prev, next, altLocale, locale } = data
+const { title, date } = entry.data
+const dateOptions: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' }
+---
+
+<SectionContainer>
+  <ScrollTop client:load />
+  <Lightbox client:visible />
+  <Mermaid client:visible />
+  <article>
+    <div>
+      <header>
+        <div class="pb-10 space-y-1 text-center border-b border-gray-200 dark:border-gray-700">
+          <dl>
+            <div>
+              <dt class="sr-only">Published on</dt>
+              <dd class="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
+                <time datetime={date.toISOString()}>{date.toLocaleDateString(siteMetadata.locale, dateOptions)}</time>
+              </dd>
+            </div>
+          </dl>
+          {
+            altLocale && (
+              <div class="pt-2">
+                <Link href={altLocale.href} class="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
+                  {altLocale.label}
+                </Link>
+              </div>
+            )
+          }
+          <div>
+            <PageTitle>{title}</PageTitle>
+          </div>
+        </div>
+      </header>
+      <div class="grid-rows-[auto_1fr] divide-y divide-gray-200 pb-8 dark:divide-gray-700 xl:divide-y-0">
+        <div class="divide-y divide-gray-200 dark:divide-gray-700 xl:col-span-3 xl:row-span-2 xl:pb-0">
+          <div class="pt-10 pb-8 max-w-none prose dark:prose-invert">
+            <slot />
+          </div>
+        </div>
+        <footer>
+          <div class="flex flex-col text-sm font-medium sm:flex-row sm:justify-between sm:text-base">
+            {
+              prev && (
+                <div class="pt-4 xl:pt-8">
+                  <Link
+                    href={postUrl(locale, prev.slug)}
+                    class="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+                    aria-label={`Previous post: ${prev.title}`}
+                  >
+                    &larr; {prev.title}
+                  </Link>
+                </div>
+              )
+            }
+            {
+              next && (
+                <div class="pt-4 xl:pt-8">
+                  <Link
+                    href={postUrl(locale, next.slug)}
+                    class="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+                    aria-label={`Next post: ${next.title}`}
+                  >
+                    {next.title} &rarr;
+                  </Link>
+                </div>
+              )
+            }
+          </div>
+        </footer>
+      </div>
+    </div>
+  </article>
+</SectionContainer>

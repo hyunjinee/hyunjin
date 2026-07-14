@@ -1,0 +1,12 @@
+# 동결 스냅샷 — out/_redirects(구 Next 정적 export, postexport.mjs 산출물)에서 그대로 복사한 7규칙.
+# out/은 Astro 이전 전 마지막 Next 빌드 산출물이며 실제 서빙에 쓰였던 검증된 실물이다.
+# astro build가 public/ → dist/로 그대로 복사하므로 이 파일이 배포 산출물 _redirects의 원본이다.
+# 갱신 조건: data/blog 콘텐츠 파일명(legacy 한글 slug) ↔ frontmatter slug 매핑 관계가 바뀔 때만 —
+# 새 글의 legacy slug가 생기거나, 기존 글의 slug/파일명이 바뀌어 매핑이 추가·변경·삭제될 때.
+/ko / 301
+/ko/* /:splat 301
+/blog/1%EB%85%84%EA%B0%84%EC%9D%98-%EC%9D%B4%EC%95%BC%EA%B8%B0 /blog/2024-retrospective 301
+/blog/%EB%82%99%EA%B4%80%EC%A0%81-%EC%97%85%EB%8D%B0%EC%9D%B4%ED%8A%B8-%EC%88%9C%EC%84%9C%EC%A0%9C%EC%96%B4 /blog/optimistic-update-ordering 301
+/blog/%EB%A6%AC%EC%95%A1%ED%8A%B8-%EB%A0%8C%EB%8D%94%EB%A7%81%EC%97%90-%EB%8C%80%ED%95%9C-%EC%9D%B4%ED%95%B4 /blog/understanding-react-rendering 301
+/blog/%EB%A6%AC%EC%95%A1%ED%8A%B8%EC%97%90%EC%84%9C-%EC%99%B8%EB%B6%80-%EC%8B%9C%EC%8A%A4%ED%85%9C%EA%B3%BC-%EB%8F%99%EA%B8%B0%ED%99%94%ED%95%98%EA%B8%B0 /blog/syncing-external-systems-in-react 301
+/blog/%EC%99%9C-setstate%EB%8A%94-%EB%B9%84%EB%8F%99%EA%B8%B0%EC%A0%81%EC%9C%BC%EB%A1%9C-%EB%8F%99%EC%9E%91%ED%95%98%EB%8A%94%EA%B0%80 /blog/why-setstate-is-asynchronous 301

@@ -3,11 +3,7 @@
 @plugin "@tailwindcss/forms";
 
 /* Tailwind v4 content sources */
-@source "node_modules/pliny/**/*.js";
-@source "app/**/*.{js,ts,jsx,tsx}";
-@source "pages/**/*.{js,ts,tsx}";
-@source "components/**/*.{js,ts,tsx}";
-@source "layouts/**/*.{js,ts,tsx}";
+@source "src/**/*.{astro,ts,tsx}";
 @source "data/**/*.mdx";
 
 /* Dark mode configuration - class-based */

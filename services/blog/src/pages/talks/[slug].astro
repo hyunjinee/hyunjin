@@ -1,0 +1,94 @@
+---
+// app/[locale]/(ko-only)/talks/[slug]/page.tsx + TalkPresentation.tsx 이식 (pdfUrl·video·HTML 데크 iframe
+// 세 갈래 전부). astro.config.mjs의 build.format:'file' 덕에 이 페이지는 talks/<slug>.html(파일)로 나가
+// public/talks/<slug>/index.html(정적 데크, 나머지 갈래가 iframe으로 참조)과 자연히 공존한다(out/의 과거
+// Next 정적 export와 동일 물리 구조) — git-collaboration은 정적 라우트(talks/git-collaboration/*)와
+// 충돌해 명시 제외.
+// biome-ignore-all lint/correctness/noUnusedImports: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+// biome-ignore-all lint/correctness/noUnusedVariables: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+import siteMetadata from '../../../data/siteMetadata.js'
+import { talks } from '../../../data/talksData'
+import PDFPresentation from '../../components/islands/PDFPresentation'
+import Base from '../../layouts/Base.astro'
+
+export function getStaticPaths() {
+  return talks
+    .filter((t) => t.href?.startsWith('/talks/') && t.href !== '/talks/git-collaboration')
+    .map((t) => ({ params: { slug: t.href?.replace('/talks/', '') } }))
+}
+
+const { slug } = Astro.params as { slug: string }
+const talk = talks.find((t) => t.href === `/talks/${slug}`)
+if (!talk) throw new Error(`talk not found for slug: ${slug}`)
+
+function getYouTubeId(url?: string) {
+  if (!url) return null
+  const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([\w-]{11})/)
+  return match ? match[1] : null
+}
+
+const youTubeId = talk.pdfUrl ? null : getYouTubeId(talk.video)
+const htmlPath = `/talks/${slug}/index.html`
+---
+
+<Base title={talk.title} ogTitle={`${talk.title} | ${siteMetadata.title}`} description={talk.description} ogImage={`${siteMetadata.siteUrl}${siteMetadata.socialBanner}`} locale="ko">
+  {
+    talk.pdfUrl ? (
+      <PDFPresentation client:only="react" pdfUrl={talk.pdfUrl} title={talk.title} />
+    ) : youTubeId ? (
+      <div class="container py-8 md:py-10">
+        <a href="/talks" class="inline-block mb-6 text-sm text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
+          ← Talks
+        </a>
+        <h1 class="text-2xl font-bold text-gray-900 md:text-3xl dark:text-gray-100">{talk.title}</h1>
+        <div class="flex flex-wrap gap-2 mt-2 text-sm text-gray-500 dark:text-gray-400">
+          <span>{talk.date}</span>
+          {talk.event && (
+            <>
+              <span>·</span>
+              <span>{talk.event}</span>
+            </>
+          )}
+        </div>
+        {talk.description && <p class="mt-3 text-gray-600 dark:text-gray-400">{talk.description}</p>}
+        <div class="overflow-hidden mt-6 w-full bg-black rounded-xl aspect-video">
+          <iframe
+            class="w-full h-full"
+            src={`https://www.youtube-nocookie.com/embed/${youTubeId}`}
+            title={talk.title}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+          />
+        </div>
+      </div>
+    ) : (
+      <div class="flex fixed inset-0 flex-col bg-white dark:bg-gray-950">
+        <div class="flex-shrink-0 px-4 py-3 bg-gray-100 border-b border-gray-200 dark:bg-gray-900 dark:border-gray-700">
+          <div class="flex justify-between items-center mx-auto max-w-7xl">
+            <div class="flex-1 min-w-0">
+              <h1 class="text-xl font-bold text-gray-900 truncate dark:text-gray-100">{talk.title}</h1>
+              <div class="flex items-center gap-2 mt-0.5 text-sm">
+                {talk.description && <p class="text-gray-600 truncate dark:text-gray-400">{talk.description}</p>}
+                {talk.event && (
+                  <>
+                    <span class="text-gray-400">·</span>
+                    <p class="text-gray-500 truncate dark:text-gray-500">{talk.event}</p>
+                  </>
+                )}
+              </div>
+            </div>
+            <a href="/talks" class="ml-4 text-sm whitespace-nowrap text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
+              ← Talks
+            </a>
+          </div>
+        </div>
+        <div class="overflow-hidden flex-1">
+          <iframe src={htmlPath} class="w-full h-full border-0" title={talk.title} allow="fullscreen" />
+        </div>
+        <script is:inline>
+          document.body.style.overflow = 'hidden'
+        </script>
+      </div>
+    )
+  }
+</Base>

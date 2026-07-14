@@ -1,0 +1,64 @@
+---
+// app/[locale]/(ko-only)/debutsplan/page.tsx 이식
+// ExcalidrawViewer: @excalidraw/excalidraw는 SSR 불가라(원본도 next/dynamic ssr:false) client:only="react".
+// biome-ignore-all lint/correctness/noUnusedImports: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+// biome-ignore-all lint/correctness/noUnusedVariables: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+import siteMetadata from '../../data/siteMetadata.js'
+import ExcalidrawViewer from '../components/islands/ExcalidrawViewer'
+import Link from '../components/Link.astro'
+import Base from '../layouts/Base.astro'
+---
+
+<Base title="Debut's Plan" ogTitle={`Debut's Plan | ${siteMetadata.title}`} ogImage={`${siteMetadata.siteUrl}${siteMetadata.socialBanner}`} locale="ko">
+  <div class="container md:mt-5">
+    {/* Hero */}
+    <header class="pb-8 mb-10 border-b border-gray-200 dark:border-gray-700">
+      <h1 class="mb-4 text-3xl font-bold text-gray-900 md:text-4xl dark:text-gray-100">Debut's Plan</h1>
+      <div class="flex gap-3 items-center mb-4">
+        <span class="text-sm text-gray-600 dark:text-gray-400">
+          Kakao Entertainment · 오디션 실시간 투표 서비스
+        </span>
+      </div>
+      <p class="text-sm leading-7 text-gray-700 break-keep md:text-base dark:text-gray-300">
+        글로벌 오디션 <strong>Debut's Plan</strong>의 실시간 투표 서비스를 개발했습니다.
+      </p>
+      <div class="flex flex-wrap gap-3 items-center mt-5 text-sm md:gap-4">
+        <Link href="/kakaoent" class="transition-colors text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
+          이력 요약
+        </Link>
+        <span class="text-gray-400 dark:text-gray-600">·</span>
+        <Link href="/berriz" class="transition-colors text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
+          Berriz 기여 상세
+        </Link>
+      </div>
+    </header>
+
+    {/* Contribution sections */}
+    <section class="mb-12">
+      <h2 class="pb-2 mb-8 text-2xl font-bold text-gray-900 border-b-2 border-gray-200 md:text-3xl dark:text-gray-100 dark:border-gray-700">
+        기여 영역
+      </h2>
+      <ul class="space-y-2">
+        <li class="text-sm md:text-base text-gray-700 dark:text-gray-300 pl-5 relative before:content-['–'] before:absolute before:left-0 before:text-primary-500">
+          Built and managed a globally synchronized voting system, ensuring accurate state management and real-time
+          updates across time zones.
+        </li>
+      </ul>
+      <figure class="mt-8">
+        <div class="overflow-hidden border border-gray-200 rounded-lg aspect-video dark:border-gray-700">
+          <iframe
+            src="https://www.youtube-nocookie.com/embed/uk2l1RRztms"
+            title="Debut's Plan"
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+            class="w-full h-full"
+          />
+        </div>
+      </figure>
+      <figure class="mt-8">
+        <ExcalidrawViewer client:only="react" src="/images/debutsplan/audition.excalidraw" />
+      </figure>
+    </section>
+  </div>
+</Base>

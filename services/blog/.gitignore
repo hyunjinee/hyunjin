@@ -34,6 +34,7 @@ public/sitemap.xml
 
 # search
 /public/search.json
+/public/search-en.json
 
 # misc
 .DS_Store
@@ -52,5 +53,12 @@ yarn-error.log*
 
 # Contentlayer
 .contentlayer
+
+# Astro
+/dist/
+.astro/
+
+# TypeScript build cache
+tsconfig.tsbuildinfo
 
 *storybook.log

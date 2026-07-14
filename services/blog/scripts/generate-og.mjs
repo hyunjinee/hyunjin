@@ -1,25 +1,32 @@
-import { mkdirSync, writeFileSync } from 'fs'
-import satori from 'satori'
+import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { Resvg } from '@resvg/resvg-js'
-import { allBlogs } from '../.contentlayer/generated/index.mjs'
+import satori from 'satori'
+import { publicPosts } from './shared/collect-posts.mjs'
 
-const OUT = './public/og'
+const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)))
+const OUT = path.join(root, 'public/og')
+const FONTS = path.join(root, 'scripts/fonts')
 
-async function loadGoogleFont(family, weight, text) {
-  const url = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(family)}:wght@${weight}&text=${encodeURIComponent(text)}`
-  const css = await (await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0' } })).text()
-  const src = css.match(/src: url\((.+?)\) format/)?.[1]
-  if (!src) throw new Error(`font load failed: ${family}`)
-  return await (await fetch(src)).arrayBuffer()
-}
+// fonts.googleapis.com 매 빌드 fetch 제거(CI 플레이크 원인) — Noto Sans KR 400/700을 정적 vendoring.
+// satori는 woff2를 파싱 못 한다(@shuding/opentype.js 의존) — ttf만 사용.
+const bold = readFileSync(path.join(FONTS, 'NotoSansKR-Bold.ttf'))
+const regular = readFileSync(path.join(FONTS, 'NotoSansKR-Regular.ttf'))
 
 const div = (style, children) => ({ type: 'div', props: { style, children } })
 
 function template(title, subtitle) {
   return div(
     {
-      width: '100%', height: '100%', display: 'flex', flexDirection: 'column',
-      justifyContent: 'space-between', background: '#0a0a0a', padding: '72px 80px', fontFamily: 'Noto',
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      background: '#0a0a0a',
+      padding: '72px 80px',
+      fontFamily: 'Noto',
     },
     [
       div({ display: 'flex', fontSize: 30, fontWeight: 400, color: '#9ca3af' }, `hyunjin · ${subtitle}`),
@@ -30,13 +37,9 @@ function template(title, subtitle) {
 }
 
 async function render(title, subtitle, outPath) {
-  const glyphs = `${title}${subtitle}hyunjin · hyunjinlee.com 이현진 (Hyunjin Lee)`
-  const [bold, regular] = await Promise.all([
-    loadGoogleFont('Noto Sans KR', 700, glyphs),
-    loadGoogleFont('Noto Sans KR', 400, glyphs),
-  ])
   const svg = await satori(template(title, subtitle), {
-    width: 1200, height: 630,
+    width: 1200,
+    height: 630,
     fonts: [
       { name: 'Noto', data: bold, weight: 700, style: 'normal' },
       { name: 'Noto', data: regular, weight: 400, style: 'normal' },
@@ -46,12 +49,15 @@ async function render(title, subtitle, outPath) {
   writeFileSync(outPath, png)
 }
 
-const posts = allBlogs.filter((p) => p.draft !== true)
+const posts = [...publicPosts('ko'), ...publicPosts('en')]
+
+// draft로 바뀐 글의 OG png가 public/og에 계속 남아있지 않도록(예: closed-loop) 매번 비우고 다시 그린다
+rmSync(OUT, { recursive: true, force: true })
 mkdirSync(OUT, { recursive: true })
 for (const post of posts) {
-  const dir = `${OUT}/blog/${post.locale}`
+  const dir = path.join(OUT, 'blog', post.locale)
   mkdirSync(dir, { recursive: true })
-  await render(String(post.title).slice(0, 80), post.tags?.[0] ?? 'Software Engineer', `${dir}/${post.slug}.png`)
+  await render(String(post.title).slice(0, 80), post.tags[0] ?? 'Software Engineer', path.join(dir, `${post.slug}.png`))
 }
-await render('이현진 (Hyunjin Lee)', 'Software Engineer', `${OUT}/default.png`)
+await render('이현진 (Hyunjin Lee)', 'Software Engineer', path.join(OUT, 'default.png'))
 console.log(`OG images generated: ${posts.length} posts + default`)

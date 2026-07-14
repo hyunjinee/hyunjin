@@ -1,0 +1,60 @@
+---
+// components/Header.tsx 이식
+// biome-ignore-all lint/correctness/noUnusedImports: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+// biome-ignore-all lint/correctness/noUnusedVariables: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+import headerNavLinks from '../../data/headerNavLinks'
+import siteMetadata from '../../data/siteMetadata.js'
+import { type Locale, localePath } from '../lib/locale'
+import MobileNav from './islands/MobileNav'
+import ThemeSwitch from './islands/ThemeSwitch'
+import Link from './Link.astro'
+import LocaleSwitcher from './LocaleSwitcher.astro'
+import SearchButton from './SearchButton.astro'
+
+interface Props {
+  locale?: Locale
+}
+
+const { locale = 'ko' } = Astro.props
+
+let headerClass = 'flex items-center w-full bg-white dark:bg-gray-950 justify-between py-6'
+if (siteMetadata.stickyNav) {
+  headerClass += ' sticky top-0 z-50'
+}
+---
+
+<header class={headerClass}>
+  <Link href={localePath(locale, '/')} aria-label={siteMetadata.headerTitle}>
+    <div class="flex justify-between items-center">
+      <div class="mr-3"></div>
+      {
+        typeof siteMetadata.headerTitle === 'string' ? (
+          <div class="hidden h-6 text-2xl font-semibold sm:block">{siteMetadata.headerTitle}</div>
+        ) : (
+          siteMetadata.headerTitle
+        )
+      }
+    </div>
+  </Link>
+  <div class="flex items-center space-x-4 leading-5 sm:space-x-6">
+    <div class="hidden items-center space-x-4 sm:flex sm:space-x-6">
+      {
+        headerNavLinks
+          .filter((link) => link.href !== '/')
+          .filter((link) => locale === 'ko' || link.localized)
+          .map((link) => (
+            <Link
+              href={link.localized ? localePath(locale, link.href) : link.href}
+              class="block font-medium text-gray-900 hover:text-primary-500 dark:text-gray-100 dark:hover:text-primary-400"
+            >
+              {link.title}
+            </Link>
+          ))
+      }
+    </div>
+    <SearchButton locale={locale} />
+    <LocaleSwitcher />
+    <ThemeSwitch client:load />
+    <MobileNav locale={locale} client:load />
+  </div>
+</header>

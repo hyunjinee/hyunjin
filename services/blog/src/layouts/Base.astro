@@ -1,0 +1,163 @@
+---
+// app/[locale]/layout.tsx 이식 — head 구성·전역 css·다크모드 FOUC 방지·전역 셸(Header/Footer) 담당.
+// pliny의 SearchProvider가 트리 전체를 감싸던 구조는 없앴다: 검색은 Header 안 SearchButton island 하나로 완결된다.
+// biome-ignore-all lint/correctness/noUnusedImports: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+// biome-ignore-all lint/correctness/noUnusedVariables: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+import '../../css/tailwind.css'
+import '../../css/pretendard-dynamic-subset.css'
+import '../../css/view-transition.css'
+import 'remark-github-blockquote-alert/alert.css'
+import '../../css/prism.css'
+// 원본의 6번째 import였던 pliny/search/algolia.css는 제외했다: pliny의 Algolia/KBar 검색 컴포넌트
+// 전용 스타일(--docsearch-* 변수)인데 이 프로젝트는 kbar 직접 의존 island로 대체해 더 쓰지 않고,
+// theme(colors.primary.600) 같은 Tailwind CSS 함수가 Astro의 Vite 처리 컨텍스트에서 해석되지 않아 빌드가 깨진다.
+
+import siteMetadata from '../../data/siteMetadata.js'
+import Footer from '../components/Footer.astro'
+import Header from '../components/Header.astro'
+import SectionContainer from '../components/SectionContainer.astro'
+import type { Locale } from '../lib/locale'
+
+interface Props {
+  title?: string
+  // null: 이 페이지는 설명이 없다(사이트 기본값으로도 대체하지 않음) — blog/[...slug]가
+  // post.summary 없는 글에서 씀(원본 generateMetadata가 description 필드를 아예 안 낸 것과 동일 효과).
+  // undefined: prop을 안 준 것 — 기존처럼 siteMetadata.description으로 대체.
+  description?: string | null
+  canonical?: string
+  hreflang?: { ko?: string; en?: string; xDefault?: string }
+  ogImage?: string
+  locale: Locale
+  // 블로그 글 상세(Task 3)가 app/[locale]/blog/[...slug]/page.tsx의 openGraph.type: 'article'을
+  // 재현하는 데 쓴다. 미지정 시 기존 동작(website) 그대로 — 기존 소비자 무파손.
+  ogType?: 'website' | 'article'
+  // Task 4: app/seo.tsx의 genPageMetadata는 og:title/twitter:title을 `${title} | ${siteName}`로
+  // 템플릿하지만(blog/tags 목록), blog/[...slug]/page.tsx의 인라인 metadata는 title을 그대로 쓴다(글 상세).
+  // 미지정 시 기존 동작(title ?? DEFAULT_TITLE, 무템플릿) 그대로 — 기존 소비자(Task 3 글 상세) 무파손.
+  ogTitle?: string
+  // Task 4: genPageMetadata 기반 목록 페이지(blog/tags)는 canonical은 있어도 openGraph.url을 지정한
+  // 적이 없어 og:url이 원본에 없다. 기본값 true로 기존 동작(canonical 있으면 og:url 표시) 유지 —
+  // 기존 소비자(Task 3 글 상세) 무파손. 목록 페이지만 false로 명시 억제.
+  ogUrl?: boolean
+  // Task 4: app/[locale]/page.tsx의 en 분기는 top-level description('Posts in English')만 주고
+  // openGraph를 자체 지정하지 않아, og:description/twitter:description은 루트 layout.tsx의 정적
+  // openGraph.description(한국어 기본값)을 그대로 물려받는다(<meta name="description">과는 다른 값) —
+  // en 홈 하나만 이 분기를 타므로 og/twitter description을 description과 독립적으로 override한다.
+  // 미지정 시 기존 동작(description과 동일 값) 그대로 — 기존 소비자 무파손.
+  ogDescription?: string
+  // Task 10 리뷰: en 홈(원본 app/[locale]/page.tsx en 분기)은 title을 ` | siteName` 템플릿 없이
+  // 그대로 낸다(out/en.html 실측: <title>Blog</title>). 기본값 true = 기존 동작(템플릿) 유지 —
+  // 기존 소비자 무파손, en/index.astro만 false로 명시 억제.
+  titleTemplate?: boolean
+}
+
+export const DEFAULT_TITLE = '이현진 (Hyunjin Lee) — Software Engineer'
+
+const {
+  title,
+  description: descriptionProp,
+  canonical,
+  hreflang,
+  ogImage,
+  locale,
+  ogType = 'website',
+  ogTitle,
+  ogUrl = true,
+  ogDescription,
+  titleTemplate = true,
+} = Astro.props
+const description = descriptionProp === null ? undefined : (descriptionProp ?? siteMetadata.description)
+const resolvedOgDescription = ogDescription ?? description
+
+const pageTitle = title ? (titleTemplate ? `${title} | ${siteMetadata.title}` : title) : DEFAULT_TITLE
+const resolvedOgTitle = ogTitle ?? title ?? DEFAULT_TITLE
+const resolvedOgImage = ogImage ?? `${siteMetadata.siteUrl}/og/default.png`
+const htmlLang = locale === 'en' ? 'en-US' : siteMetadata.language
+const feedPath = locale === 'en' ? '/en/feed.xml' : '/feed.xml'
+---
+
+<html lang={htmlLang} class="scroll-smooth">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    {description && <meta name="description" content={description} />}
+
+    {canonical && <link rel="canonical" href={canonical} />}
+    {hreflang?.ko && <link rel="alternate" hreflang="ko" href={hreflang.ko} />}
+    {hreflang?.en && <link rel="alternate" hreflang="en" href={hreflang.en} />}
+    {hreflang?.xDefault && <link rel="alternate" hreflang="x-default" href={hreflang.xDefault} />}
+
+    <meta name="robots" content="index, follow" />
+    <meta name="googlebot" content="index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1" />
+
+    <meta property="og:title" content={resolvedOgTitle} />
+    {resolvedOgDescription && <meta property="og:description" content={resolvedOgDescription} />}
+    <meta property="og:site_name" content={siteMetadata.title} />
+    <meta property="og:image" content={resolvedOgImage} />
+    {canonical && ogUrl && <meta property="og:url" content={canonical} />}
+    <meta property="og:locale" content={locale === 'en' ? 'en_US' : 'ko_KR'} />
+    <meta property="og:type" content={ogType} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={resolvedOgTitle} />
+    {resolvedOgDescription && <meta name="twitter:description" content={resolvedOgDescription} />}
+    <meta name="twitter:image" content={resolvedOgImage} />
+
+    <link rel="apple-touch-icon" sizes="76x76" href="/static/favicons/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/favicons/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/favicons/favicon-16x16.png" />
+    <link rel="manifest" href="/static/favicons/site.webmanifest" />
+    <link rel="mask-icon" href="/static/favicons/safari-pinned-tab.svg" color="#5bbad5" />
+    <meta name="msapplication-TileColor" content="#000000" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fff" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000" />
+    <link rel="alternate" type="application/rss+xml" href={feedPath} />
+
+    <script is:inline>
+      // FOUC 방지: 페인트 전에 html.dark를 확정한다.
+      // localStorage 'theme' 키·값('light'|'dark'|'system')은 next-themes와 호환 유지 (ThemeSwitch island가 갱신).
+      ;(function () {
+        try {
+          var theme = localStorage.getItem('theme') || 'dark'
+          var isDark = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+          document.documentElement.classList.toggle('dark', isDark)
+        } catch (e) {}
+      })()
+    </script>
+
+    {
+      import.meta.env.PUBLIC_UMAMI_ID && (
+        <script defer src="https://analytics.umami.is/script.js" data-website-id={import.meta.env.PUBLIC_UMAMI_ID} />
+      )
+    }
+
+    {/* 페이지별 추가 head 태그(og:article:*, JSON-LD 등) 확장 지점 — Base 자체는 그 의미를 모른다 */}
+    <slot name="head" />
+  </head>
+  <body class="bg-white pl-[calc(100vw-100%)] text-black antialiased dark:bg-gray-950 dark:text-white h-full">
+    <SectionContainer>
+      <Header locale={locale} />
+      <main class="flex-1">
+        <slot />
+      </main>
+      <Footer />
+    </SectionContainer>
+
+    <script is:inline>
+      // components/Pre.tsx의 복사 버튼 클릭 처리를 문서 전체에 위임 하나로 대체한다
+      // (src/lib/rehypeCopyButton.ts가 코드 블록마다 주입한 [data-copy-button] 마크업 소비).
+      document.addEventListener('click', (event) => {
+        const button = event.target instanceof Element ? event.target.closest('[data-copy-button]') : null
+        if (!button) return
+        const pre = button.nextElementSibling
+        const text = pre instanceof HTMLElement ? pre.textContent || '' : ''
+        navigator.clipboard?.writeText(text)
+        button.setAttribute('data-copied', '')
+        window.clearTimeout(Number(button.dataset.copyTimeout))
+        const timeout = window.setTimeout(() => button.removeAttribute('data-copied'), 2000)
+        button.dataset.copyTimeout = String(timeout)
+      })
+    </script>
+  </body>
+</html>

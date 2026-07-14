@@ -1,51 +1,5 @@
 {
-  "compilerOptions": {
-    "incremental": true,
-    "target": "ES6",
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "strict": false,
-    "forceConsistentCasingInFileNames": true,
-    "noEmit": true,
-    "composite": true,
-    "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "react-jsx",
-    "baseUrl": ".",
-    "paths": {
-      "@/components/*": ["components/*"],
-      "@/data/*": ["data/*"],
-      "@/layouts/*": ["layouts/*"],
-      "@/css/*": ["css/*"],
-      "contentlayer/generated": ["./.contentlayer/generated"],
-      // moduleResolution "node"는 @opennextjs/cloudflare의 package.json "exports" 서브패스를 못 읽음(pliny도 exports 의존이라 "bundler"로 전면 전환 불가) — 이 서브패스만 직접 매핑
-      "@opennextjs/cloudflare/overrides/incremental-cache/static-assets-incremental-cache": [
-        "node_modules/@opennextjs/cloudflare/dist/api/overrides/incremental-cache/static-assets-incremental-cache.d.ts"
-      ]
-    },
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
-    "strictNullChecks": true
-  },
-  "include": [
-    "next-env.d.ts",
-    "**/*.js",
-    "**/*.mjs",
-    "**/*.ts",
-    "**/*.tsx",
-    "**/*.json",
-    "**/*.mdx",
-    ".contentlayer/generated",
-    ".contentlayer/generated/**/*.json",
-    ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts"
-  ],
-  "exclude": ["node_modules"]
+  "extends": "astro/tsconfigs/strict",
+  "include": [".astro/types.d.ts", "astro.config.mjs", "src/**/*", "scripts/**/*"],
+  "exclude": ["dist", "stories"]
 }

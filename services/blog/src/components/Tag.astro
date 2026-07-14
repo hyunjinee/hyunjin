@@ -1,0 +1,22 @@
+---
+// components/Tag.tsx 이식. 원본은 usePathname으로 locale을 클라이언트에서 추론했지만,
+// Astro 정적 페이지는 자신이 어느 locale로 렌더되는지 빌드 타임에 이미 알고 있으므로 prop으로 받는다.
+// biome-ignore-all lint/correctness/noUnusedImports: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+// biome-ignore-all lint/correctness/noUnusedVariables: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+import { slug } from 'github-slugger'
+import { type Locale, localePath } from '../lib/locale'
+
+interface Props {
+  text: string
+  locale?: Locale
+}
+
+const { text, locale = 'ko' } = Astro.props
+---
+
+<a
+  href={localePath(locale, `/tags/${slug(text)}`)}
+  class="mr-3 text-sm font-medium uppercase text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+>
+  {text.split(' ').join('-')}
+</a>
