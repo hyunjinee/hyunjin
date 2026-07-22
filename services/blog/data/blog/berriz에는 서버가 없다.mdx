@@ -1,0 +1,180 @@
+---
+title: '서버 없이 운영하는 FE 인프라'
+slug: serverless-fe-infra
+date: '2026-07-06'
+tags: ['aws', 'cloudfront', 'nextjs', 'architecture', 'infra']
+layout: PostSimple
+draft: true
+summary: 'Berriz 웹의 요청은 서버 프로세스를 한 번도 거치지 않고 CloudFront 계층 안에서 끝난다. 10KB짜리 CloudFront Function이 라우터가 되고, Lambda@Edge가 봇에게만 서버 노릇을 하고, S3가 나머지 전부를 서빙하는 구조를 만들고 운영하며 배운 것들.'
+---
+
+berriz.in에는 웹 서버가 없다.
+
+정확히 말하면, 브라우저가 berriz.in의 페이지를 요청했을 때 그 요청을 처리하는 Node.js 프로세스가 없다. Next.js로 만든 서비스인데 Next.js 서버가 안 떠 있다. 요청은 CloudFront에 닿고, 10KB짜리 함수가 URL을 고쳐 쓰고, S3가 정적 파일을 돌려주면 끝난다. 서버가 하는 일처럼 보이는 것들, 그러니까 동적 라우팅, locale 분기, OG 태그 렌더링은 전부 CDN 계층 안에서 일어난다.
+
+이 글은 그 구조를 만들고 1년 넘게 운영하면서 배운 것들의 기록이다. 왜 서버를 없앴는지, 서버가 하던 일을 누가 대신하게 됐는지, 그리고 그 과정에서 터졌던 사고 두 개에 대해 쓴다.
+
+## 왜 static export인가
+
+Next.js 앱을 서빙하는 가장 흔한 방법은 서버를 띄우는 것이다. Berriz도 처음에는 그랬다. 쿠버네티스 위에서 SSR 컨테이너로 서빙했고, Helm 차트와 ArgoCD로 배포했다. 나는 이 시기에 딥링크 게이트 서버의 배포 구성과 라우팅 작업을 했다.
+
+서버 서빙은 유연하지만 유지비가 있다. 파드는 항상 떠 있어야 하고, 트래픽이 튀면 스케일링을 고민해야 하고, 배포마다 롤링 업데이트를 지켜봐야 한다.
+
+이후 서비스는 Next.js의 [static export](https://nextjs.org/docs/app/guides/static-exports) 체제로 옮겨갔다. 빌드하면 라우트별 HTML과 클라이언트 내비게이션용 payload가 나오고, 이걸 S3에 올린 뒤 CloudFront로 서빙한다. 팬 플랫폼의 트래픽은 특정 이벤트에 몰리고 페이지 대부분은 빌드 시점에 확정할 수 있는 콘텐츠라, 정적 산출물 서빙과 잘 맞는 조건이었다. 서버가 없으니 지킬 프로세스도 없고, 트래픽은 CDN이 받아낸다.
+
+공짜는 아니다. static export를 선택하는 순간 [공식 문서가 나열하는 기능들](https://nextjs.org/docs/app/guides/static-exports#unsupported-features)을 포기하게 된다. `generateStaticParams` 없는 동적 라우트, Rewrites와 Redirects, ISR, 기본 이미지 최적화, Server Actions. 이 중에서 실제로 아픈 건 두 가지였다. 동적 라우팅과 OG 태그다. 이 글의 나머지는 사실상 이 두 가지를 서버 없이 해결한 이야기다.
+
+## 요청의 일생
+
+먼저 전체 그림. berriz.in에 요청이 들어오면 이렇게 흐른다.
+
+```
+[브라우저 / 크롤러]
+        |
+        v
+  CloudFront distribution (앱별 1개)
+        |
+        v  viewer-request
+  +------------------------------------------------+
+  | CloudFront Function (코드 제한 10KB)             |
+  |  배포 태그 프리픽스 제거                          |
+  |  -> 정적 파일은 그대로 통과                       |
+  |  -> 봇이면 뷰어 타입 헤더만 붙이고 통과            |
+  |  -> RSC payload(.txt) 경로 정규화                |
+  |  -> locale 없는 요청은 307 리다이렉트             |
+  |  -> 동적 경로 정규식 리라이트                     |
+  |  -> index.html 부착 + 배포 태그 프리픽스 재부착    |
+  +------------------------------------------------+
+        |
+        v  origin-request
+   뷰어 타입 헤더 있음? --yes--> Lambda@Edge가 OG/JSON-LD를
+        | no                    포함한 HTML을 200으로 직접 반환
+        v                       (S3에 도달하지 않음)
+   Lambda@Edge 패스스루
+        |
+        v
+   S3 (OAC, 배포 태그 프리픽스 아래 정적 산출물)
+```
+
+포인트는 세 가지다.
+
+첫째, viewer-request 단계의 CloudFront Function(이하 CFF)이 모든 요청이 통과하는 관문이다. 커뮤니티 앱의 CFF는 9단계 파이프라인으로 되어 있는데, 이 함수가 응답을 직접 만들어 돌려주는 경우는 리다이렉트뿐이다. 나머지는 전부 `request.uri`를 고쳐 쓰는 리라이트다. 라우팅 판단은 전부 이 함수가 하고, 콘텐츠는 전부 그 뒤에 있다.
+
+둘째, Lambda@Edge는 origin-request 단계에 있지만 사람의 요청에는 아무것도 하지 않는다. CFF가 붙여준 뷰어 타입 헤더가 있는 요청, 그러니까 봇의 요청만 가로챈다. 이 역할 분담은 뒤에서 자세히 쓴다.
+
+셋째, S3 접근은 OAC(Origin Access Control)로 잠겨 있고 산출물은 배포 태그 프리픽스 아래에 쌓인다. 이 구조 덕에 롤백이 재미있어지는데, 이것도 뒤에서 쓴다.
+
+같은 골격을 커뮤니티, 커머스, 계정, 딥링크 게이트 등 앱별 CloudFront 배포가 공유한다. 다만 복잡도는 다르다. 커뮤니티 앱이 자동 생성 정규식 테이블에 국내 검색엔진 봇 구분까지 얹은 최대형이고, 계정 앱은 리라이트 테이블 없이 locale 처리와 index.html 부착만 하는 미니멀형이다. 딥링크 게이트(link.berriz.in)는 SPA라서 아예 다른 전략을 쓴다. 어떤 경로로 들어와도 루트로 리다이렉트하지 않고 path를 보존한 채 SPA 엔트리로 리라이트한다. 잘못된 링크로 들어온 유저에게도 URL은 그대로 남겨줘야 앱이 그 경로를 해석할 기회가 생기기 때문이다.
+
+## 10KB가 코드 스타일을 결정한다
+
+CFF의 제약은 [공식 문서](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cloudfront-function-restrictions.html) 기준으로 이렇다. 함수 크기 10KB(조정 불가), 메모리 2MB, 네트워크 접근 불가, 파일시스템 불가, 요청 바디 접근 불가, 타이머 불가. 실행 시간은 밀리초가 아니라 compute utilization이라는 0~100 지표로만 노출된다. 요청 메타데이터만 보고 아주 빨리 끝나는 일만 하라고 설계된 물건이다.
+
+10KB는 생각보다 빡빡하다. 커뮤니티 앱의 CFF는 TypeScript로 작성한 뒤 esbuild로 es5 타깃 번들링을 하고 terser로 압축해서 배포하는데, 이 과정을 거친 결과물이 현재 약 7.3KB다. 한도의 71%를 쓰고 있다.
+
+이 제약은 문법 수준까지 내려온다. 레포의 CFF 디렉터리에는 가이드 문서가 있는데, 요지는 이렇다. lodash 같은 라이브러리 금지, 구조 분해 할당 금지, spread 연산자 금지. 전부 압축 후 바이트를 아끼기 위해서다. 정규식 테이블도 객체 배열이 아니라 flat한 문자열 배열로 인코딩해서 넣는다. 그리고 CI에 사이즈 게이트가 있다. 번들이 10,240바이트를 넘으면 배포가 실패한다. 함수 크기 초과를 AWS API 에러로 처음 만나는 것보다 CI에서 만나는 게 훨씬 싸다.
+
+10KB 안에서 못 하는 일은 명확하다. 그 일은 Lambda@Edge로 넘긴다. [AWS의 선택 가이드](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/edge-functions-choosing.html)도 같은 기준을 제시한다. 네트워크나 파일시스템이 필요하거나 처리에 수 밀리초 이상 걸리면 Lambda@Edge, 요청 메타데이터만 보는 가벼운 조작이면 CFF. 가격도 다르다. 요청 단가 기준으로 CFF는 100만 호출당 $0.10, Lambda@Edge는 100만 요청당 $0.60에 실행 시간 과금이 더 붙는다. 모든 요청이 통과하는 관문을 CFF로, 일부 요청만 타는 무거운 일을 Lambda@Edge로 보내는 지금의 분담은 이 특성과 맞아떨어진다.
+
+## CDN이 라우터가 되어야 하는 이유
+
+static export의 산출물은 파일이다. `/community/[slug]` 같은 동적 라우트는 빌드 시점에 `generateStaticParams`로 열거된 slug마다 `community/{slug}/index.html`이 생긴다. 그런데 유저가 브라우저 주소창에 `/community/something`을 치면, S3에는 그 경로 그대로의 객체가 없다. 누군가 이 URL을 `community/something/index.html`로 고쳐 써줘야 한다.
+
+Next.js 공식 문서도 이 문제를 안다. static export 가이드에 nginx rewrite 설정 예제가 실려 있다. 서버로 서빙하면 nginx가 하던 일을, 우리는 CDN 앞단에서 해야 한다. 그 일을 하는 곳이 CFF다.
+
+여기에 복병이 하나 더 있다. App Router의 클라이언트 내비게이션은 HTML이 아니라 RSC payload를 요청하는데, static export에서는 이게 `.txt` 파일로 나온다. 그러니까 리라이트 규칙은 HTML용과 payload용 두 벌이 필요하다. 이 payload 경로가 어떻게 생겼는지는 공식 가이드 본문에 없고, 나는 이걸 운영 사고로 배웠다. 아래에서 쓴다.
+
+## 라우팅 테이블의 진실의 원천 옮기기
+
+처음에 리라이트 규칙은 CFF 코드 안에 하드코딩된 정규식 목록이었다. 라우트가 늘어날 때마다 사람이 정규식을 추가했다. 이 방식의 문제는 명확하다. 앱의 라우팅은 Next.js 파일시스템에 있는데 그 그림자 사본이 CFF에 있고, 둘을 동기화하는 건 사람의 기억력이다.
+
+나는 이걸 빌드 스크립트로 옮기는 작업을 했다. 라우트 정보에서 정규식 테이블을 생성해 CFF 코드에 주입하는 방식으로, 수동 패턴 관리를 제거하는 게 목표였다. 이후 팀에서 이 방식을 한 단계 더 밀고 나가서, 지금은 App Router 디렉터리를 직접 스캔해 `generateStaticParams`를 가진 동적 라우트만 골라 정규식으로 변환한다. 패턴끼리 충돌하면 negative lookahead를 자동으로 삽입하고, 산출물 파일 머리에는 "수동 수정 금지" 헤더가 박힌다. 규칙 생성은 모든 빌드에 선행 단계로 강제되어 있어서, 라우트를 추가하면 CFF 규칙이 따라온다.
+
+세대를 거치며 바뀐 건 규칙의 개수가 아니라 진실의 원천이다. 사람의 기억에서 템플릿으로, 템플릿에서 파일시스템으로 옮겨왔다. 지금 커뮤니티 앱의 테이블은 정규식 약 40쌍 규모인데, 이 숫자를 사람이 관리했다면 어딘가는 반드시 어긋나 있었을 것이다.
+
+## 운영에서 터진 두 가지
+
+자동 생성으로 옮겼어도 정규식 리라이트라는 방식 자체의 위험은 남는다. 실제로 두 번 터졌다.
+
+**하나. catch-all 오매칭.** 커뮤니티 앱의 URL 구조상 최상위 경로 하나(`/{communityKey}`)를 통째로 받는 catch-all 패턴이 존재한다. 문제는 이 패턴이 너무 관대하다는 것이다. 새로 추가된 정적 페이지 경로가 커뮤니티 키로 오인되어 엉뚱한 페이지로 리라이트되는 사고가 났다. 수정은 정적 경로 가드를 확장하고, 규칙 생성기에도 정적 디렉터리 목록과의 충돌 검사를 넣는 이중 방어로 마무리됐다. catch-all과 정적 경로가 한 네임스페이스에 사는 한 이 긴장은 구조적이다.
+
+**둘. RSC payload 경로 불일치.** 이건 내가 잡은 버그다. 재현 경로가 고약했다. 메인 홈에서 커뮤니티 홈으로 이동하고, 새로고침한 다음, 뒤로가기를 누르면 페이지가 깨졌다.
+
+원인을 따라가 보면 이렇다. 클라이언트 라우터는 뒤로가기 시점에 메인 홈의 RSC payload를 `/ko.txt` 형태로 요청한다. 그런데 빌드 산출물은 `/ko/index.txt`다. S3에 `/ko.txt`는 없다. 없으면 404가 나야 하는데, 더 나쁜 일이 벌어졌다. `/ko.txt`라는 경로가 하필 catch-all 커뮤니티 패턴에 매칭돼버린 것이다. 그 결과 "ko"라는 이름의 존재하지 않는 커뮤니티의 payload 경로로 리라이트됐고, 브라우저는 엉뚱한 데이터를 받아 화면이 깨졌다. 운영 모니터링에서도 이 증상과 연관된 것으로 보이는 잘못된 API 호출이 소량이지만 꾸준히 관측되고 있었다.
+
+수정 자체는 명쾌하다. CFF 파이프라인 진입부에서 `{path}.txt` 형태의 요청을 `{path}/index.txt`로 정규화하는 단계를 넣었다. 클라이언트 라우터가 어떤 형태로 요청하든 산출물 구조와 일치시키고 나서 나머지 파이프라인을 태운다. 같은 계열의 회귀를 막으려고 경로 변형 케이스별 테스트도 함께 넣었다.
+
+이 버그에서 배운 건, static export를 CDN에서 서빙하기로 했다면 HTML만이 아니라 클라이언트 라우터의 요청 형태까지 서빙 계층의 책임이라는 것이다. 프레임워크는 산출물을 만들어줄 뿐, 요청과 산출물 사이의 간극은 리라이트를 소유한 쪽이 메워야 한다.
+
+## 봇에게만 서버를 내주다
+
+두 번째 아픈 문제, OG 태그다.
+
+카카오톡에 링크를 공유하면 미리보기가 뜬다. 그 미리보기는 크롤러가 서버가 돌려준 HTML에서 OG 태그를 읽어 만든다. Meta의 크롤러 문서는 OG 태그가 [응답의 첫 1MB 안에 있어야 한다](https://developers.facebook.com/docs/sharing/webmasters/crawler/)고 못 박고, Google도 [모든 봇이 JavaScript를 실행할 수 있는 건 아니라고](https://developers.google.com/search/docs/crawling-indexing/javascript/javascript-seo-basics) 안내한다. 클라이언트에서 JS로 채우는 메타 태그는 크롤러 상대로는 없는 것과 같다는 뜻이다.
+
+static export의 HTML에는 빌드 시점 콘텐츠만 있다. 커뮤니티 게시물처럼 빌드 후에 생기는 콘텐츠의 OG는 정적 파일에 있을 수가 없다. 서버가 필요하다. 그런데 서버를 없애는 게 이 아키텍처의 목표였다.
+
+타협점은 이렇다. 사람에게는 정적 파일을, 봇에게만 서버를 내주는 것.
+
+판별과 렌더링을 쪼갠 게 핵심이다. 모든 요청이 통과하는 viewer-request의 CFF는 User-Agent를 보고 봇이면 뷰어 타입 헤더를 붙이는 것까지만 한다. 판별은 문자열 검사라 10KB짜리 함수로 충분하다. 렌더링은 origin-request의 Lambda@Edge가 맡는다. 헤더가 붙은 요청만 가로채서 API를 호출하고, OG 태그와 JSON-LD 구조화 데이터(ItemList, FAQPage, Article)에 내비게이션과 FAQ 본문까지 포함한 완성 HTML을 200으로 직접 반환한다. 이 요청은 S3에 도달하지 않는다. 커뮤니티 앱의 봇 렌더러는 1,500줄 규모에 30개 이상의 페이지 타입을 처리한다. 사실상 봇 전용 부분 SSR 서버인데, 상주 프로세스가 아니라 봇이 올 때만 깨어난다.
+
+봇 목록에는 검색엔진과 소셜 크롤러 외에 AI 크롤러가 명시적으로 들어 있다. GPTBot, ClaudeBot, PerplexityBot 같은 것들이다. AI가 답변에 인용할 수 있는 형태의 콘텐츠를 돌려주는 것까지가 이 렌더러의 역할이 됐다. OG에서 시작한 구조가 AEO(Answer Engine Optimization, AI 검색이 답변에 인용하기 좋게 만드는 최적화)까지 커버하게 된 셈이다.
+
+실패 처리도 서버가 하던 일이다. OG 데이터를 만들려면 API를 불러야 하고 API는 실패할 수 있다. 실패하면 각 서비스의 Lambda가 기본 OG 태그로 폴백한다. 링크를 공유했는데 미리보기가 텅 비는 경험만은 막는다는 원칙이다. 사용자 입력이 태그에 들어가는 자리는 전부 이스케이프를 거친다.
+
+딥링크 게이트는 여기서 한 번 더 재미있어진다. link.berriz.in은 커뮤니티, 커머스 등 여러 서비스의 링크를 받아내는 관문이라, 봇이 왔을 때 어느 서비스의 OG를 보여줘야 할지가 대상 경로에 따라 달라진다. 각 서비스의 OG 로직을 게이트에 복제하는 대신, 서비스별 Lambda를 원격 호출하는 구조를 만들었다. 각 서비스의 Lambda는 CloudFront 이벤트와 직접 invoke 이벤트를 모두 처리하는 듀얼 모드로 작성되어 있고, 게이트의 Lambda는 경로를 보고 해당 서비스의 Lambda를 invoke해 OG 데이터를 받아온 뒤 hreflang 4개 로케일과 canonical까지 얹은 HTML을 조립한다. 이 구조 덕에 OG 로직은 도메인당 한 벌만 있으면 되고, 게이트는 조립만 한다.
+
+## 환경 9개, 분기 코드 0줄
+
+이 구조는 다중 환경에서 돌아간다. 개발, QA, CBT, 프로덕션 계열을 합쳐 9개 환경이다. 환경이 이만큼 늘어나면 보통 코드 어딘가에 환경 분기가 스며들기 마련인데, 이 코드베이스의 CFF와 Lambda에는 런타임 환경 분기가 없다.
+
+방법은 세 가지 규약이다. 환경별 설정은 env 파일에 두고 esbuild define으로 빌드 타임에 리터럴로 치환한다. 환경 간 리소스 연결은 환경과 서비스명을 조합한 함수 네이밍 규칙 하나로 해결한다. 인프라 정의는 환경별 디렉터리 복제로 관리한다. 런타임에 "지금 어느 환경이지?"라고 묻는 코드가 없으니, 환경별로 다르게 동작하는 류의 버그가 아예 생길 수 없다.
+
+배포는 세 트랙으로 분리되어 있다. 정적 산출물은 S3 sync, CFF는 함수 업데이트와 publish, Lambda는 코드 업데이트와 버전 publish. 서로 독립적으로 배포할 수 있고, 버전드 배포를 쓰는 앱에서는 프로덕션이 아닌 환경에 한해 정적 배포가 CFF 배포를 자동으로 체이닝하는 옵션이 있다.
+
+버전드 배포가 이 구조의 마무리다. 정적 산출물을 S3에 배포 태그 프리픽스로 쌓고, CFF 번들에 서빙할 태그를 빌드 타임에 베이크한다. CFF는 요청 URI에 태그를 붙여 S3의 해당 버전 디렉터리를 바라본다. 그러면 롤백이 뭐가 되냐면, 이전 태그가 박힌 CFF를 다시 배포하는 것 하나가 된다. 산출물을 다시 올릴 필요도, 캐시를 전면 무효화할 필요도 없다. 서빙 버전을 가리키는 포인터가 그 10KB 함수 안에 있기 때문이다.
+
+## 콘솔에서 코드로
+
+이 인프라도 처음부터 코드였던 건 아니다. 초기의 CloudFront와 S3는 콘솔에서 손으로 만들어졌다. 당시 팀에 남아 있던 인프라 생성 가이드는 콘솔 작업을 단계별로 안내하는 수기 문서였는데, 마지막 줄에 한 단어가 적혀 있었다. "테라폼?"
+
+그 물음표에 답하는 작업 중에서 나는 딥링크 게이트 인프라의 IaC 전환을 맡았다. CloudFront 배포, CFF, Lambda를 모듈로 나누고 환경별 구성을 붙여 30개 파일 규모의 Terraform 코드로 만들었다. 이미 콘솔로 만들어져 돌아가는 리소스들이라 새로 만드는 게 아니라 import부터 시작해야 했다.
+
+Terraform과 CI의 책임은 명시적으로 갈랐다. CFF의 코드와 Lambda의 소스 해시에는 `lifecycle.ignore_changes`를 걸었다. 인프라의 골격(배포, 오리진, 캐시 정책, 함수의 존재)은 Terraform이 관리하고, 그 안에 들어가는 코드의 배포는 기존 CI 파이프라인이 계속 소유한다. IaC를 도입하면서 배포 파이프라인까지 Terraform으로 끌어오면 plan이 매 배포마다 diff로 오염되기 때문이다.
+
+이 전환에서 제일 기억에 남는 건 apply가 아니라 import가 준 발견이다. 리소스를 하나씩 import해서 코드와 대조하던 중에, CI는 Lambda를 최신 버전까지 배포해왔는데 CloudFront의 함수 연결은 두 버전 전을 참조하고 있는 drift를 발견했다. 봇에게 서빙되는 OG 로직이 실제로는 두 버전 뒤처진 채 돌고 있었다는 뜻이다. 콘솔 운영에서는 아무도 모르던 불일치가, 현재 상태를 전부 코드와 대조하는 import 과정에서 드러났다. IaC의 가치는 인프라를 만들 때보다 현재 상태를 의심할 때 먼저 온다.
+
+전환이 끝나고 얼마 뒤 새 환경을 한꺼번에 늘릴 일이 있었는데, 환경 5개 증설이 하루 작업으로 끝났다. 콘솔 시대였다면 가이드 문서를 펴 놓고 클릭을 5회 반복하는, 그리고 어딘가 한 군데는 반드시 다르게 클릭했을 일이다.
+
+## 기각된 대안들
+
+이 구조가 유일한 답이라서 유지하고 있는 건 아니다. 대안을 진지하게 검토한 기록이 있고, 그 기각 사유가 이 아키텍처의 트레이드오프를 제일 정직하게 설명한다.
+
+정규식 리라이트 테이블에 대한 피로감이 쌓였을 때, CFF 라우팅을 클라이언트 라우터와의 공존으로 대체하는 안을 검토했다. TanStack Router를 얹는 구성을 브랜치에 실제로 구현해보는 데까지 간 검토였고, 나는 그 결론과 기각 사유를 문서로 정리했다. 결론은 기각, 사유는 네 가지였다. 진입점용 빈 페이지가 필요해지고, 라우터 전환 구간에 깜빡임이 생기고, 결정적으로 초기 진입의 CFF 리라이트는 여전히 필요해서 문제가 사라지는 게 아니라 이중화되며, locale과 에러 처리를 두 라우터가 중복으로 갖게 된다. 이 검토는 정식 백로그로 열려 3주간 검증을 거친 뒤 "현행 유지"로 닫혔다.
+
+SSR로 돌아가는 안도 검토 대상이었다. Next.js 서버를 되살리고 CloudFront를 캐시 계층으로 쓰는 구성이다. 이론적으로는 s-maxage와 stale-while-revalidate로 대부분의 트래픽을 캐시가 받아낼 수 있다. 하지만 서버 프로세스가 부활하는 순간 이 글 앞부분의 비용이 전부 돌아온다. 지금 구조에서 그 비용을 다시 지불할 만큼의 이득이 없었다.
+
+## 남은 트레이드오프
+
+솔직하게 남겨두는 것들.
+
+정규식 테이블은 여전히 앱 라우팅의 그림자 사본이다. 자동 생성으로 진실의 원천을 옮겼고 충돌 검사로 방어하고 있지만, "리라이트 규칙과 산출물 구조가 어긋나면 사고"라는 명제 자체는 사라지지 않았다. catch-all과 정적 경로의 긴장도 구조적으로 남아 있다.
+
+10KB는 계속 차오른다. 지금 71%다. 라우트가 늘고 파이프라인에 단계가 추가될 때마다 바이트를 세게 된다. 언젠가 한도에 닿으면 무언가를 Lambda@Edge로 밀어내거나 KeyValueStore 같은 외부 저장을 검토해야 할 것이다.
+
+static export의 제약 목록은 그대로 유효하다. ISR이 없으니 콘텐츠 갱신은 재빌드다. 이 트레이드오프가 수지가 맞는 건 콘텐츠 갱신 주기와 트래픽 패턴이 그걸 허용하는 서비스라서다. 모든 서비스에 권할 구조는 아니다.
+
+그래도 남는 이득은 분명하다. 지킬 서버가 없고 새벽에 깨울 파드가 없다는 것, 트래픽이 몰리는 순간을 CDN이 받아준다는 것, 롤백이 함수 하나 교체로 끝난다는 것이다.
+
+돌아보면 서버를 없앤다는 건 서버가 하던 일을 없애는 게 아니었다. "서버가 하던 일"이라고 뭉뚱그려 부르던 것들을 판별, 리라이트, 렌더링, 폴백으로 분해해서 각자 제일 싼 자리로 보내는 일이었다.
+
+## References
+
+- [CloudFront Functions restrictions - AWS](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cloudfront-function-restrictions.html)
+- [CloudFront Functions quotas - AWS](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cloudfront-limits.html#limits-functions)
+- [Choosing between CloudFront Functions and Lambda@Edge - AWS](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/edge-functions-choosing.html)
+- [CloudFront Functions example code - AWS](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/functions-example-code.html)
+- [Restricting access to an Amazon S3 origin (OAC) - AWS](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-restricting-access-to-s3.html)
+- [Static Exports - Next.js](https://nextjs.org/docs/app/guides/static-exports)
+- [Facebook Crawler - Meta for Developers](https://developers.facebook.com/docs/sharing/webmasters/crawler/)
+- [JavaScript SEO Basics - Google Search Central](https://developers.google.com/search/docs/crawling-indexing/javascript/javascript-seo-basics)

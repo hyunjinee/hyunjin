@@ -1,0 +1,120 @@
+{"kind":"deck","id":"pr/o136ue","name":"Deck"}
+{"kind":"layout","layoutId":"a018fd10-a9b8-44f8-9621-240f30cef5c4","name":"Master","type":"master"}
+{"kind":"layout","layoutId":"3ae83a4a-1ac5-43c7-a378-2ef3ead73bf1","name":"Title Slide","type":"title"}
+{"kind":"slide","id":"sl/u6ohlq","slide":1,"title":"AI Agent Browser Automation","textShapes":6}
+{"kind":"shape","id":"sh/0fepkzup","slide":1,"bbox":[0,0,560,720]}
+{"kind":"shape","id":"sh/p0bi9s36","slide":1,"bbox":[550,0,90,720]}
+{"kind":"shape","id":"sh/ixczed8v","slide":1,"bbox":[72,88,84,5]}
+{"kind":"textbox","id":"sh/bi9s36hc","slide":1,"text":"AI Agent Browser Automation","textPreview":"AI Agent Browser Automation","textChars":27,"textLines":1,"bbox":[72,108,360,26]}
+{"kind":"textbox","id":"sh/032lszqt","slide":1,"text":"agent-browser","textPreview":"agent-browser","textChars":13,"textLines":1,"bbox":[72,190,470,86]}
+{"kind":"textbox","id":"sh/tovahoza","slide":1,"text":"AI 에이전트를 위해 브라우저를 다시 설계한 이야기","textPreview":"AI 에이전트를 위해 브라우저를 다시 설계한 이야기","textChars":28,"textLines":1,"bbox":[72,304,430,96]}
+{"kind":"textbox","id":"sh/il0rqd4v","slide":1,"text":"접근성 트리 · Ref 시스템 · Rust/CDP · 28개 PR 기여","textPreview":"접근성 트리 · Ref 시스템 · Rust/CDP · 28개 PR 기여","textChars":39,"textLines":1,"bbox":[72,436,430,72]}
+{"kind":"textbox","id":"sh/b6xkf6dc","slide":1,"text":"agent-browser","textPreview":"agent-browser","textChars":13,"textLines":1,"bbox":[72,648,260,24]}
+{"kind":"textbox","id":"sh/32lszqtc","slide":1,"text":"01","textPreview":"01","textChars":2,"textLines":1,"bbox":[1160,648,48,24]}
+{"kind":"image","id":"im/ih4byhgn","slide":1,"name":"","alt":"slide-01-hero","bbox":[0,0,1280,720]}
+{"kind":"notes","id":"nt/u6ohlq","slide":1,"text":"오프닝: 브라우저 자동화 도구가 많아졌지만, AI 에이전트에게 필요한 브라우저 표현과 행동 루프는 사람을 위한 자동화와 다르다는 문제에서 시작한다."}
+{"kind":"slide","id":"sl/06hhy1","slide":2,"title":"Problem","textShapes":5}
+{"kind":"shape","id":"sh/dcbulwva","slide":2,"bbox":[0,0,570,720]}
+{"kind":"shape","id":"sh/kre1w7mp","slide":2,"bbox":[558,0,72,720]}
+{"kind":"shape","id":"sh/vixczed8","slide":2,"bbox":[72,88,84,5]}
+{"kind":"textbox","id":"sh/2x4nap4r","slide":2,"text":"Problem","textPreview":"Problem","textChars":7,"textLines":1,"bbox":[72,108,360,26]}
+{"kind":"textbox","id":"sh/donyd0z6","slide":2,"text":"AI에게 DOM을 그대로 주면 비용과 실패가 같이 늘어난다","textPreview":"AI에게 DOM을 그대로 주면 비용과 실패가 같이 늘어난다","textChars":32,"textLines":1,"bbox":[72,150,452,154]}
+{"kind":"textbox","id":"sh/k3q5o7qp","slide":2,"text":"• 페이지를 한 번 보는 데 수만 토큰이 필요해진다\n• CSS 셀렉터는 DOM 변화에 쉽게 무너진다\n• 도구가 많아질수록 모델의 선택 부담도 커진다","textPreview":"• 페이지를 한 번 보는 데 수만 토큰이 필요해진다 | • CSS 셀렉터는 DOM 변화에 쉽게 무너진다 | • 도구가 많아질수록 모델의 선택 부담도 커진다","textChars":82,"textLines":3,"bbox":[72,336,440,210]}
+{"kind":"textbox","id":"sh/vu9knih4","slide":2,"text":"agent-browser","textPreview":"agent-browser","textChars":13,"textLines":1,"bbox":[72,648,260,24]}
+{"kind":"textbox","id":"sh/29gr2p8n","slide":2,"text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[1160,648,48,24]}
+{"kind":"image","id":"im/nqxs72x4","slide":2,"name":"","alt":"slide-02-problem","bbox":[0,0,1280,720]}
+{"kind":"notes","id":"nt/06hhy1","slide":2,"text":"출처: services/blog/data/blog/agent-browser.mdx, “AI 에이전트가 브라우저를 사용할 때 생기는 문제” 섹션."}
+{"kind":"slide","id":"sl/2dladr","slide":3,"title":"Core Idea","textShapes":7}
+{"kind":"shape","id":"sh/oj2t83it","slide":3,"bbox":[0,0,570,720]}
+{"kind":"shape","id":"sh/d4vmtwra","slide":3,"bbox":[558,0,72,720]}
+{"kind":"shape","id":"sh/61032lsz","slide":3,"bbox":[72,88,84,5]}
+{"kind":"textbox","id":"sh/vmtwra5g","slide":3,"text":"Core Idea","textPreview":"Core Idea","textChars":9,"textLines":1,"bbox":[72,108,360,26]}
+{"kind":"textbox","id":"sh/o7qpg3ex","slide":3,"text":"핵심은 DOM이 아니라 행동 가능한 의미만 남기는 것이다","textPreview":"핵심은 DOM이 아니라 행동 가능한 의미만 남기는 것이다","textChars":31,"textLines":1,"bbox":[72,150,452,154]}
+{"kind":"textbox","id":"sh/dsji5sne","slide":3,"text":"• 접근성 트리는 role, name, state 중심으로 페이지를 읽는다\n• interactive 모드는 실제 조작 가능한 요소와 컨텍스트만 남긴다\n• naver.com 스냅샷은 37,787 토큰에서 6,621 토큰으로 줄었다","textPreview":"• 접근성 트리는 role, name, state 중심으로 페이지를 읽는다 | • interactive 모드는 실제 조작 가능한 요소와 컨텍스트만 남긴다 | • naver.com 스냅샷은 37,787 토큰에서 6,621 토큰으로 줄었다","textChars":127,"textLines":3,"bbox":[72,336,440,210]}
+{"kind":"textbox","id":"sh/6tovahoz","slide":3,"text":"82%","textPreview":"82%","textChars":3,"textLines":1,"bbox":[72,548,130,58]}
+{"kind":"textbox","id":"sh/vahoza1g","slide":3,"text":"snapshot token reduction","textPreview":"snapshot token reduction","textChars":24,"textLines":1,"bbox":[212,561,300,44]}
+{"kind":"textbox","id":"sh/7qpg3ex0","slide":3,"text":"agent-browser","textPreview":"agent-browser","textChars":13,"textLines":1,"bbox":[72,648,260,24]}
+{"kind":"textbox","id":"sh/i5sneloj","slide":3,"text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[1160,648,48,24]}
+{"kind":"image","id":"im/a9w3m94f","slide":3,"name":"","alt":"slide-03-ax-tree","bbox":[0,0,1280,720]}
+{"kind":"notes","id":"nt/2dladr","slide":3,"text":"출처: agent-browser.mdx의 naver.com HTML vs snapshot 비교표. Playwright MCP 37,787 토큰, agent-browser 6,621 토큰, 82% 감소."}
+{"kind":"slide","id":"sl/1qypjm","slide":4,"title":"Ref System","textShapes":5}
+{"kind":"shape","id":"sh/bi9s36hc","slide":4,"bbox":[0,0,560,720]}
+{"kind":"shape","id":"sh/ixczed8v","slide":4,"bbox":[550,0,90,720]}
+{"kind":"shape","id":"sh/p0bi9s36","slide":4,"bbox":[72,88,84,5]}
+{"kind":"textbox","id":"sh/0fepkzup","slide":4,"text":"Ref System","textPreview":"Ref System","textChars":10,"textLines":1,"bbox":[72,108,360,26]}
+{"kind":"textbox","id":"sh/bulwval8","slide":4,"text":"Ref는 CSS 셀렉터 대신 의미로 요소를 다시 찾는다","textPreview":"Ref는 CSS 셀렉터 대신 의미로 요소를 다시 찾는다","textChars":30,"textLines":1,"bbox":[72,150,452,154]}
+{"kind":"textbox","id":"sh/i9s36hcr","slide":4,"text":"• 스냅샷의 [ref=e121]를 @e121로 사용한다\n• backend_node_id가 stale이면 role + name + nth로 fallback한다\n• DOM 구조보다 사용자에게 보이는 의미에 붙는다","textPreview":"• 스냅샷의 [ref=e121]를 @e121로 사용한다 | • backend_node_id가 stale이면 role + name + nth로 fallback한다 | • DOM 구조보다 사용자에게 보이는 의미에 붙는다","textChars":116,"textLines":3,"bbox":[72,336,440,210]}
+{"kind":"textbox","id":"sh/t47y1kre","slide":4,"text":"agent-browser","textPreview":"agent-browser","textChars":13,"textLines":1,"bbox":[72,648,260,24]}
+{"kind":"textbox","id":"sh/0je9cvix","slide":4,"text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[1160,648,48,24]}
+{"kind":"image","id":"im/psfil0rq","slide":4,"name":"","alt":"slide-04-ref-system","bbox":[0,0,1280,720]}
+{"kind":"notes","id":"nt/1qypjm","slide":4,"text":"출처: agent-browser.mdx의 “Ref 시스템: CSS 셀렉터 없이 요소 지정” 섹션. 클릭 경로와 stale fallback 설명을 발표용으로 압축했다."}
+{"kind":"slide","id":"sl/8dvba8","slide":5,"title":"Execution Loop","textShapes":6}
+{"kind":"shape","id":"sh/i5sneloj","slide":5,"bbox":[0,0,570,720]}
+{"kind":"shape","id":"sh/7qpg3ex0","slide":5,"bbox":[558,0,72,720]}
+{"kind":"shape","id":"sh/wjudg7ad","slide":5,"bbox":[72,88,84,5]}
+{"kind":"textbox","id":"sh/p4r65wju","slide":5,"text":"Execution Loop","textPreview":"Execution Loop","textChars":14,"textLines":1,"bbox":[72,108,360,26]}
+{"kind":"textbox","id":"sh/ed8v6psf","slide":5,"text":"좋은 브라우저 도구는 행동한 뒤 결과까지 검증한다","textPreview":"좋은 브라우저 도구는 행동한 뒤 결과까지 검증한다","textChars":27,"textLines":1,"bbox":[72,150,452,154]}
+{"kind":"textbox","id":"sh/7y1kre1w","slide":5,"text":"• diff snapshot으로 접근성 트리 변화를 구조적으로 확인한다\n• diff screenshot과 diff url로 시각적 회귀도 비교할 수 있다\n• 루프가 실행자에서 자기 검증 에이전트로 확장된다","textPreview":"• diff snapshot으로 접근성 트리 변화를 구조적으로 확인한다 | • diff screenshot과 diff url로 시각적 회귀도 비교할 수 있다 | • 루프가 실행자에서 자기 검증 에이전트로 확장된다","textChars":114,"textLines":3,"bbox":[72,336,440,210]}
+{"kind":"shape","id":"sh/0nuxc3yl","slide":5,"bbox":[72,555,430,58]}
+{"kind":"textbox","id":"sh/p8nqxs72","slide":5,"text":"snapshot → action → diff → judgement","textPreview":"snapshot → action → diff → judgement","textChars":36,"textLines":1,"bbox":[96,574,386,28]}
+{"kind":"textbox","id":"sh/xobm58z2","slide":5,"text":"agent-browser","textPreview":"agent-browser","textChars":13,"textLines":1,"bbox":[72,648,260,24]}
+{"kind":"textbox","id":"sh/83itgfml","slide":5,"text":"05","textPreview":"05","textChars":2,"textLines":1,"bbox":[1160,648,48,24]}
+{"kind":"image","id":"im/svu9knih","slide":5,"name":"","alt":"slide-05-loop","bbox":[0,0,1280,720]}
+{"kind":"notes","id":"nt/8dvba8","slide":5,"text":"출처: agent-browser.mdx의 “snapshot → 상호작용 루프”와 “Diff: 행동의 결과를 검증하다” 섹션."}
+{"kind":"slide","id":"sl/gz3srn","slide":6,"title":"Architecture","textShapes":5}
+{"kind":"shape","id":"sh/onyd0z61","slide":6,"bbox":[0,0,560,720]}
+{"kind":"shape","id":"sh/d8v6psfi","slide":6,"bbox":[550,0,90,720]}
+{"kind":"shape","id":"sh/6tovahoz","slide":6,"bbox":[72,88,84,5]}
+{"kind":"textbox","id":"sh/vahoza1g","slide":6,"text":"Architecture","textPreview":"Architecture","textChars":12,"textLines":1,"bbox":[72,108,360,26]}
+{"kind":"textbox","id":"sh/ovahoza1","slide":6,"text":"Rust 데몬이 상태를 잡고, CDP가 브라우저와 직접 대화한다","textPreview":"Rust 데몬이 상태를 잡고, CDP가 브라우저와 직접 대화한다","textChars":35,"textLines":1,"bbox":[72,150,452,154]}
+{"kind":"textbox","id":"sh/dg7adsji","slide":6,"text":"• CLI는 명령마다 가볍게 실행되고 결과만 출력한다\n• 데몬은 브라우저 연결, RefMap, 세션 상태를 유지한다\n• 중간 추상화 없이 필요한 CDP 명령을 직접 사용한다","textPreview":"• CLI는 명령마다 가볍게 실행되고 결과만 출력한다 | • 데몬은 브라우저 연결, RefMap, 세션 상태를 유지한다 | • 중간 추상화 없이 필요한 CDP 명령을 직접 사용한다","textChars":96,"textLines":3,"bbox":[72,336,440,210]}
+{"kind":"textbox","id":"sh/61032lsz","slide":6,"text":"agent-browser","textPreview":"agent-browser","textChars":13,"textLines":1,"bbox":[72,648,260,24]}
+{"kind":"textbox","id":"sh/vmtwra5g","slide":6,"text":"06","textPreview":"06","textChars":2,"textLines":1,"bbox":[1160,648,48,24]}
+{"kind":"image","id":"im/ed8v6psf","slide":6,"name":"","alt":"slide-06-architecture","bbox":[0,0,1280,720]}
+{"kind":"notes","id":"nt/gz3srn","slide":6,"text":"출처: agent-browser.mdx의 “Client → Daemon → Browser”와 “CDP: 브라우저와의 단일 프로토콜” 섹션."}
+{"kind":"slide","id":"sl/qd2a0w","slide":7,"title":"Real Web","textShapes":5}
+{"kind":"shape","id":"sh/qpg3ex0n","slide":7,"bbox":[0,0,570,720]}
+{"kind":"shape","id":"sh/fa9w3m94","slide":7,"bbox":[558,0,72,720]}
+{"kind":"shape","id":"sh/8jqh0fep","slide":7,"bbox":[72,88,84,5]}
+{"kind":"textbox","id":"sh/x4nap4r6","slide":7,"text":"Real Web","textPreview":"Real Web","textChars":8,"textLines":1,"bbox":[72,108,360,26]}
+{"kind":"textbox","id":"sh/qd4vmtwr","slide":7,"text":"실제 웹의 까다로운 경계까지 스냅샷 안으로 끌어온다","textPreview":"실제 웹의 까다로운 경계까지 스냅샷 안으로 끌어온다","textChars":28,"textLines":1,"bbox":[72,150,452,154]}
+{"kind":"textbox","id":"sh/fyxobm58","slide":7,"text":"• Target.setAutoAttach로 cross-origin iframe 세션을 연결한다\n• 원격 CDP와 WebSocket fallback으로 다양한 실행 환경에 대응한다\n• iframe 내부 요소도 하나의 페이지처럼 ref로 조작할 수 있다","textPreview":"• Target.setAutoAttach로 cross-origin iframe 세션을 연결한다 | • 원격 CDP와 WebSocket fallback으로 다양한 실행 환경에 대응한다 | • iframe 내부 요소도 하나의 페이지처럼 ref로 조작...","textChars":139,"textLines":3,"bbox":[72,336,440,210]}
+{"kind":"textbox","id":"sh/87ed8bat","slide":7,"text":"agent-browser","textPreview":"agent-browser","textChars":13,"textLines":1,"bbox":[72,648,260,24]}
+{"kind":"textbox","id":"sh/xs72x4na","slide":7,"text":"07","textPreview":"07","textChars":2,"textLines":1,"bbox":[1160,648,48,24]}
+{"kind":"image","id":"im/orytsvu9","slide":7,"name":"","alt":"slide-07-real-web","bbox":[0,0,1280,720]}
+{"kind":"notes","id":"nt/qd2a0w","slide":7,"text":"출처: agent-browser.mdx의 cross-origin iframe, 로컬과 원격 섹션 및 기여 목록 #854, #873, #949, #1218."}
+{"kind":"slide","id":"sl/fdd8e5","slide":8,"title":"Safety and State","textShapes":5}
+{"kind":"shape","id":"sh/lwval87e","slide":8,"bbox":[0,0,560,720]}
+{"kind":"shape","id":"sh/wb2hwfyx","slide":8,"bbox":[550,0,90,720]}
+{"kind":"shape","id":"sh/3itgfmlk","slide":8,"bbox":[72,88,84,5]}
+{"kind":"textbox","id":"sh/ex0nuxc3","slide":8,"text":"Safety and State","textPreview":"Safety and State","textChars":16,"textLines":1,"bbox":[72,108,360,26]}
+{"kind":"textbox","id":"sh/loj2t83i","slide":8,"text":"에이전트용 브라우저는 보안과 세션을 기본 설계로 품어야 한다","textPreview":"에이전트용 브라우저는 보안과 세션을 기본 설계로 품어야 한다","textChars":33,"textLines":1,"bbox":[72,150,452,154]}
+{"kind":"textbox","id":"sh/w3m94fu1","slide":8,"text":"• 도메인 허용목록과 액션 정책으로 위험한 행동을 제어한다\n• 인증 볼트와 콘텐츠 경계로 민감정보와 웹 콘텐츠를 분리한다\n• 쿠키와 localStorage를 크로스 도메인 상태로 저장하고 복원한다","textPreview":"• 도메인 허용목록과 액션 정책으로 위험한 행동을 제어한다 | • 인증 볼트와 콘텐츠 경계로 민감정보와 웹 콘텐츠를 분리한다 | • 쿠키와 localStorage를 크로스 도메인 상태로 저장하고 복원한다","textChars":109,"textLines":3,"bbox":[72,336,440,210]}
+{"kind":"textbox","id":"sh/3ex0nuxc","slide":8,"text":"agent-browser","textPreview":"agent-browser","textChars":13,"textLines":1,"bbox":[72,648,260,24]}
+{"kind":"textbox","id":"sh/at47y1kr","slide":8,"text":"08","textPreview":"08","textChars":2,"textLines":1,"bbox":[1160,648,48,24]}
+{"kind":"image","id":"im/zidonyd0","slide":8,"name":"","alt":"slide-08-security","bbox":[0,0,1280,720]}
+{"kind":"notes","id":"nt/fdd8e5","slide":8,"text":"출처: agent-browser.mdx의 “보안과 세션” 섹션 및 기여 목록 #1064."}
+{"kind":"slide","id":"sl/0wmq8e","slide":9,"title":"Contributions","textShapes":7}
+{"kind":"shape","id":"sh/lc7u54zi","slide":9,"bbox":[0,0,570,720]}
+{"kind":"shape","id":"sh/wra5gbq1","slide":9,"bbox":[558,0,72,720]}
+{"kind":"shape","id":"sh/7u54zido","slide":9,"bbox":[72,88,84,5]}
+{"kind":"textbox","id":"sh/ed8bat47","slide":9,"text":"Contributions","textPreview":"Contributions","textChars":13,"textLines":1,"bbox":[72,108,360,26]}
+{"kind":"textbox","id":"sh/l0rqd4vm","slide":9,"text":"기여는 버그 수정이 아니라 에이전트 실행 경로를 안정화한 작업이었다","textPreview":"기여는 버그 수정이 아니라 에이전트 실행 경로를 안정화한 작업이었다","textChars":37,"textLines":1,"bbox":[72,150,452,154]}
+{"kind":"textbox","id":"sh/wfyxobm5","slide":9,"text":"• CDP 연결: IPv6, remote host, WebSocket fallback, DevToolsActivePort\n• 스냅샷/상호작용: xpath, iframe, getByRole, upload, hidden inputs\n• 상태/녹화/테스트: cross-domain state, recording, CI, e2e","textPreview":"• CDP 연결: IPv6, remote host, WebSocket fallback, DevToolsActivePort | • 스냅샷/상호작용: xpath, iframe, getByRole, upload, hidden inputs | • 상태/...","textChars":179,"textLines":3,"bbox":[72,336,440,210]}
+{"kind":"textbox","id":"sh/7mp0bi9s","slide":9,"text":"28","textPreview":"28","textChars":2,"textLines":1,"bbox":[72,548,130,58]}
+{"kind":"textbox","id":"sh/e1w7mp0b","slide":9,"text":"merged PRs · 2026.03.01 - 04.15","textPreview":"merged PRs · 2026.03.01 - 04.15","textChars":31,"textLines":1,"bbox":[212,561,300,44]}
+{"kind":"textbox","id":"sh/0rqd4vmt","slide":9,"text":"agent-browser","textPreview":"agent-browser","textChars":13,"textLines":1,"bbox":[72,648,260,24]}
+{"kind":"textbox","id":"sh/tcj6tova","slide":9,"text":"09","textPreview":"09","textChars":2,"textLines":1,"bbox":[1160,648,48,24]}
+{"kind":"image","id":"im/3itgfmlk","slide":9,"name":"","alt":"slide-09-contributions","bbox":[0,0,1280,720]}
+{"kind":"notes","id":"nt/0wmq8e","slide":9,"text":"출처: agent-browser.mdx Contributions 테이블. 총 28개 merged PR, PR #573부터 #1218까지, 2026-03-01부터 2026-04-15까지."}
+{"kind":"slide","id":"sl/h8mjpd","slide":10,"title":"Takeaway","textShapes":5}
+{"kind":"shape","id":"sh/g3ex0nux","slide":10,"bbox":[0,0,560,720]}
+{"kind":"shape","id":"sh/5o7qpg3e","slide":10,"bbox":[550,0,90,720]}
+{"kind":"shape","id":"sh/ylc7u54z","slide":10,"bbox":[72,88,84,5]}
+{"kind":"textbox","id":"sh/r65wjudg","slide":10,"text":"Takeaway","textPreview":"Takeaway","textChars":8,"textLines":1,"bbox":[72,108,360,26]}
+{"kind":"textbox","id":"sh/gr2p8nqx","slide":10,"text":"브라우저는 AI 에이전트의 마지막 퍼즐 조각이다","textPreview":"브라우저는 AI 에이전트의 마지막 퍼즐 조각이다","textChars":26,"textLines":1,"bbox":[72,150,452,154]}
+{"kind":"textbox","id":"sh/9cvixcze","slide":10,"text":"• agent-browser는 웹을 보는 표현, 요소를 가리키는 방법, 행동을 검증하는 루프를 하나로 묶는다\n• 중요한 질문은 더 많은 액션이 아니라 더 안정적인 루프를 만드는 것이다","textPreview":"• agent-browser는 웹을 보는 표현, 요소를 가리키는 방법, 행동을 검증하는 루프를 하나로 묶는다 | • 중요한 질문은 더 많은 액션이 아니라 더 안정적인 루프를 만드는 것이다","textChars":102,"textLines":2,"bbox":[72,336,440,210]}
+{"kind":"textbox","id":"sh/yd0z6103","slide":10,"text":"agent-browser","textPreview":"agent-browser","textChars":13,"textLines":1,"bbox":[72,648,260,24]}
+{"kind":"textbox","id":"sh/rytsvu9k","slide":10,"text":"10","textPreview":"10","textChars":2,"textLines":1,"bbox":[1160,648,48,24]}
+{"kind":"image","id":"im/idonyd0z","slide":10,"name":"","alt":"slide-10-closing","bbox":[0,0,1280,720]}
+{"kind":"notes","id":"nt/h8mjpd","slide":10,"text":"클로징: agent-browser를 단순 자동화 도구가 아니라 AI 에이전트의 지각과 행동 계층으로 정리한다."}

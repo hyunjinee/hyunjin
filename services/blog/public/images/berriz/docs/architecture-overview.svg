@@ -1,0 +1,233 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1680" height="1180" viewBox="0 0 1680 1180" role="img" aria-labelledby="title desc">
+  <title id="title">Berriz FE Music Fan Platform Architecture</title>
+  <desc id="desc">Architecture overview of the Berriz frontend monorepo, showing clients, edge routing, applications, shared packages, external services, and delivery workflow.</desc>
+  <defs>
+    <style>
+      .canvas { fill: #f6f8fb; }
+      .title { font: 800 38px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #141923; }
+      .subtitle { font: 500 18px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #586174; }
+      .section-title { font: 800 22px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #1c2433; }
+      .label { font: 700 17px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #182033; }
+      .small { font: 500 14px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #4d5870; }
+      .tiny { font: 500 12px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #677287; }
+      .mono { font: 600 13px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; fill: #344054; }
+      .panel { fill: #ffffff; stroke: #d8dee9; stroke-width: 1.5; rx: 20; }
+      .card { fill: #ffffff; stroke: #d7deea; stroke-width: 1.5; rx: 14; }
+      .client { fill: #eef6ff; stroke: #8ebdea; }
+      .edge { fill: #fff7e8; stroke: #e8b45d; }
+      .app { fill: #f1f8f3; stroke: #8dc59c; }
+      .pkg { fill: #f4f0ff; stroke: #b7a4e5; }
+      .service { fill: #fef0f2; stroke: #e8a0aa; }
+      .ops { fill: #eef2f7; stroke: #aab5c6; }
+      .badge { fill: #f8fafc; stroke: #d7deea; rx: 8; }
+      .arrow { fill: none; stroke: #64748b; stroke-width: 2.2; marker-end: url(#arrow); }
+      .arrow-strong { fill: none; stroke: #2563eb; stroke-width: 3; marker-end: url(#arrow-blue); }
+      .arrow-dashed { fill: none; stroke: #8b98aa; stroke-width: 2; stroke-dasharray: 8 8; marker-end: url(#arrow); }
+      .lane { fill: #fbfcfe; stroke: #e1e6ef; stroke-width: 1.3; rx: 18; }
+      .dot { fill: #64748b; }
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b" />
+    </marker>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#2563eb" />
+    </marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#182033" flood-opacity="0.09" />
+    </filter>
+  </defs>
+
+  <rect class="canvas" x="0" y="0" width="1680" height="1180" />
+
+  <text class="title" x="70" y="72">Berriz FE Music Fan Platform Architecture</text>
+  <text class="subtitle" x="70" y="105">pnpm + Turbo monorepo / Next.js static export apps / CloudFront edge routing / shared frontend platform packages</text>
+
+  <rect class="panel" x="50" y="135" width="1580" height="970" filter="url(#shadow)" />
+
+  <!-- Clients -->
+  <rect class="lane" x="88" y="170" width="1488" height="132" />
+  <text class="section-title" x="112" y="206">1. 진입 채널</text>
+  <g>
+    <rect class="card client" x="135" y="225" width="260" height="52" />
+    <text class="label" x="160" y="248">사용자 브라우저</text>
+    <text class="small" x="160" y="268">mobile / PC / webview</text>
+  </g>
+  <g>
+    <rect class="card client" x="430" y="225" width="260" height="52" />
+    <text class="label" x="455" y="248">검색/소셜 봇</text>
+    <text class="small" x="455" y="268">OG, SEO, preview 요청</text>
+  </g>
+  <g>
+    <rect class="card client" x="725" y="225" width="260" height="52" />
+    <text class="label" x="750" y="248">Berriz App</text>
+    <text class="small" x="750" y="268">scheme / gate / deeplink</text>
+  </g>
+  <g>
+    <rect class="card client" x="1020" y="225" width="330" height="52" />
+    <text class="label" x="1045" y="248">로컬 개발 도메인</text>
+    <text class="small" x="1045" y="268">dev.berriz.in, dev-shop, dev-accounts</text>
+  </g>
+
+  <!-- Edge -->
+  <rect class="lane" x="88" y="342" width="1488" height="170" />
+  <text class="section-title" x="112" y="378">2. Edge / Static Hosting</text>
+  <g>
+    <rect class="card edge" x="135" y="400" width="300" height="82" />
+    <text class="label" x="160" y="425">CloudFront Functions</text>
+    <text class="small" x="160" y="449">locale redirect, rewrite, version prefix</text>
+    <text class="small" x="160" y="469">bot marker: x-viewer-type</text>
+  </g>
+  <g>
+    <rect class="card edge" x="475" y="400" width="300" height="82" />
+    <text class="label" x="500" y="425">S3 static origin</text>
+    <text class="small" x="500" y="449">Next output: export</text>
+    <text class="small" x="500" y="469">HTML, RSC .txt, JS/CSS/assets</text>
+  </g>
+  <g>
+    <rect class="card edge" x="815" y="400" width="315" height="82" />
+    <text class="label" x="840" y="425">Lambda@Edge / redirect Lambda</text>
+    <text class="small" x="840" y="449">bot OG HTML, canonical, hreflang</text>
+    <text class="small" x="840" y="469">community / commerce / accounts / link</text>
+  </g>
+  <g>
+    <rect class="card edge" x="1170" y="400" width="330" height="82" />
+    <text class="label" x="1195" y="425">Terraform infra</text>
+    <text class="small" x="1195" y="449">apps/*/aws/infra per phase</text>
+    <text class="small" x="1195" y="469">preview / epic-infra CloudFront bundles</text>
+  </g>
+
+  <!-- Apps -->
+  <rect class="lane" x="88" y="552" width="900" height="365" />
+  <text class="section-title" x="112" y="588">3. Application Layer</text>
+  <g>
+    <rect class="card app" x="125" y="612" width="390" height="122" />
+    <text class="label" x="150" y="637">fan-community</text>
+    <text class="small" x="150" y="661">Next.js App Router, static export</text>
+    <text class="tiny" x="150" y="684">domains: home, community, vod, fanclub, event,</text>
+    <text class="tiny" x="150" y="704">notification, my, setting, support</text>
+  </g>
+  <g>
+    <rect class="card app" x="555" y="612" width="390" height="122" />
+    <text class="label" x="580" y="637">fan-commerce</text>
+    <text class="small" x="580" y="661">Next.js App Router, static export</text>
+    <text class="tiny" x="580" y="684">domains: mall, product, cart, checkout, order,</text>
+    <text class="tiny" x="580" y="704">pickup, coupon, search, collection</text>
+  </g>
+  <g>
+    <rect class="card app" x="125" y="760" width="390" height="122" />
+    <text class="label" x="150" y="785">fan-accounts</text>
+    <text class="small" x="150" y="809">Next.js App Router, static export</text>
+    <text class="tiny" x="150" y="832">domains: auth, account, identity</text>
+    <text class="tiny" x="150" y="852">special route: /auth/token OAuth callback</text>
+  </g>
+  <g>
+    <rect class="card app" x="555" y="760" width="190" height="122" />
+    <text class="label" x="580" y="785">fan-berry</text>
+    <text class="small" x="580" y="809">Next.js static app</text>
+    <text class="tiny" x="580" y="832">Berry-focused pages</text>
+    <text class="tiny" x="580" y="852">shares commerce-style runtime</text>
+  </g>
+  <g>
+    <rect class="card app" x="775" y="760" width="170" height="122" />
+    <text class="label" x="800" y="785">fan-link</text>
+    <text class="small" x="800" y="809">Vite gate app</text>
+    <text class="tiny" x="800" y="832">QR, app scheme,</text>
+    <text class="tiny" x="800" y="852">web redirect</text>
+  </g>
+
+  <!-- Shared runtime -->
+  <rect class="lane" x="1028" y="552" width="548" height="365" />
+  <text class="section-title" x="1052" y="588">4. Shared Runtime &amp; Packages</text>
+  <g>
+    <rect class="card pkg" x="1065" y="612" width="226" height="122" />
+    <text class="label" x="1090" y="637">@kakaoent/shared</text>
+    <text class="small" x="1090" y="661">auth, api, UI, hooks</text>
+    <text class="tiny" x="1090" y="684">cart, order, delivery, coupon,</text>
+    <text class="tiny" x="1090" y="704">notification, vod, validation</text>
+  </g>
+  <g>
+    <rect class="card pkg" x="1315" y="612" width="226" height="122" />
+    <text class="label" x="1340" y="637">@kakaoent/i18n</text>
+    <text class="small" x="1340" y="661">next-intl bridge</text>
+    <text class="tiny" x="1340" y="684">messages per service</text>
+    <text class="tiny" x="1340" y="704">Google Sheet download scripts</text>
+  </g>
+  <g>
+    <rect class="card pkg" x="1065" y="760" width="226" height="122" />
+    <text class="label" x="1090" y="785">Provider stack</text>
+    <text class="small" x="1090" y="809">React Query, AuthProvider</text>
+    <text class="tiny" x="1090" y="832">NextIntl, Modal, Header, ErrorBoundary,</text>
+    <text class="tiny" x="1090" y="852">Tiara, ForceUpdate, SafeArea</text>
+  </g>
+  <g>
+    <rect class="card pkg" x="1315" y="760" width="226" height="122" />
+    <text class="label" x="1340" y="785">Platform packages</text>
+    <text class="small" x="1340" y="809">tailwindcss, TS/ESLint config</text>
+    <text class="tiny" x="1340" y="832">live-player SDK/UI, e2e, preview,</text>
+    <text class="tiny" x="1340" y="852">epic-infra</text>
+  </g>
+
+  <!-- External services -->
+  <rect class="lane" x="88" y="956" width="950" height="105" />
+  <text class="section-title" x="112" y="993">5. External APIs &amp; Observability</text>
+  <g>
+    <rect class="badge service" x="135" y="1015" width="140" height="30" />
+    <text class="mono" x="154" y="1035">API_HOST</text>
+  </g>
+  <g>
+    <rect class="badge service" x="295" y="1015" width="190" height="30" />
+    <text class="mono" x="314" y="1035">FAN_COMMUNITY_API</text>
+  </g>
+  <g>
+    <rect class="badge service" x="505" y="1015" width="180" height="30" />
+    <text class="mono" x="524" y="1035">FAN_COMMERCE_API</text>
+  </g>
+  <g>
+    <rect class="badge service" x="705" y="1015" width="150" height="30" />
+    <text class="mono" x="724" y="1035">ACCOUNT_API</text>
+  </g>
+  <g>
+    <rect class="badge service" x="875" y="1015" width="130" height="30" />
+    <text class="mono" x="894" y="1035">VOD/LIVE</text>
+  </g>
+
+  <rect class="lane" x="1078" y="956" width="498" height="105" />
+  <text class="section-title" x="1102" y="993">6. Delivery Workflow</text>
+  <g>
+    <rect class="badge ops" x="1115" y="1015" width="120" height="30" />
+    <text class="mono" x="1134" y="1035">pnpm</text>
+  </g>
+  <g>
+    <rect class="badge ops" x="1255" y="1015" width="120" height="30" />
+    <text class="mono" x="1274" y="1035">Turbo</text>
+  </g>
+  <g>
+    <rect class="badge ops" x="1395" y="1015" width="140" height="30" />
+    <text class="mono" x="1414" y="1035">Vitest/Cypress</text>
+  </g>
+
+  <!-- Arrows -->
+  <path class="arrow-strong" d="M 265 278 C 265 330, 410 330, 410 397" />
+  <path class="arrow-strong" d="M 560 278 C 560 330, 755 350, 970 397" />
+  <path class="arrow" d="M 855 278 C 855 330, 880 354, 960 397" />
+  <path class="arrow" d="M 435 441 L 472 441" />
+  <path class="arrow-dashed" d="M 775 441 L 812 441" />
+  <path class="arrow" d="M 625 482 C 625 535, 420 548, 325 608" />
+  <path class="arrow" d="M 625 482 C 625 535, 755 548, 750 608" />
+  <path class="arrow" d="M 625 482 C 625 565, 290 690, 320 756" />
+  <path class="arrow" d="M 625 482 C 625 565, 650 690, 650 756" />
+  <path class="arrow" d="M 1130 442 C 1220 495, 1098 555, 1175 608" />
+  <path class="arrow-dashed" d="M 945 674 C 1010 674, 1000 674, 1062 674" />
+  <path class="arrow-dashed" d="M 945 820 C 1010 820, 1000 820, 1062 820" />
+  <path class="arrow" d="M 515 882 C 515 935, 370 940, 360 1012" />
+  <path class="arrow" d="M 745 882 C 745 935, 630 940, 605 1012" />
+  <path class="arrow" d="M 1178 882 C 1178 930, 1250 950, 1295 1012" />
+  <path class="arrow-dashed" d="M 1470 882 C 1470 920, 1468 955, 1468 1012" />
+
+  <!-- Legend -->
+  <g transform="translate(70 1125)">
+    <circle class="dot" cx="0" cy="0" r="4" />
+    <text class="tiny" x="12" y="4">실선: 런타임 트래픽 / 점선: 빌드 또는 간접 호출 / 파란선: 주요 요청 흐름</text>
+    <text class="tiny" x="690" y="4">Source: README.md, package.json, apps/*/next.config.mjs, apps/*/aws/*, apps/*/domains, packages/*</text>
+  </g>
+</svg>

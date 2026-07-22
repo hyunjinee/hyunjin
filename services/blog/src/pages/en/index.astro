@@ -1,30 +1,163 @@
 ---
-// app/[locale]/page.tsx 이식 (en 분기 — Main 렌더). ko판은 src/pages/index.astro(ResumeHome).
+// en 홈(영문 이력서). 마크업은 ResumeHome.astro 공용 — /index.astro(ko)와 데이터(문자열)만 다르다.
+// 영어 글 목록은 /en/blog가 담당(구 /en의 PostList 역할 이동).
 // biome-ignore-all lint/correctness/noUnusedImports: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
 // biome-ignore-all lint/correctness/noUnusedVariables: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
 import siteMetadata from '../../../data/siteMetadata.js'
-import PostList from '../../components/PostList.astro'
-import Base, { DEFAULT_TITLE } from '../../layouts/Base.astro'
-import { postsForLocale } from '../../lib/posts'
+import ResumeHome, { type Experience, type NewsItem } from '../../components/ResumeHome.astro'
+import Base from '../../layouts/Base.astro'
 
-const posts = await postsForLocale('en')
+const experiences: Experience[] = [
+  {
+    title: 'Kakao Entertainment',
+    period: '2024.07 ~ Present',
+    role: 'Frontend Engineer',
+    link: '/kakaoent',
+    logos: [
+      {
+        src: '/images/kakaoentertainment/kakaoent.svg',
+        darkInvert: true,
+        href: 'https://kakaoent.com/',
+        width: 57,
+        height: 25,
+      },
+      { src: '/images/kakaoentertainment/berriz_logo.svg', href: 'https://berriz.in/en', width: 24, height: 24 },
+    ],
+    projects: [
+      {
+        name: 'Berriz Global Fan Platform · Community · Shop · Accounts · DeepLink · Live Player · Agents',
+        bullets: [
+          "Joined during the service's initial build-out and contributed as it grew past 1 million users.",
+          'Designed and built the deep link system (link.berriz.in) on Universal Links, App Links, and custom schemes. With fallback handling and SEO support, a single tap takes users straight to the right screen in the app when it is installed, or seamlessly through installation when it is not.',
+          'Improved UX by refining the interface between webviews and native components.',
+          'Provisioned and operated the AWS architecture (CloudFront · Lambda · S3) with Terraform.',
+          'Built Berriz agents that automate repetitive work such as commit/PR handling, document summarization, and task creation.',
+        ],
+      },
+      {
+        name: "Debut's Plan real-time voting service",
+        link: '/debutsplan',
+        bullets: [],
+      },
+    ],
+  },
+  {
+    title: 'Toss Bank',
+    period: '2023.09 ~ 2024.04',
+    role: 'Software Engineer',
+    link: '/tossbank',
+    logos: [
+      { src: '/images/tossbank/Toss_Symbol_Primary.png', href: 'https://www.tossbank.com/', width: 24, height: 24 },
+    ],
+    projects: [
+      {
+        name: 'Housing Loan Squad',
+        bullets: [
+          "Developed LUMOS (Loan Universal Management Operating System), designed to streamline the Loan Tribe's loan review and approval process.",
+          'Built a notification service that cut the review time for certain documents by 50%.',
+          'Applied optimistic updates to improve UI responsiveness and user experience.',
+          'Advocated for runtime validation and introduced Zod to build a type-safe application.',
+        ],
+      },
+    ],
+  },
+  {
+    title: 'SW Maestro',
+    period: '2022.04 ~ 2022.12',
+    role: 'Software Engineer',
+    projects: [
+      {
+        name: '',
+        bullets: ['Developed the MOZI service and was selected as one of the 13 outstanding trainees of the 13th cohort.'],
+      },
+    ],
+  },
+]
+
+const skills = [
+  'Flexible enough to quickly pick up and apply modern frontend stacks, with a solid foundation built by studying the parts that do not change.',
+  'Understand state management on the frontend and can apply the right patterns and choose the right libraries.',
+  'Understand how browsers are structured and behave, and can apply rendering patterns that fit a project with Core Web Vitals in mind.',
+  'Deeply interested in the React and Next.js ecosystems, constantly thinking about better ways to build.',
+  'Experienced in building servers with Node.js and NestJS, and deploying and operating applications on AWS.',
+  'Can set up CI/CD pipelines with GitHub Actions and CodeDeploy to improve code stability and reliability.',
+]
+
+const news: NewsItem[] = [
+  {
+    date: '08/2025',
+    segments: [
+      { text: 'Kakao Tech Campus', href: 'https://www.kakaotechcampus.com/' },
+      { text: ' 3rd cohort frontend mentor' },
+    ],
+  },
+  {
+    date: '03/2023',
+    segments: [
+      { text: 'SI Analytics Frontend Engineer (university co-op internship), developed the Ovision service' },
+    ],
+  },
+  {
+    date: '02/2023',
+    segments: [
+      {
+        text: 'Design and Implementation of a Medication Support System Using an AI Speaker',
+        href: 'https://www.dbpia.co.kr/Journal/articleDetail?nodeId=NODE11229679',
+      },
+      { text: ' (The HCI Society of Korea, undergraduate thesis)' },
+    ],
+  },
+  {
+    date: '10/2022',
+    segments: [
+      { text: 'Elice SW Track 3rd cohort hands-on coding coach, ' },
+      { text: 'JavaScript & TypeScript lectures', href: '/talks/asynchronous-javascript' },
+      { text: ' (rated 4.49/5 by 72 students)' },
+    ],
+  },
+  {
+    date: '04/2022',
+    segments: [
+      {
+        text: 'SW Maestro 13th cohort trainee (developed the MOZI service, selected as one of the 13 outstanding trainees)',
+      },
+    ],
+  },
+  {
+    date: '07/2021',
+    segments: [
+      { text: 'Real-estate platform for single-person households ' },
+      { text: 'Bangchelin Guide', href: '/bclguide' },
+      { text: ' (startup club, 1,500+ users, 98 peer-to-peer deals closed)' },
+    ],
+  },
+]
+
+const intro = [
+  'I fell in love with frontend development because it lets me express my ideas on a web page.',
+  'I enjoy exchanging ideas with colleagues and sharing what I learn while building products. I stay consistent in developing both hard and soft skills, and I strive to grow through new challenges.',
+]
+
 const canonical = `${siteMetadata.siteUrl}/en`
-// page.tsx의 en 분기 metadata는 openGraph를 지정하지 않아 layout.tsx의 기본 og:title/og:description을
-// 그대로 물려받는다 — <title>·description(<meta name>)만 'Blog'/'Posts in English'로 바뀌고
-// og:*·twitter:*는 사이트 기본값 그대로인 원본의 실제 동작(out/en.html 확인)을 ogTitle/ogDescription으로 재현한다.
-// titleTemplate={false}: <title>도 무템플릿 'Blog' 그대로(out/en.html 실측, Task 10 리뷰 확정).
 ---
 
 <Base
-  title="Blog"
+  title="Hyunjin Lee — Software Engineer"
   titleTemplate={false}
-  ogTitle={DEFAULT_TITLE}
-  description="Posts in English"
-  ogDescription={siteMetadata.description}
+  description="Frontend engineer Hyunjin Lee."
+  ogDescription="Frontend engineer Hyunjin Lee."
   canonical={canonical}
   hreflang={{ ko: siteMetadata.siteUrl, en: canonical, xDefault: canonical }}
   ogUrl={false}
   locale="en"
 >
-  <PostList posts={posts} />
+  <ResumeHome
+    name="Hyunjin Lee (이현진)"
+    photoAlt="Hyunjin Lee"
+    intro={intro}
+    experiences={experiences}
+    skills={skills}
+    news={news}
+    blogLabel="Blog"
+  />
 </Base>

@@ -1,0 +1,245 @@
+---
+// index.astro(ko 홈)의 이력서 마크업을 공용화 — ko(/)·en(/en) 홈이 데이터(문자열)만 다르게 공유한다.
+// 마크업 출처: app/[locale]/ResumeHome.tsx 이식본. next/image(unoptimized)는 <img>로 속성 보존.
+// biome-ignore-all lint/correctness/noUnusedImports: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+// biome-ignore-all lint/correctness/noUnusedVariables: biome이 .astro 템플릿(--- 아래)을 파싱하지 않아 오탐
+import siteMetadata from '../../data/siteMetadata.js'
+import Link from './Link.astro'
+
+export type Experience = {
+  title: string
+  period: string
+  role: string
+  link?: string
+  logos?: { src: string; darkInvert?: boolean; href: string; width: number; height: number }[]
+  projects: { name: string; link?: string; bullets: string[] }[]
+}
+
+export type NewsSegment = { text: string; href?: string }
+
+export type NewsItem = { date: string; segments: NewsSegment[] }
+
+interface Props {
+  name: string
+  photoAlt: string
+  intro: string[]
+  experiences: Experience[]
+  skills: string[]
+  news: NewsItem[]
+  /** Open Source 섹션의 블로그 링크 라벨 ('블로그' | 'Blog') */
+  blogLabel: string
+}
+
+const { name, photoAlt, intro, experiences, skills, news, blogLabel } = Astro.props
+
+const personJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: '이현진 (Hyunjin Lee)',
+  alternateName: 'Hyunjin Lee',
+  url: siteMetadata.siteUrl,
+  image: `${siteMetadata.siteUrl}/images/hyunjin/hyunjin.jpg`,
+  jobTitle: 'Software Engineer',
+  email: `mailto:${siteMetadata.email}`,
+  worksFor: { '@type': 'Organization', name: 'Kakao Entertainment' },
+  sameAs: [siteMetadata.github, siteMetadata.linkedin, siteMetadata.youtube].filter(Boolean),
+}
+
+const newsLinkClass = 'transition-colors text-primary-500 hover:text-primary-600 dark:hover:text-primary-400'
+---
+
+<div class="divide-y divide-gray-200 dark:divide-gray-700">
+  <script type="application/ld+json" set:html={JSON.stringify(personJsonLd)} />
+  <div class="container md:mt-5">
+    <header class="mb-8">
+      <div class="flex flex-col items-start gap-8 md:flex-row">
+        <div class="relative flex-shrink-0 mx-auto overflow-hidden rounded-full w-50 h-50 md:w-50 md:h-50 md:mx-0">
+          <img src="/images/hyunjin/hyunjin.jpg" alt={photoAlt} class="absolute inset-0 h-full w-full object-cover" />
+        </div>
+        <div class="flex-1 text-center md:text-left">
+          <h1 class="mb-2 text-3xl font-bold text-gray-900 dark:text-gray-100">{name}</h1>
+          <p class="mb-6 text-lg text-gray-600 md:text-xl dark:text-gray-400">Software Engineer</p>
+
+          <div class="mb-6 space-y-3 text-base text-gray-700 dark:text-gray-300">
+            {intro.map((paragraph) => <p>{paragraph}</p>)}
+          </div>
+
+          <div class="flex flex-wrap justify-center gap-3 text-base md:gap-4 md:justify-start">
+            <span class="text-gray-600 dark:text-gray-400">{siteMetadata.email}</span>
+            <span class="text-gray-400 dark:text-gray-600">·</span>
+            <Link
+              href={siteMetadata.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="transition-colors text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+            >
+              GitHub
+            </Link>
+            <span class="text-gray-400 dark:text-gray-600">·</span>
+            <Link
+              href={siteMetadata.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="transition-colors text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+            >
+              LinkedIn
+            </Link>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="mb-10">
+      <h2 class="pb-2 mb-8 text-2xl font-bold text-gray-900 border-b-2 border-gray-200 md:text-3xl dark:text-gray-100 dark:border-gray-700">
+        Work Experience
+      </h2>
+      <div class="space-y-8">
+        {
+          experiences.map((exp) => (
+            <div class="group">
+              <div class="flex flex-col gap-2 mb-2 sm:flex-row sm:justify-between sm:items-start">
+                <div class="flex-1">
+                  <div class="flex items-center gap-2">
+                    {exp.link ? (
+                      <Link
+                        href={exp.link}
+                        {...(exp.link.startsWith('/') ? {} : { target: '_blank', rel: 'noopener noreferrer' })}
+                        class="text-lg font-semibold text-gray-900 transition-colors md:text-xl dark:text-gray-100 hover:text-primary-500 dark:hover:text-primary-400"
+                      >
+                        {exp.title}
+                      </Link>
+                    ) : (
+                      <h3 class="text-lg font-semibold text-gray-900 md:text-xl dark:text-gray-100">{exp.title}</h3>
+                    )}
+                    {exp.logos?.map((logo) => (
+                      <Link href={logo.href} target="_blank" rel="noopener noreferrer">
+                        <img
+                          src={logo.src}
+                          alt=""
+                          width={logo.width}
+                          height={logo.height}
+                          style={`height:${logo.height}px;width:${logo.width}px`}
+                          class={`object-contain ${logo.darkInvert ? 'dark:invert' : ''}`}
+                        />
+                      </Link>
+                    ))}
+                  </div>
+                  <p class="mt-1 text-sm text-gray-600 md:text-base dark:text-gray-400">{exp.role}</p>
+                </div>
+                <span class="text-sm text-gray-500 whitespace-nowrap dark:text-gray-500">{exp.period}</span>
+              </div>
+              <div class="mt-3 space-y-4">
+                {exp.projects.map((project) => (
+                  <div>
+                    {project.name &&
+                      (project.link ? (
+                        <Link
+                          href={project.link}
+                          class="text-sm font-medium text-gray-800 break-keep md:text-base dark:text-gray-200 transition-colors hover:text-primary-500 dark:hover:text-primary-400"
+                        >
+                          {project.name}
+                        </Link>
+                      ) : (
+                        <p class="text-sm font-medium text-gray-800 break-keep md:text-base dark:text-gray-200">{project.name}</p>
+                      ))}
+                    <ul class={`${project.name ? 'mt-2' : ''} space-y-1.5`}>
+                      {project.bullets.map((bullet) => (
+                        <li class="text-sm text-gray-700 dark:text-gray-300 break-keep pl-5 relative before:content-['–'] before:absolute before:left-0 before:text-primary-500">
+                          {bullet}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="mb-10">
+      <h2 class="pb-2 mb-8 text-2xl font-bold text-gray-900 border-b-2 border-gray-200 md:text-3xl dark:text-gray-100 dark:border-gray-700">
+        Open Source
+      </h2>
+      <div class="group">
+        <div class="flex flex-col gap-2 mb-2 sm:flex-row sm:justify-between sm:items-start">
+          <div class="flex-1">
+            <Link
+              href="https://github.com/vercel-labs/agent-browser"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-lg font-semibold text-gray-900 transition-colors md:text-xl dark:text-gray-100 hover:text-primary-500 dark:hover:text-primary-400"
+            >
+              agent-browser
+            </Link>
+            <p class="mt-1 text-sm text-gray-600 md:text-base dark:text-gray-400">
+              vercel-labs ·{' '}
+              <Link
+                href="https://github.com/search?q=repo%3Avercel-labs%2Fagent-browser+is%3Apr+is%3Amerged+author%3Ajin-2-kakaoent+author%3Ahyunjinee&type=pullrequests"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="transition-colors text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+              >
+                28 PRs merged
+              </Link>{' '}
+              · Rust / TypeScript
+            </p>
+          </div>
+          <div class="flex flex-col gap-1 mt-1 sm:mt-0 sm:items-end">
+            <span class="text-sm text-gray-500 whitespace-nowrap dark:text-gray-500">2026.03 ~</span>
+            <Link
+              href="/blog/agent-browser"
+              class="text-sm transition-colors whitespace-nowrap text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+            >
+              {blogLabel}
+            </Link>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mb-10">
+      <h2 class="pb-2 mb-8 text-2xl font-bold text-gray-900 border-b-2 border-gray-200 md:text-3xl dark:text-gray-100 dark:border-gray-700">
+        Skills
+      </h2>
+      <ul class="space-y-4">
+        {
+          skills.map((skill) => (
+            <li class="text-sm md:text-base text-gray-700 dark:text-gray-300 pl-6 relative before:content-['•'] before:absolute before:left-0 before:text-primary-500">
+              {skill}
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section>
+      <h2 class="pb-2 mb-8 text-2xl font-bold text-gray-900 border-b-2 border-gray-200 md:text-3xl dark:text-gray-100 dark:border-gray-700">
+        News
+      </h2>
+      <div class="space-y-4">
+        {
+          news.map((item) => (
+            <div class="flex flex-col gap-2 sm:flex-row sm:gap-4">
+              <span class="flex-shrink-0 text-[14px] font-medium text-gray-500 md:text-[16px] dark:text-gray-500 sm:w-20">{item.date}</span>
+              <div class="flex-1">
+                <p class="text-[14px] text-gray-700 md:text-[16px] dark:text-gray-300">
+                  {item.segments.map((seg) =>
+                    seg.href ? (
+                      <Link href={seg.href} class={newsLinkClass}>
+                        {seg.text}
+                      </Link>
+                    ) : (
+                      seg.text
+                    ),
+                  )}
+                </p>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+  </div>
+</div>
