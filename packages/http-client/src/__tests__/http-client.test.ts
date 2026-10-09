@@ -71,6 +71,46 @@ describe('AxiosHttpClient', () => {
   })
 
   describe('재시도 로직', () => {
+    it.each([
+      { response: { status: 503 } },
+      { code: 'ECONNABORTED' },
+    ])('POST는 오류 발생 시 기본적으로 재시도하지 않는다: %j', async (error) => {
+      httpClient.setRetryConfig({ retries: 5, retryDelay: 0 })
+      const instance = httpClient.getAxiosInstance()
+      instance.post.mockRejectedValue(error)
+
+      await expect(httpClient.post('/payments', { amount: 100 })).rejects.toBe(error)
+      expect(instance.post).toHaveBeenCalledTimes(1)
+    })
+
+    it('POST는 요청에 명시한 횟수만큼 재시도하고 GET 설정을 변경하지 않는다', async () => {
+      httpClient.setRetryConfig({ retries: 3, retryDelay: 0 })
+      const instance = httpClient.getAxiosInstance()
+      const error = { response: { status: 503 } }
+      instance.post.mockRejectedValue(error)
+
+      await expect(httpClient.post('/payments', {}, { retry: 1, retryDelay: 0 })).rejects.toBe(error)
+      expect(instance.post).toHaveBeenCalledTimes(2)
+      expect(instance.post).toHaveBeenCalledWith('/payments', {}, {})
+
+      instance.get.mockRejectedValue(error)
+      await expect(httpClient.get('/users')).rejects.toBe(error)
+      expect(instance.get).toHaveBeenCalledTimes(4)
+
+      instance.post.mockClear()
+      await expect(httpClient.post('/payments', {})).rejects.toBe(error)
+      expect(instance.post).toHaveBeenCalledTimes(1)
+    })
+
+    it('POST의 retry: 0은 재시도를 비활성화한다', async () => {
+      const instance = httpClient.getAxiosInstance()
+      const error = { response: { status: 503 } }
+      instance.post.mockRejectedValue(error)
+
+      await expect(httpClient.post('/payments', {}, { retry: 0 })).rejects.toBe(error)
+      expect(instance.post).toHaveBeenCalledTimes(1)
+    })
+
     it('네트워크 에러 시 재시도해야 한다', async () => {
       const mockError = { code: 'ECONNABORTED' }
       const mockResponse = { data: { success: true } }
