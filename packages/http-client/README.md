@@ -72,6 +72,8 @@ const result = await uploadClient.post('/upload', formData)
 
 ### 재시도 설정
 
+POST 요청은 중복 처리를 방지하기 위해 기본적으로 재시도하지 않습니다. `setRetryConfig()`를 설정해도 POST는 요청별 `retry` 옵션을 명시해야 재시도합니다. 서버가 멱등성 키 등으로 중복 처리를 방지하는 경우에만 활성화하세요.
+
 ```typescript
 import { AxiosHttpClient } from '@hyunjin/http-client'
 
@@ -120,6 +122,13 @@ client.addInterceptor({
 ```typescript
 const response = await client.get('/api/users', {
   retry: 3,
+  retryDelay: 1000,
+})
+
+// 서버가 Idempotency-Key를 지원하는 경우에만 POST 재시도를 허용합니다.
+const payment = await client.post('/api/payments', { amount: 100 }, {
+  headers: { 'Idempotency-Key': paymentRequestId },
+  retry: 2,
   retryDelay: 1000,
 })
 ```

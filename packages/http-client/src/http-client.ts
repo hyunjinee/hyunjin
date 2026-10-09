@@ -61,17 +61,18 @@ export class AxiosHttpClient implements HttpClient {
   private async retryRequest<T>(
     requestFn: () => Promise<AxiosResponse<T>>,
     retryCount: number = 0,
+    retryConfig: RetryConfig = this.retryConfig,
   ): Promise<AxiosResponse<T>> {
     try {
       return await requestFn()
     } catch (error: any) {
-      const shouldRetry = this.retryConfig.retryCondition
-        ? this.retryConfig.retryCondition(error)
+      const shouldRetry = retryConfig.retryCondition
+        ? retryConfig.retryCondition(error)
         : this.isRetryableError(error)
 
-      if (shouldRetry && retryCount < this.retryConfig.retries) {
-        await this.delay(this.retryConfig.retryDelay * Math.pow(2, retryCount))
-        return this.retryRequest(requestFn, retryCount + 1)
+      if (shouldRetry && retryCount < retryConfig.retries) {
+        await this.delay(retryConfig.retryDelay * Math.pow(2, retryCount))
+        return this.retryRequest(requestFn, retryCount + 1, retryConfig)
       }
 
       throw error
@@ -113,9 +114,20 @@ export class AxiosHttpClient implements HttpClient {
   }
 
   async post<T = any>(url: string, data?: any, config?: RequestConfig): Promise<Response<T>> {
-    const axiosConfig = this.createRequestConfig(config)
+    const { retry, retryDelay, ...axiosConfig } = config || {}
 
-    return this.retryRequest(() => this.instance.post<T>(url, data, axiosConfig))
+    // POST may already have succeeded on the server when its response fails.
+    // Retrying requires an explicit request-level opt-in.
+    if (retry === undefined || retry <= 0) {
+      return this.instance.post<T>(url, data, axiosConfig)
+    }
+
+    const retryConfig = {
+      ...this.retryConfig,
+      retries: retry,
+      retryDelay: retryDelay ?? this.retryConfig.retryDelay,
+    }
+    return this.retryRequest(() => this.instance.post<T>(url, data, axiosConfig), 0, retryConfig)
   }
 
   async put<T = any>(url: string, data?: any, config?: RequestConfig): Promise<Response<T>> {
