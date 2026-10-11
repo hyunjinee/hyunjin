@@ -71,6 +71,51 @@ describe('AxiosHttpClient', () => {
   })
 
   describe('재시도 로직', () => {
+    it.each(['get', 'put', 'patch', 'delete', 'head', 'options'] as const)(
+      '%s 요청의 재시도 옵션은 다음 요청에 남지 않는다',
+      async (method) => {
+        httpClient.setRetryConfig({ retries: 2, retryDelay: 0 })
+        const instance = httpClient.getAxiosInstance()
+        const error = { response: { status: 503 } }
+        instance[method].mockRejectedValue(error)
+        const request = (config?: { retry?: number; retryDelay?: number }) =>
+          method === 'put' || method === 'patch'
+            ? httpClient[method]('/test', {}, config)
+            : httpClient[method]('/test', config)
+
+        await expect(request({ retry: 0, retryDelay: 500 })).rejects.toBe(error)
+        expect(instance[method]).toHaveBeenCalledTimes(1)
+        instance[method].mockClear()
+
+        const delay = vi.spyOn(globalThis, 'setTimeout')
+        try {
+          await expect(request()).rejects.toBe(error)
+          expect(instance[method]).toHaveBeenCalledTimes(3)
+          expect(delay.mock.calls.map((call) => call[1])).toEqual([0, 0])
+        } finally {
+          delay.mockRestore()
+        }
+      },
+    )
+
+    it('동시 요청은 서로 다른 재시도 횟수를 유지한다', async () => {
+      httpClient.setRetryConfig({ retryDelay: 0 })
+      const instance = httpClient.getAxiosInstance()
+      const error = { response: { status: 503 } }
+      instance.get.mockRejectedValue(error)
+
+      const results = await Promise.allSettled([
+        httpClient.get('/once', { retry: 0 }),
+        httpClient.get('/retry', { retry: 2 }),
+      ])
+      expect(results).toEqual([
+        { status: 'rejected', reason: error },
+        { status: 'rejected', reason: error },
+      ])
+      expect(instance.get.mock.calls.filter(([url]: [string]) => url === '/once')).toHaveLength(1)
+      expect(instance.get.mock.calls.filter(([url]: [string]) => url === '/retry')).toHaveLength(3)
+    })
+
     it.each([
       { response: { status: 503 } },
       { code: 'ECONNABORTED' },

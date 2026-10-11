@@ -119,6 +119,8 @@ client.addInterceptor({
 
 ### 개별 요청에 재시도 설정
 
+`retry`와 `retryDelay`는 해당 요청에만 적용되며, 이후 요청이나 동시에 실행 중인 요청의 설정을 변경하지 않습니다. 공통 기본값을 변경하려면 `setRetryConfig()`를 사용하세요.
+
 ```typescript
 const response = await client.get('/api/users', {
   retry: 3,
