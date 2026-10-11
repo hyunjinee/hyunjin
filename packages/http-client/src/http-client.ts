@@ -61,7 +61,7 @@ export class AxiosHttpClient implements HttpClient {
   private async retryRequest<T>(
     requestFn: () => Promise<AxiosResponse<T>>,
     retryCount: number = 0,
-    retryConfig: RetryConfig = this.retryConfig,
+    retryConfig: RetryConfig = { ...this.retryConfig },
   ): Promise<AxiosResponse<T>> {
     try {
       return await requestFn()
@@ -93,24 +93,26 @@ export class AxiosHttpClient implements HttpClient {
     return new Promise((resolve) => setTimeout(resolve, ms))
   }
 
-  private createRequestConfig(config?: RequestConfig): AxiosRequestConfig {
+  private createRequestConfig(config?: RequestConfig): {
+    axiosConfig: AxiosRequestConfig
+    retryConfig: RetryConfig
+  } {
     const { retry, retryDelay, ...axiosConfig } = config || {}
 
-    if (retry !== undefined) {
-      this.retryConfig.retries = retry
+    return {
+      axiosConfig,
+      retryConfig: {
+        ...this.retryConfig,
+        retries: retry ?? this.retryConfig.retries,
+        retryDelay: retryDelay ?? this.retryConfig.retryDelay,
+      },
     }
-
-    if (retryDelay !== undefined) {
-      this.retryConfig.retryDelay = retryDelay
-    }
-
-    return axiosConfig
   }
 
   async get<T = any>(url: string, config?: RequestConfig): Promise<Response<T>> {
-    const axiosConfig = this.createRequestConfig(config)
+    const { axiosConfig, retryConfig } = this.createRequestConfig(config)
 
-    return this.retryRequest(() => this.instance.get<T>(url, axiosConfig))
+    return this.retryRequest(() => this.instance.get<T>(url, axiosConfig), 0, retryConfig)
   }
 
   async post<T = any>(url: string, data?: any, config?: RequestConfig): Promise<Response<T>> {
@@ -131,33 +133,33 @@ export class AxiosHttpClient implements HttpClient {
   }
 
   async put<T = any>(url: string, data?: any, config?: RequestConfig): Promise<Response<T>> {
-    const axiosConfig = this.createRequestConfig(config)
+    const { axiosConfig, retryConfig } = this.createRequestConfig(config)
 
-    return this.retryRequest(() => this.instance.put<T>(url, data, axiosConfig))
+    return this.retryRequest(() => this.instance.put<T>(url, data, axiosConfig), 0, retryConfig)
   }
 
   async patch<T = any>(url: string, data?: any, config?: RequestConfig): Promise<Response<T>> {
-    const axiosConfig = this.createRequestConfig(config)
+    const { axiosConfig, retryConfig } = this.createRequestConfig(config)
 
-    return this.retryRequest(() => this.instance.patch<T>(url, data, axiosConfig))
+    return this.retryRequest(() => this.instance.patch<T>(url, data, axiosConfig), 0, retryConfig)
   }
 
   async delete<T = any>(url: string, config?: RequestConfig): Promise<Response<T>> {
-    const axiosConfig = this.createRequestConfig(config)
+    const { axiosConfig, retryConfig } = this.createRequestConfig(config)
 
-    return this.retryRequest(() => this.instance.delete<T>(url, axiosConfig))
+    return this.retryRequest(() => this.instance.delete<T>(url, axiosConfig), 0, retryConfig)
   }
 
   async head<T = any>(url: string, config?: RequestConfig): Promise<Response<T>> {
-    const axiosConfig = this.createRequestConfig(config)
+    const { axiosConfig, retryConfig } = this.createRequestConfig(config)
 
-    return this.retryRequest(() => this.instance.head<T>(url, axiosConfig))
+    return this.retryRequest(() => this.instance.head<T>(url, axiosConfig), 0, retryConfig)
   }
 
   async options<T = any>(url: string, config?: RequestConfig): Promise<Response<T>> {
-    const axiosConfig = this.createRequestConfig(config)
+    const { axiosConfig, retryConfig } = this.createRequestConfig(config)
 
-    return this.retryRequest(() => this.instance.options<T>(url, axiosConfig))
+    return this.retryRequest(() => this.instance.options<T>(url, axiosConfig), 0, retryConfig)
   }
 
   // 인터셉터 추가 메서드
